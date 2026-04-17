@@ -198,36 +198,60 @@ class ProcessedImoveisStatistics:
         return self._salvar_ou_mostrar(fig, destino, salvar_png, mostrar_gui)
 
     def analisar_correlacao_macro(self) -> pd.DataFrame:
-        """Analisa correlação entre preços de imóveis e indicadores macroeconômicos."""
-        # Carregar dados
-        df_imoveis = self.carregar_processados()
+        """Analisa correlação entre preços FIPEZap e indicadores macroeconômicos."""
+        df_fipezap = self.repo.carregar_fipezap_sjc_como_df()
         df_macro = self.repo.carregar_indicadores_como_df()
 
+        if df_fipezap.empty:
+            raise RuntimeError(
+                "Nenhum dado FIPEZap encontrado. Execute `python -m src.macro.fipezap_processor` primeiro."
+            )
         if df_macro.empty:
             raise RuntimeError(
                 "Nenhum indicador macro encontrado. Execute `python -m src.macro.ingest` primeiro."
             )
 
-        # Filtrar dados macro para período válido (2008-2025)
+        df_fipezap["data"] = pd.to_datetime(df_fipezap["data"])
         df_macro["data_ref"] = pd.to_datetime(df_macro["data_ref"])
-        df_macro = df_macro[(df_macro["data_ref"] >= "2008-01-01") & (df_macro["data_ref"] <= "2025-12-31")]
 
-        # Agregar preços de imóveis por mês (usando data de processamento)
-        # NOTA: Como os imóveis foram coletados recentemente, não há sobreposição temporal perfeita
-        # Vamos mostrar correlação entre indicadores macro para demonstrar a análise
-        print("[STATS] Nota: Imóveis coletados recentemente, mostrando correlação entre indicadores macro")
+        df_fipezap["mes"] = df_fipezap["data"].dt.to_period("M").dt.to_timestamp()
+        df_macro["mes"] = df_macro["data_ref"].dt.to_period("M").dt.to_timestamp()
 
-        # Pivotear indicadores macro
-        macro_pivot = df_macro.pivot(index="data_ref", columns="nome_serie", values="valor")
+        df_macro_pivot = df_macro.pivot_table(
+            index="mes",
+            columns="nome_serie",
+            values="valor",
+            aggfunc="mean"
+        )
 
-        # Calcular correlação entre indicadores macro
-        colunas_numericas = macro_pivot.select_dtypes(include=[float, int]).columns
-        correlacao = macro_pivot[colunas_numericas].corr()
+        df_fipezap_pivot = df_fipezap.set_index("mes")[
+            [
+                "preco_m2",
+                "preco_m2_locacao_residencial",
+                "var_mensal_venda_residencial",
+                "var_mensal_locacao_residencial",
+                "var_12m_venda_residencial",
+                "var_12m_locacao_residencial",
+                "rentabilidade_aluguel_residencial",
+            ]
+        ]
 
+        df_join = df_fipezap_pivot.join(df_macro_pivot, how="inner")
+
+        if df_join.empty:
+            raise RuntimeError(
+                "Não há dados sobrepostos entre FIPEZap e indicadores macro para cálculo de correlação."
+            )
+
+        correlacao = df_join.corr()
+
+        print(
+            "[STATS] Nota: calculando correlação cruzada entre preços FIPEZap e indicadores macroeconômicos"
+        )
         return correlacao
 
     def plotar_correlacao_macro(self, salvar_png: bool = True, mostrar_gui: bool = False, destino: str | None = None) -> str | None:
-        """Gera heatmap da correlação entre preços e indicadores macro."""
+        """Gera heatmap da correlação entre preços FIPEZap e indicadores macro."""
         try:
             import matplotlib.pyplot as plt
             import seaborn as sns
@@ -243,15 +267,14 @@ class ProcessedImoveisStatistics:
         if dir_destino:  # Só cria diretório se houver um caminho
             os.makedirs(dir_destino, exist_ok=True)
 
-        fig, ax = plt.subplots(figsize=(12, 8))
+        fig, ax = plt.subplots(figsize=(14, 10))
 
-        # Heatmap com seaborn
         sns.heatmap(correlacao, annot=True, cmap="RdYlBu_r", center=0,
-                   fmt=".2f", linewidths=0.5, ax=ax, square=True)
+                    fmt=".2f", linewidths=0.5, ax=ax)
 
-        ax.set_title("Correlação entre Indicadores Macroeconômicos\n(Período: 2008-2025)")
-        ax.set_xlabel("Indicadores")
-        ax.set_ylabel("Indicadores")
+        ax.set_title("Correlação entre FIPEZap e Indicadores Macroeconômicos")
+        ax.set_xlabel("Séries")
+        ax.set_ylabel("Séries")
 
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
