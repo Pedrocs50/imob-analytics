@@ -38,45 +38,52 @@ python -m pip install -r requirements.txt
 
 ## Como rodar
 
-### 1. Inicializar o banco
+### Menu Interativo (Recomendado)
 
 ```bash
-python -c "from src.database import Database; Database().setup()"
+python main.py          # ou python main.py --menu
 ```
 
-### 2. Coleta de imóveis (scraper)
+Mostra um menu interativo com todas as opções disponíveis. Basta escolher o número da operação desejada.
+
+### Comandos Diretos
 
 ```bash
-python main.py scrape
+python main.py scrape   # coleta todos os imóveis (paralelo)
+python main.py clean    # limpa e processa os dados brutos
+python main.py all      # scrape + clean em sequência
 ```
 
-### 3. Limpeza e processamento de imóveis
+### Estatísticas
 
 ```bash
-python main.py clean
+python main.py stats                    # Barras (padrão) - salva PNG
+python main.py stats --gui             # Mostra gráfico na interface gráfica
+python main.py stats --no-plot         # Apenas estatísticas, sem gráfico
+python main.py stats --tipo=distribuicao  # Boxplot + histograma
+python main.py stats --tipo=scatter    # Scatter plot preço vs área
+python main.py stats --tipo=pizza      # Proporção dos tipos de imóvel
+python main.py stats --tipo=correlacao # Heatmap de correlação com macro
+python main.py stats --correlacao      # Análise numérica de correlação
 ```
-
-### 4. Rodar scraper + cleaner em sequência
 
 ```bash
-python main.py all
+python main.py stats                    # Barras (padrão) - salva PNG
+python main.py stats --gui             # Mostra gráfico na interface gráfica
+python main.py stats --no-plot         # Apenas estatísticas, sem gráfico
+python main.py stats --tipo=distribuicao  # Boxplot + histograma
+python main.py stats --tipo=scatter    # Scatter plot preço vs área
+python main.py stats --tipo=pizza      # Proporção dos tipos de imóvel
+python main.py stats --tipo=correlacao # Heatmap de correlação com macro
+python main.py stats --correlacao      # Análise numérica de correlação
 ```
 
-### 5. Processar o CSV FIPEZap SJC para SQLite
+Isso calcula e imprime média, mediana e desvio padrão para `preco_venda` e `area_m2`, segmentado por tipo de imóvel (Apartamento, Casa, Terreno, etc.). Valores são arredondados para 2 casas decimais, com coluna de unidade (R$ ou m²). Os resultados são salvos na tabela `imoveis_estatisticas` do banco. Se matplotlib estiver instalado, gera diferentes tipos de gráficos conforme opção.
 
-```bash
-python -m src.macro.fipezap_processor
-```
-
-Isso lê `data/raw/fipezap_sjc.csv`, aplica limpeza e grava o resultado na tabela `fipezap_sjc` do banco.
-
-### 6. Ingerir macro indicadores
-
-```bash
-python -m src.macro.ingest
-```
-
-Isso carrega séries BCB, IBGE e IPEA e persiste em `indicadores_macro`.
+- estatísticas são geradas globalmente e por `tipo` (`Apartamento`, `Casa`, `Terreno`, etc.)
+- o resultado é salvo em `imoveis_estatisticas` dentro de `data/database/imoveis.db`
+- se `matplotlib` estiver instalado, o próprio comando `python main.py stats` tentará gerar gráficos em `data/processed`
+- **correlação macroeconômica**: analisa correlação entre indicadores macro (dólar, inflação, atividade econômica, etc.) e gera heatmap visual. Use `--tipo=correlacao` para o gráfico e `--correlacao` para análise numérica
 
 ## Banco de dados
 
@@ -84,6 +91,7 @@ O banco SQLite contém as seguintes tabelas principais:
 
 - `imoveis_raw`
 - `imoveis_processados`
+- `imoveis_estatisticas`
 - `progresso_scraping`
 - `indicadores_macro`
 - `fipezap_sjc`

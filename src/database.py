@@ -93,6 +93,24 @@ class Database:
                     UNIQUE(data)
                 );
 
+                -- Recriar tabela imoveis_estatisticas com nova estrutura
+                DROP TABLE IF EXISTS imoveis_estatisticas;
+                CREATE TABLE imoveis_estatisticas (
+                    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+                    tipo            TEXT NOT NULL,
+                    campo           TEXT NOT NULL,
+                    unidade         TEXT,
+                    contagem        INTEGER,
+                    media           REAL,
+                    mediana         REAL,
+                    desvio_padrao   REAL,
+                    calculado_em    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(tipo, campo)
+                );
+
+                CREATE INDEX IF NOT EXISTS idx_imoveis_estatisticas_tipo
+                    ON imoveis_estatisticas(tipo);
+
                 CREATE INDEX IF NOT EXISTS idx_indicadores_fonte_serie
                     ON indicadores_macro(fonte, codigo_serie);
             """)

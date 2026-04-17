@@ -80,6 +80,24 @@ class DataRepository:
         with self._db.get_connection() as conn:
             return conn.execute("SELECT COUNT(*) FROM imoveis_processados").fetchone()[0]
 
+    def salvar_estatisticas_imoveis(self, df: pd.DataFrame) -> None:
+        if df.empty:
+            return
+
+        colunas_finais = ["tipo", "campo", "contagem", "media", "mediana", "desvio_padrao"]
+        df_final = df[colunas_finais].copy()
+
+        with self._db.get_connection() as conn:
+            conn.execute("DELETE FROM imoveis_estatisticas")
+            df_final.to_sql("imoveis_estatisticas", conn, if_exists="append", index=False)
+
+    def carregar_estatisticas_imoveis(self) -> pd.DataFrame:
+        with self._db.get_connection() as conn:
+            return pd.read_sql(
+                "SELECT * FROM imoveis_estatisticas ORDER BY tipo, campo",
+                conn,
+            )
+
     def salvar_fipezap_sjc(self, df: pd.DataFrame) -> None:
         if df.empty:
             return
@@ -142,3 +160,10 @@ class DataRepository:
                 """,
                 conn,
             )
+
+    def salvar_estatisticas_imoveis(self, df: pd.DataFrame) -> None:
+        if df.empty:
+            return
+        with self._db.get_connection() as conn:
+            conn.execute("DELETE FROM imoveis_estatisticas")
+            df.to_sql("imoveis_estatisticas", conn, if_exists="append", index=False)
