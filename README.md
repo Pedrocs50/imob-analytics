@@ -93,6 +93,7 @@ O banco SQLite contém as seguintes tabelas principais:
 - O fluxo de scraping e limpeza está separado do processamento do CSV FIPEZap.
 - O arquivo `src/repository.py` centraliza a lógica de escrita/leitura do banco.
 - O arquivo `src/database.py` é responsável apenas pelo schema e pela conexão SQLite.
+- O projeto está sendo organizado no Jira; isso é apenas para controle interno, não é preciso acessar o board para executar o código.
 
 ## Uso sugerido
 
