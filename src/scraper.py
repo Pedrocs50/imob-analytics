@@ -23,12 +23,12 @@ DELAY_MIN = 8  # segundos minimos entre paginas
 DELAY_MAX = 15  # segundos maximos entre paginas
 MAX_PAGINAS = 400  # limite seguro por segmento antes de bloqueio do Zap
 
-# Evita travar infinito no CAPTCHA
+# para evitar o capcha infinito, ja que estava tentando esperar uma liberação que não existe
 CAPTCHA_MAX_WAIT = 90  # segundos
 CAPTCHA_POLL = 3  # segundos
 
 
-# Segmentos = fatias do catalogo para driblar o limite de ~400 paginas por URL
+# fatias do catalogo para driblar o limite de paginas que stava dando menos de 50 por pagina
 SEGMENTOS_WORKER_1 = [
     {"tipo": "casas", "preco_min": 0, "preco_max": 300_000},
     {"tipo": "casas", "preco_min": 300_000, "preco_max": 600_000},
