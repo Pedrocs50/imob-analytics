@@ -1,88 +1,104 @@
 """
-main.py — Ponto de entrada único do projeto.
+main.py - Ponto de entrada unico do projeto.
 
 Uso:
-    python main.py              → mostra menu interativo
-    python main.py --menu       → mostra menu interativo
-    python main.py scrape       → coleta todos os imóveis (paralelo)
-    python main.py clean        → limpa e processa os dados brutos
-    python main.py stats        → gera estatísticas (salva PNG por padrão)
-    python main.py stats --gui  → mostra gráfico na interface gráfica
-    python main.py stats --no-plot → apenas estatísticas, sem gráfico
-    python main.py stats --tipo=distribuicao → gráfico de distribuição
-    python main.py stats --tipo=scatter → scatter plot preço vs área
-    python main.py stats --tipo=pizza → gráfico de pizza dos tipos
-    python main.py stats --tipo=correlacao → heatmap de correlação macro
-    python main.py stats --correlacao → análise numérica de correlação
-    python main.py all          → scrape + clean em sequência
+    python main.py
+    python main.py --menu
+    python main.py scrape
+    python main.py clean
+    python main.py stats
+    python main.py stats --gui
+    python main.py stats --no-plot
+    python main.py stats --tipo=distribuicao
+    python main.py stats --tipo=scatter
+    python main.py stats --tipo=pizza
+    python main.py stats --tipo=correlacao
+    python main.py stats --correlacao
+    python main.py jacarei-train
+    python main.py vivareal-prep
+    python main.py series-coletar
+    python main.py series-fipezap
+    python main.py series-painel
+    python main.py eda-series
+    python main.py eda-vivareal
+    python main.py all
 """
 
 import sys
-from src.database import Database, DB_PATH
-from src.scraper import ScraperOrchestrator
+
 from src.cleaner import DataCleaner
+from src.database import DB_PATH, Database
+from src.scraper import ScraperOrchestrator
 from src.stats import ProcessedImoveisStatistics
 
 
 def mostrar_menu():
-    """Exibe menu interativo para escolher operações."""
+    """Exibe menu interativo para escolher operacoes."""
     while True:
-        print("\n" + "="*50)
-        print("🏠 SISTEMA DE ANÁLISE IMOBILIÁRIA")
-        print("="*50)
-        print("1. Coletar imóveis (scrape)")
+        print("\n" + "=" * 50)
+        print("SISTEMA DE ANALISE IMOBILIARIA")
+        print("=" * 50)
+        print("1. Coletar imoveis (scrape)")
         print("2. Limpar e processar dados (clean)")
-        print("3. Gerar estatísticas (stats)")
+        print("3. Gerar estatisticas (stats)")
         print("4. Executar tudo (scrape + clean)")
-        print("5. Estatísticas - Barras (padrão)")
-        print("6. Estatísticas - Distribuição (boxplot + histograma)")
-        print("7. Estatísticas - Scatter (preço vs área)")
-        print("8. Estatísticas - Pizza (proporção tipos)")
-        print("9. Estatísticas - Correlação Macro (heatmap)")
+        print("5. Estatisticas - Barras (padrao)")
+        print("6. Estatisticas - Distribuicao (boxplot + histograma)")
+        print("7. Estatisticas - Scatter (preco vs area)")
+        print("8. Estatisticas - Pizza (proporcao tipos)")
+        print("9. Estatisticas - Correlacao Macro (heatmap)")
+        print("10. Treinar baseline VivaReal Jacarei")
+        print("11. Gerar datasets limpos VivaReal (apartamento, casa, residencial)")
         print("0. Sair")
-        print("="*50)
+        print("=" * 50)
 
         try:
-            opcao = input("Escolha uma opção (0-9): ").strip()
+            opcao = input("Escolha uma opcao (0-11): ").strip()
 
             if opcao == "0":
-                print("Até logo!")
+                print("Ate logo!")
                 break
-            elif opcao == "1":
-                print("\nIniciando coleta de imóveis...")
+            if opcao == "1":
+                print("\nIniciando coleta de imoveis...")
                 cmd_scrape()
             elif opcao == "2":
                 print("\nIniciando limpeza de dados...")
                 cmd_clean()
             elif opcao == "3":
-                print("\nGerando estatísticas básicas...")
+                print("\nGerando estatisticas basicas...")
                 cmd_stats_basico()
             elif opcao == "4":
                 print("\nExecutando scrape + clean...")
                 cmd_all()
             elif opcao == "5":
-                print("\nGerando gráfico de barras...")
+                print("\nGerando grafico de barras...")
                 cmd_stats_tipo("barras")
             elif opcao == "6":
-                print("\nGerando gráfico de distribuição...")
+                print("\nGerando grafico de distribuicao...")
                 cmd_stats_tipo("distribuicao")
             elif opcao == "7":
                 print("\nGerando scatter plot...")
                 cmd_stats_tipo("scatter")
             elif opcao == "8":
-                print("\nGerando gráfico de pizza...")
+                print("\nGerando grafico de pizza...")
                 cmd_stats_tipo("pizza")
             elif opcao == "9":
-                print("\nGerando heatmap de correlação macro...")
+                print("\nGerando heatmap de correlacao macro...")
                 cmd_stats_tipo("correlacao")
+            elif opcao == "10":
+                print("\nTreinando baseline de regressao para Jacarei...")
+                cmd_jacarei_train()
+            elif opcao == "11":
+                print("\nGerando datasets limpos do VivaReal...")
+                cmd_vivareal_prep()
             else:
-                print("Opção inválida! Digite um número de 0 a 9.")
+                print("Opcao invalida! Digite um numero de 0 a 11.")
 
         except KeyboardInterrupt:
-            print("\nOperação cancelada pelo usuário!")
+            print("\nOperacao cancelada pelo usuario!")
             break
-        except Exception as e:
-            print(f"Erro: {e}")
+        except Exception as exc:
+            print(f"Erro: {exc}")
 
         input("\nPressione Enter para continuar...")
 
@@ -104,12 +120,10 @@ def cmd_stats():
     db.setup()
     stats = ProcessedImoveisStatistics(db)
 
-    # Argumentos: stats [--png] [--gui] [--no-plot] [--tipo=TIPO]
     salvar_png = "--png" in sys.argv or ("--no-plot" not in sys.argv and "--gui" not in sys.argv)
     mostrar_gui = "--gui" in sys.argv
-    gerar_grafico = not ("--no-plot" in sys.argv)
+    gerar_grafico = "--no-plot" not in sys.argv
 
-    # Extrair tipo de gráfico
     tipo_grafico = "barras"
     analisar_correlacao = "--correlacao" in sys.argv
     destino = None
@@ -119,11 +133,18 @@ def cmd_stats():
         elif arg.startswith("--destino="):
             destino = arg.split("=", 1)[1]
 
-    stats.executar(gerar_grafico=gerar_grafico, salvar_png=salvar_png, mostrar_gui=mostrar_gui, tipo_grafico=tipo_grafico, analisar_correlacao=analisar_correlacao, destino=destino)
+    stats.executar(
+        gerar_grafico=gerar_grafico,
+        salvar_png=salvar_png,
+        mostrar_gui=mostrar_gui,
+        tipo_grafico=tipo_grafico,
+        analisar_correlacao=analisar_correlacao,
+        destino=destino,
+    )
 
 
 def cmd_stats_basico():
-    """Estatísticas básicas sem argumentos especiais."""
+    """Estatisticas basicas sem argumentos especiais."""
     db = Database(DB_PATH)
     db.setup()
     stats = ProcessedImoveisStatistics(db)
@@ -131,7 +152,7 @@ def cmd_stats_basico():
 
 
 def cmd_stats_tipo(tipo: str):
-    """Estatísticas com tipo específico."""
+    """Estatisticas com tipo especifico."""
     db = Database(DB_PATH)
     db.setup()
     stats = ProcessedImoveisStatistics(db)
@@ -143,22 +164,84 @@ def cmd_all():
     cmd_clean()
 
 
+def cmd_jacarei_train():
+    from src.pricing.random_forest import JacareiPricePerM2Model
+
+    modelo = JacareiPricePerM2Model()
+    modelo.train()
+
+
+def cmd_vivareal_prep():
+    from src.vivareal.build_dataset import construir_datasets
+
+    construir_datasets()
+
+
+def cmd_series_coletar():
+    from src.timeseries.collect import coletar_series
+
+    coletar_series()
+
+
+def cmd_series_fipezap():
+    from src.timeseries.fipezap import importar_fipezap
+
+    importar_fipezap()
+
+
+def cmd_series_painel():
+    from src.timeseries import vazamento
+    from src.timeseries.panel import carregar_wide, construir_paineis
+    from src.timeseries.quality import escrever_relatorio, validar
+
+    resultados = validar()
+    escrever_relatorio(resultados)
+    falhas = [r for r in resultados if r.falhas]
+    print(f"[SERIES] validacao: {len(resultados)} series, {len(falhas)} com falha (ver reports/results/series_qualidade.md)")
+    paineis = construir_paineis()
+
+    wide, meta = carregar_wide()
+    teste = vazamento.validar_vazamento(wide, meta, paineis)
+    vazamento.escrever_relatorio(teste, meta, paineis)
+    print(f"[SERIES] vazamento temporal: {len(teste['falhas'])} falha(s) (ver {vazamento.RELATORIO})")
+    if teste["falhas"]:
+        sys.exit(1)
+
+
+def cmd_eda_series():
+    from src.analysis.series_eda import executar
+
+    executar()
+    print("[EDA] series: relatorio em reports/results/eda_series.md; tabelas em reports/results/eda/; figuras em reports/figures/")
+
+
+def cmd_eda_vivareal():
+    from src.analysis.vivareal_eda import executar
+
+    executar()
+    print("[EDA] vivareal: relatorio em reports/results/eda_vivareal.md; tabelas em reports/results/eda/; figuras em reports/figures/")
+
+
 COMANDOS = {
     "scrape": cmd_scrape,
-    "clean":  cmd_clean,
-    "stats":  cmd_stats,
-    "all":    cmd_all,
+    "clean": cmd_clean,
+    "stats": cmd_stats,
+    "jacarei-train": cmd_jacarei_train,
+    "vivareal-prep": cmd_vivareal_prep,
+    "series-coletar": cmd_series_coletar,
+    "series-fipezap": cmd_series_fipezap,
+    "series-painel": cmd_series_painel,
+    "eda-series": cmd_eda_series,
+    "eda-vivareal": cmd_eda_vivareal,
+    "all": cmd_all,
 }
 
 
 if __name__ == "__main__":
-    # Se não há argumentos ou --menu, mostra o menu interativo
     if len(sys.argv) == 1 or (len(sys.argv) == 2 and sys.argv[1] == "--menu"):
         mostrar_menu()
-    # Se há argumentos e é um comando válido, executa normalmente
     elif len(sys.argv) >= 2 and sys.argv[1] in COMANDOS:
         COMANDOS[sys.argv[1]]()
-    # Caso contrário, mostra ajuda
     else:
         print(__doc__)
         sys.exit(1)

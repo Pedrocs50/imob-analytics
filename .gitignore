@@ -5,9 +5,24 @@ scripts/chromedriver.exe
 # Ignorar tudo dentro de data
 data/*
 
-# Permitir apenas dados brutos
+# Permitir dados brutos de fontes publicas e artefatos leves dos modelos
 !data/raw/
 !data/raw/**
+!data/models/
+!data/models/**
+
+# Bancos de dados nunca sobem: a base do orientador (data/raw/vivareal_jacarei/) tem
+# nome, telefone, WhatsApp e CRECI de anunciantes, e o repositorio e publico.
+# Coloque o arquivo manualmente (ver README). Estas regras vem depois das excecoes
+# acima de proposito: a ultima regra que casa vence.
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+
+# Modelos serializados: grandes (>100 MB estoura o limite do GitHub) e regeneraveis
+# com `python main.py jacarei-train`
+*.pkl
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

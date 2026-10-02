@@ -1,0 +1,29 @@
+{
+  "db_path": "data\\raw\\vivareal_jacarei\\vivareal_jacarei_20260324.db",
+  "rows_loaded": 23128,
+  "rows_after_filter": 18453,
+  "rows_train": 14762,
+  "rows_test": 3691,
+  "mae": 785.3706010987117,
+  "rmse": 1092.977618740093,
+  "mape": 0.18815123293701386,
+  "r2": 0.7827000684064422,
+  "cv_mae_mean": 1367.4387381544104,
+  "cv_mae_std": 238.77952580527145,
+  "features_numeric": [
+    "usable_area_m2",
+    "bedrooms",
+    "bathrooms",
+    "suites",
+    "parking_spaces",
+    "yearly_iptu",
+    "monthly_condo",
+    "amenities_count",
+    "neighborhood_encoded"
+  ],
+  "features_categorical": [
+    "property_type",
+    "listing_type"
+  ],
+  "target": "preco_m2"
+}
