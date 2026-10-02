@@ -1,0 +1,151 @@
+alvo (var. 12 meses),preditor,lag,r,n,limiar (n/12),utilizavel (lag >= L+1),significativa
+nacional (nominal),Selic meta (nivel),0,0.1476041903694405,212,0.4663143324022687,False,False
+nacional (nominal),Selic meta (nivel),3,0.1292039909649837,212,0.4663143324022687,True,False
+nacional (nominal),Selic meta (nivel),6,0.10544925496358809,212,0.4663143324022687,True,False
+nacional (nominal),Selic meta (nivel),9,0.08054688184963214,212,0.4663143324022687,True,False
+nacional (nominal),Selic meta (nivel),12,0.060075498644388776,212,0.4663143324022687,True,False
+nacional (nominal),"Selic real, media de 12 meses",0,0.05618703111483635,212,0.4663143324022687,False,False
+nacional (nominal),"Selic real, media de 12 meses",3,0.049974906212246026,210,0.4685296148590823,True,False
+nacional (nominal),"Selic real, media de 12 meses",6,0.048367017228685354,207,0.47191254409621525,True,False
+nacional (nominal),"Selic real, media de 12 meses",9,0.058260873602910775,204,0.4753698250712126,True,False
+nacional (nominal),"Selic real, media de 12 meses",12,0.07518314303326401,201,0.47890422187671644,True,False
+nacional (nominal),Saldo cred. imob. (var. 12 meses),0,0.9476645941718681,212,0.4663143324022687,False,True
+nacional (nominal),Saldo cred. imob. (var. 12 meses),3,0.9338332009451328,209,0.4696491615325526,True,True
+nacional (nominal),Saldo cred. imob. (var. 12 meses),6,0.9111465487162841,206,0.47305657618496827,True,True
+nacional (nominal),Saldo cred. imob. (var. 12 meses),9,0.878540038258886,203,0.47653924830218736,True,True
+nacional (nominal),Saldo cred. imob. (var. 12 meses),12,0.8396994416419584,200,0.4800999895855029,True,True
+nacional (nominal),IBC-Br (var. 12 meses),0,0.3488145320518939,211,0.4674180365080926,False,False
+nacional (nominal),IBC-Br (var. 12 meses),3,0.380148530538126,209,0.4696491615325526,True,False
+nacional (nominal),IBC-Br (var. 12 meses),6,0.39375488890262594,206,0.47305657618496827,True,False
+nacional (nominal),IBC-Br (var. 12 meses),9,0.39782761695659424,203,0.47653924830218736,True,False
+nacional (nominal),IBC-Br (var. 12 meses),12,0.39168975472853124,200,0.4800999895855029,True,False
+nacional (nominal),Dolar PTAX (var. 12 meses),0,-0.22746576313317893,212,0.4663143324022687,False,False
+nacional (nominal),Dolar PTAX (var. 12 meses),3,-0.26038280333298125,209,0.4696491615325526,True,False
+nacional (nominal),Dolar PTAX (var. 12 meses),6,-0.28191962026662915,206,0.47305657618496827,True,False
+nacional (nominal),Dolar PTAX (var. 12 meses),9,-0.2928553907113638,203,0.47653924830218736,True,False
+nacional (nominal),Dolar PTAX (var. 12 meses),12,-0.28773791844165436,200,0.4800999895855029,True,False
+nacional (nominal),IPCA acumulado 12 meses,0,0.07198000947076896,212,0.4663143324022687,False,False
+nacional (nominal),IPCA acumulado 12 meses,3,0.04431386380340777,212,0.4663143324022687,True,False
+nacional (nominal),IPCA acumulado 12 meses,6,0.01296622771568223,212,0.4663143324022687,True,False
+nacional (nominal),IPCA acumulado 12 meses,9,-0.02885464725143876,212,0.4663143324022687,True,False
+nacional (nominal),IPCA acumulado 12 meses,12,-0.07462596415424508,212,0.4663143324022687,True,False
+nacional (nominal),INCC acumulado 12 meses,0,0.18364540464411394,212,0.4663143324022687,False,False
+nacional (nominal),INCC acumulado 12 meses,3,0.19319067617069732,212,0.4663143324022687,True,False
+nacional (nominal),INCC acumulado 12 meses,6,0.19310243966301358,212,0.4663143324022687,True,False
+nacional (nominal),INCC acumulado 12 meses,9,0.17916763746913525,212,0.4663143324022687,True,False
+nacional (nominal),INCC acumulado 12 meses,12,0.15765089394784043,212,0.4663143324022687,True,False
+nacional (nominal),Confianca do consumidor (nivel),0,0.8229466030225903,212,0.4663143324022687,False,True
+nacional (nominal),Confianca do consumidor (nivel),3,0.8234718268770802,212,0.4663143324022687,True,True
+nacional (nominal),Confianca do consumidor (nivel),6,0.8215095355412313,212,0.4663143324022687,True,True
+nacional (nominal),Confianca do consumidor (nivel),9,0.8154832620004215,212,0.4663143324022687,True,True
+nacional (nominal),Confianca do consumidor (nivel),12,0.7985507763886898,212,0.4663143324022687,True,True
+nacional (nominal),Desocupacao Brasil (nivel),0,-0.6573473315189725,175,0.5132484778350541,False,True
+nacional (nominal),Desocupacao Brasil (nivel),3,-0.6510272384050629,173,0.516206706816029,True,True
+nacional (nominal),Desocupacao Brasil (nivel),6,-0.6252914772568062,170,0.520741552697576,True,True
+nacional (nominal),Desocupacao Brasil (nivel),9,-0.5765654160376896,167,0.5253980526919139,True,True
+nacional (nominal),Desocupacao Brasil (nivel),12,-0.5170168547398986,164,0.5301817451844503,True,False
+nacional (nominal),Juros financ. imob. mercado (nivel),0,0.5935264811077905,186,0.49784049784074674,False,True
+nacional (nominal),Juros financ. imob. mercado (nivel),3,0.5465814000837117,183,0.5019045693369523,True,True
+nacional (nominal),Juros financ. imob. mercado (nivel),6,0.4773017214929479,180,0.5060698239044358,True,False
+nacional (nominal),Juros financ. imob. mercado (nivel),9,0.3935175867660697,177,0.5103405310448296,True,False
+nacional (nominal),Juros financ. imob. mercado (nivel),12,0.2990416532671763,174,0.5147212168101124,True,False
+nacional (real),Selic meta (nivel),0,0.047444504286173556,212,0.4663143324022687,False,False
+nacional (real),Selic meta (nivel),3,0.07615397860504546,212,0.4663143324022687,True,False
+nacional (real),Selic meta (nivel),6,0.10358744713310136,212,0.4663143324022687,True,False
+nacional (real),Selic meta (nivel),9,0.12712297084151117,212,0.4663143324022687,True,False
+nacional (real),Selic meta (nivel),12,0.14120554057048396,212,0.4663143324022687,True,False
+nacional (real),"Selic real, media de 12 meses",0,0.19964170416683633,212,0.4663143324022687,False,False
+nacional (real),"Selic real, media de 12 meses",3,0.21569070272205912,210,0.4685296148590823,True,False
+nacional (real),"Selic real, media de 12 meses",6,0.2181307259823343,207,0.47191254409621525,True,False
+nacional (real),"Selic real, media de 12 meses",9,0.2150164735661832,204,0.4753698250712126,True,False
+nacional (real),"Selic real, media de 12 meses",12,0.19827936512247138,201,0.47890422187671644,True,False
+nacional (real),Saldo cred. imob. (var. 12 meses),0,0.889527060523704,212,0.4663143324022687,False,True
+nacional (real),Saldo cred. imob. (var. 12 meses),3,0.8641348733603719,209,0.4696491615325526,True,True
+nacional (real),Saldo cred. imob. (var. 12 meses),6,0.8311686384877823,206,0.47305657618496827,True,True
+nacional (real),Saldo cred. imob. (var. 12 meses),9,0.7904141648170462,203,0.47653924830218736,True,True
+nacional (real),Saldo cred. imob. (var. 12 meses),12,0.7484004689501674,200,0.4800999895855029,True,True
+nacional (real),IBC-Br (var. 12 meses),0,0.3704530249341684,211,0.4674180365080926,False,False
+nacional (real),IBC-Br (var. 12 meses),3,0.389087791338643,209,0.4696491615325526,True,False
+nacional (real),IBC-Br (var. 12 meses),6,0.39888066139491385,206,0.47305657618496827,True,False
+nacional (real),IBC-Br (var. 12 meses),9,0.40032845956578744,203,0.47653924830218736,True,False
+nacional (real),IBC-Br (var. 12 meses),12,0.3917543972979559,200,0.4800999895855029,True,False
+nacional (real),Dolar PTAX (var. 12 meses),0,-0.24889192038642954,212,0.4663143324022687,False,False
+nacional (real),Dolar PTAX (var. 12 meses),3,-0.30823459195396546,209,0.4696491615325526,True,False
+nacional (real),Dolar PTAX (var. 12 meses),6,-0.3574781446562107,206,0.47305657618496827,True,False
+nacional (real),Dolar PTAX (var. 12 meses),9,-0.3826044884821557,203,0.47653924830218736,True,False
+nacional (real),Dolar PTAX (var. 12 meses),12,-0.3742241118650651,200,0.4800999895855029,True,False
+nacional (real),IPCA acumulado 12 meses,0,-0.19161258949740165,212,0.4663143324022687,False,False
+nacional (real),IPCA acumulado 12 meses,3,-0.1870675856036194,212,0.4663143324022687,True,False
+nacional (real),IPCA acumulado 12 meses,6,-0.167020802011445,212,0.4663143324022687,True,False
+nacional (real),IPCA acumulado 12 meses,9,-0.14781373505696282,212,0.4663143324022687,True,False
+nacional (real),IPCA acumulado 12 meses,12,-0.11859326355482895,212,0.4663143324022687,True,False
+nacional (real),INCC acumulado 12 meses,0,0.0032781415778520657,212,0.4663143324022687,False,False
+nacional (real),INCC acumulado 12 meses,3,0.0144445644443214,212,0.4663143324022687,True,False
+nacional (real),INCC acumulado 12 meses,6,0.02985135639799542,212,0.4663143324022687,True,False
+nacional (real),INCC acumulado 12 meses,9,0.044597427730810234,212,0.4663143324022687,True,False
+nacional (real),INCC acumulado 12 meses,12,0.06687057790337854,212,0.4663143324022687,True,False
+nacional (real),Confianca do consumidor (nivel),0,0.8744619569588433,212,0.4663143324022687,False,True
+nacional (real),Confianca do consumidor (nivel),3,0.8672876988690746,212,0.4663143324022687,True,True
+nacional (real),Confianca do consumidor (nivel),6,0.8512298196988424,212,0.4663143324022687,True,True
+nacional (real),Confianca do consumidor (nivel),9,0.8259083275743958,212,0.4663143324022687,True,True
+nacional (real),Confianca do consumidor (nivel),12,0.7918629166712163,212,0.4663143324022687,True,True
+nacional (real),Desocupacao Brasil (nivel),0,-0.5963976685467591,175,0.5132484778350541,False,True
+nacional (real),Desocupacao Brasil (nivel),3,-0.5975475392316222,173,0.516206706816029,True,True
+nacional (real),Desocupacao Brasil (nivel),6,-0.5800477588524737,170,0.520741552697576,True,True
+nacional (real),Desocupacao Brasil (nivel),9,-0.5370276892241995,167,0.5253980526919139,True,True
+nacional (real),Desocupacao Brasil (nivel),12,-0.47744251289693945,164,0.5301817451844503,True,False
+nacional (real),Juros financ. imob. mercado (nivel),0,0.5180359962982839,186,0.49784049784074674,False,True
+nacional (real),Juros financ. imob. mercado (nivel),3,0.5038373387325725,183,0.5019045693369523,True,True
+nacional (real),Juros financ. imob. mercado (nivel),6,0.47399177415878446,180,0.5060698239044358,True,False
+nacional (real),Juros financ. imob. mercado (nivel),9,0.4312504795832403,177,0.5103405310448296,True,False
+nacional (real),Juros financ. imob. mercado (nivel),12,0.3616375790036538,174,0.5147212168101124,True,False
+SJC (nominal),Selic meta (nivel),0,0.6823362381513729,92,0.7078688161443228,False,False
+SJC (nominal),Selic meta (nivel),3,0.6079392971962233,92,0.7078688161443228,True,False
+SJC (nominal),Selic meta (nivel),6,0.5000047730705793,92,0.7078688161443228,True,False
+SJC (nominal),Selic meta (nivel),9,0.3640732390337911,92,0.7078688161443228,True,False
+SJC (nominal),Selic meta (nivel),12,0.20562130052115057,92,0.7078688161443228,True,False
+SJC (nominal),"Selic real, media de 12 meses",0,0.17374250504909322,92,0.7078688161443228,False,False
+SJC (nominal),"Selic real, media de 12 meses",3,-0.025102439275687755,92,0.7078688161443228,True,False
+SJC (nominal),"Selic real, media de 12 meses",6,-0.22232849877077548,92,0.7078688161443228,True,False
+SJC (nominal),"Selic real, media de 12 meses",9,-0.3896143326662147,92,0.7078688161443228,True,False
+SJC (nominal),"Selic real, media de 12 meses",12,-0.5174702787837899,92,0.7078688161443228,True,False
+SJC (nominal),Saldo cred. imob. (var. 12 meses),0,0.7004803419785137,92,0.7078688161443228,False,False
+SJC (nominal),Saldo cred. imob. (var. 12 meses),3,0.7719239330681869,92,0.7078688161443228,True,True
+SJC (nominal),Saldo cred. imob. (var. 12 meses),6,0.822549300696729,92,0.7078688161443228,True,True
+SJC (nominal),Saldo cred. imob. (var. 12 meses),9,0.8545412838338975,92,0.7078688161443228,True,True
+SJC (nominal),Saldo cred. imob. (var. 12 meses),12,0.863861183809104,92,0.7078688161443228,True,True
+SJC (nominal),IBC-Br (var. 12 meses),0,0.25726362892785837,91,0.7117475784185117,False,False
+SJC (nominal),IBC-Br (var. 12 meses),3,0.2671290376293898,92,0.7078688161443228,True,False
+SJC (nominal),IBC-Br (var. 12 meses),6,0.2941087999831355,92,0.7078688161443228,True,False
+SJC (nominal),IBC-Br (var. 12 meses),9,0.3804339577969313,92,0.7078688161443228,True,False
+SJC (nominal),IBC-Br (var. 12 meses),12,0.40177395712003755,92,0.7078688161443228,True,False
+SJC (nominal),Dolar PTAX (var. 12 meses),0,-0.49654384608768365,92,0.7078688161443228,False,False
+SJC (nominal),Dolar PTAX (var. 12 meses),3,-0.5788496542867018,92,0.7078688161443228,True,False
+SJC (nominal),Dolar PTAX (var. 12 meses),6,-0.662378122989694,92,0.7078688161443228,True,False
+SJC (nominal),Dolar PTAX (var. 12 meses),9,-0.6620173199548127,92,0.7078688161443228,True,False
+SJC (nominal),Dolar PTAX (var. 12 meses),12,-0.45067474834307986,92,0.7078688161443228,True,False
+SJC (nominal),IPCA acumulado 12 meses,0,0.4951935161354235,92,0.7078688161443228,False,False
+SJC (nominal),IPCA acumulado 12 meses,3,0.6770919245748305,92,0.7078688161443228,True,False
+SJC (nominal),IPCA acumulado 12 meses,6,0.8029148994094856,92,0.7078688161443228,True,True
+SJC (nominal),IPCA acumulado 12 meses,9,0.8281914398408367,92,0.7078688161443228,True,True
+SJC (nominal),IPCA acumulado 12 meses,12,0.7819593256622102,92,0.7078688161443228,True,True
+SJC (nominal),INCC acumulado 12 meses,0,0.23730489735289978,92,0.7078688161443228,False,False
+SJC (nominal),INCC acumulado 12 meses,3,0.4591484544214292,92,0.7078688161443228,True,False
+SJC (nominal),INCC acumulado 12 meses,6,0.6714628183884687,92,0.7078688161443228,True,False
+SJC (nominal),INCC acumulado 12 meses,9,0.8178029112787993,92,0.7078688161443228,True,True
+SJC (nominal),INCC acumulado 12 meses,12,0.8701207126040037,92,0.7078688161443228,True,True
+SJC (nominal),Confianca do consumidor (nivel),0,0.09820405111193557,92,0.7078688161443228,False,False
+SJC (nominal),Confianca do consumidor (nivel),3,-0.021667725398565908,92,0.7078688161443228,True,False
+SJC (nominal),Confianca do consumidor (nivel),6,-0.0346065573957568,92,0.7078688161443228,True,False
+SJC (nominal),Confianca do consumidor (nivel),9,-0.09024396309843855,92,0.7078688161443228,True,False
+SJC (nominal),Confianca do consumidor (nivel),12,-0.15886781057015012,92,0.7078688161443228,True,False
+SJC (nominal),Desocupacao Brasil (nivel),0,-0.5111314881700657,91,0.7117475784185117,False,False
+SJC (nominal),Desocupacao Brasil (nivel),3,-0.4340863108419469,92,0.7078688161443228,True,False
+SJC (nominal),Desocupacao Brasil (nivel),6,-0.329282365655368,92,0.7078688161443228,True,False
+SJC (nominal),Desocupacao Brasil (nivel),9,-0.20233745576078713,92,0.7078688161443228,True,False
+SJC (nominal),Desocupacao Brasil (nivel),12,-0.07886852154364238,92,0.7078688161443228,True,False
+SJC (nominal),Juros financ. imob. mercado (nivel),0,0.4285134401936972,92,0.7078688161443228,False,False
+SJC (nominal),Juros financ. imob. mercado (nivel),3,0.33884712966091624,92,0.7078688161443228,True,False
+SJC (nominal),Juros financ. imob. mercado (nivel),6,0.23145397760066763,92,0.7078688161443228,True,False
+SJC (nominal),Juros financ. imob. mercado (nivel),9,0.10870130087411856,92,0.7078688161443228,True,False
+SJC (nominal),Juros financ. imob. mercado (nivel),12,-0.03213463211145961,92,0.7078688161443228,True,False

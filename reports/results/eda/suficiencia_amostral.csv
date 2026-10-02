@@ -1,0 +1,10 @@
+cenario,observacoes,variaveis,obs. por variavel
+"ARIMA univariado, nacional (nominal)",222,1,222.0
+"ARIMAX/LSTM, nacional (nominal), 9 preditores com historico desde 2008",221,9,24.6
+"ARIMAX/LSTM, nacional (nominal), todos os 12 preditores",173,12,14.4
+"Modelo trimestral univariado, nacional (nominal)",72,1,72.0
+"ARIMA univariado, SJC (nominal)",102,1,102.0
+"ARIMAX/LSTM, SJC (nominal), 9 preditores com historico desde 2008",101,9,11.2
+"ARIMAX/LSTM, SJC (nominal), todos os 12 preditores",101,12,8.4
+"Modelo trimestral univariado, SJC (nominal)",32,1,32.0
+"Trimestral, nacional, com desocupacao e renda de SP (IBGE)",48,2,24.0

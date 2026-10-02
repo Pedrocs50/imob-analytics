@@ -1,0 +1,13 @@
+preditor,coluna,transformacao inicial,diferencas extras,estacionaria,n,inicio,defasagem L,ADF p (antes),KPSS p (antes),ADF p (final),KPSS p (final)
+Selic meta,bcb_selic_meta,1a diferenca,0,sim,223,2008-02,0,0.03343509413323351,0.1,0.03343509413323351,0.1
+Selic real no mes,selic_real_mes,nivel,0,sim,224,2008-01,1,8.14164033846923e-05,0.1,8.14164033846923e-05,0.1
+IPCA mensal,bcb_ipca,nivel,0,sim,224,2008-01,1,7.38399389591718e-12,0.1,7.38399389591718e-12,0.1
+IGP-M mensal,bcb_igpm,nivel,0,sim,224,2008-01,0,7.365618717135852e-10,0.1,7.365618717135852e-10,0.1
+INCC mensal,bcb_incc,nivel,0,sim,224,2008-01,0,0.009817191526134994,0.1,0.009817191526134994,0.1
+Dolar PTAX,bcb_ptax,var. % (dlog),0,sim,223,2008-02,0,1.4286013556803469e-18,0.1,1.4286013556803469e-18,0.1
+IBC-Br,bcb_ibcbr,var. % (dlog),0,sim,222,2008-02,2,0.0010502446403994766,0.1,0.0010502446403994766,0.1
+Saldo cred. imob.,bcb_credimob_saldo,var. % (dlog),1,sim,222,2008-03,1,0.6288323161998688,0.01,9.94871663461469e-16,0.1
+Juros financ. imob. (mercado),bcb_credimob_juros_mercado,1a diferenca,0,sim,185,2011-04,1,6.440690885253071e-06,0.1,6.440690885253071e-06,0.1
+Juros financ. imob. (regulada),bcb_credimob_juros_regulada,1a diferenca,0,sim,185,2011-04,1,0.029203263376138624,0.1,0.029203263376138624,0.1
+Confianca do consumidor,ipea_icc,1a diferenca,0,sim,223,2008-02,1,0.0035185173250994327,0.1,0.0035185173250994327,0.1
+Desocupacao Brasil,ipea_desocupacao_br_mensal,1a diferenca,1,sim,173,2012-03,2,0.09816218196146342,0.1,0.00041537170963900293,0.1

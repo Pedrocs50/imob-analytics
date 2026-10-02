@@ -1,0 +1,3 @@
+serie,transformacao estacionaria,autocorr. lag 1 (var. mensal),autocorr. lag 1 (estacionaria),autocorr. lag 2 (estacionaria),autocorr. lag 3 (estacionaria),Ljung-Box p12 (var. mensal),Ljung-Box p12 (estacionaria)
+nacional (nominal),dif. da var. mensal (d2),0.9764423404627338,0.06806200525249721,-0.09963084188216104,-0.2236444289671271,0.0,0.009796830591752313
+SJC (nominal),dif. da var. mensal (d2),0.8129648640608045,0.047591431754642775,-0.03271594120730915,-0.35337634221979874,4.8314089738554253e-32,0.00020244030350169558

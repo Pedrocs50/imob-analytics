@@ -1,0 +1,13 @@
+serie,transformacao,n,ADF p,KPSS p,estacionaria
+nacional (nominal),log (nivel),224,0.15561315419290095,0.01,nao
+nacional (nominal),d1: var. mensal (dlog),223,0.3986903589380806,0.01,nao
+nacional (nominal),d2: dif. da var. mensal,222,0.005776671008020867,0.1,sim
+nacional (real),log (nivel),224,0.0020887599827567995,0.061610345233963415,sim
+nacional (real),d1: var. mensal (dlog),223,0.5867342986383216,0.01,nao
+nacional (real),d2: dif. da var. mensal,222,1.6704200590957835e-14,0.1,sim
+SJC (nominal),log (nivel),104,0.8037752503913842,0.01,nao
+SJC (nominal),d1: var. mensal (dlog),103,0.5375877226860193,0.0465575709899667,nao
+SJC (nominal),d2: dif. da var. mensal,102,1.0232901114452372e-05,0.1,sim
+SJC (real),log (nivel),104,0.9909275260427334,0.01,nao
+SJC (real),d1: var. mensal (dlog),103,3.060439872124958e-05,0.03579106960575799,conflito
+SJC (real),d2: dif. da var. mensal,102,2.191393269079998e-06,0.1,sim

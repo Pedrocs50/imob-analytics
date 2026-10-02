@@ -1,0 +1,157 @@
+preditor,coluna,lag,r,n,limiar,significativa,utilizavel (lag >= L+1)
+Selic meta,bcb_selic_meta,0,0.04831771135562736,222,0.2278453719378858,False,False
+Selic meta,bcb_selic_meta,1,-0.02909626824010861,222,0.2278453719378858,False,True
+Selic meta,bcb_selic_meta,2,-0.003455926616817359,221,0.22836027738990147,False,True
+Selic meta,bcb_selic_meta,3,-0.049752926160266345,220,0.22887868958348775,False,True
+Selic meta,bcb_selic_meta,4,-0.0988498690748887,219,0.2294006485044159,False,True
+Selic meta,bcb_selic_meta,5,-0.10471385777169057,218,0.22992619477969786,False,True
+Selic meta,bcb_selic_meta,6,-0.06781085533574668,217,0.23045536969086844,False,True
+Selic meta,bcb_selic_meta,7,-0.02450159074139576,216,0.23098821518760554,False,True
+Selic meta,bcb_selic_meta,8,-0.05285837809395403,215,0.23152477390169837,False,True
+Selic meta,bcb_selic_meta,9,-0.03810154883192413,214,0.23206508916137436,False,True
+Selic meta,bcb_selic_meta,10,0.06391677056097043,213,0.23260920500599525,False,True
+Selic meta,bcb_selic_meta,11,-0.09572693206792494,212,0.23315716620113436,False,True
+Selic meta,bcb_selic_meta,12,-0.04102291464997292,211,0.2337090182540463,False,True
+Selic real no mes,selic_real_mes,0,-0.01893237269800923,222,0.2278453719378858,False,False
+Selic real no mes,selic_real_mes,1,-0.022642511489142862,222,0.2278453719378858,False,False
+Selic real no mes,selic_real_mes,2,-0.05803319980952186,222,0.2278453719378858,False,True
+Selic real no mes,selic_real_mes,3,-0.020665007695890445,221,0.22836027738990147,False,True
+Selic real no mes,selic_real_mes,4,-0.08147215862550951,220,0.22887868958348775,False,True
+Selic real no mes,selic_real_mes,5,-0.12442854799602836,219,0.2294006485044159,False,True
+Selic real no mes,selic_real_mes,6,-0.01897290983652549,218,0.22992619477969786,False,True
+Selic real no mes,selic_real_mes,7,0.02384557447126085,217,0.23045536969086844,False,True
+Selic real no mes,selic_real_mes,8,0.14678137511978515,216,0.23098821518760554,False,True
+Selic real no mes,selic_real_mes,9,0.06341378755022282,215,0.23152477390169837,False,True
+Selic real no mes,selic_real_mes,10,0.008372686394183228,214,0.23206508916137436,False,True
+Selic real no mes,selic_real_mes,11,0.03454553559303302,213,0.23260920500599525,False,True
+Selic real no mes,selic_real_mes,12,-0.018215679758474955,212,0.23315716620113436,False,True
+IPCA mensal,bcb_ipca,0,-0.03476515416106735,222,0.2278453719378858,False,False
+IPCA mensal,bcb_ipca,1,-0.012010371545232176,222,0.2278453719378858,False,False
+IPCA mensal,bcb_ipca,2,0.008942449459547266,222,0.2278453719378858,False,True
+IPCA mensal,bcb_ipca,3,-0.011448940288652952,221,0.22836027738990147,False,True
+IPCA mensal,bcb_ipca,4,0.0512876110538819,220,0.22887868958348775,False,True
+IPCA mensal,bcb_ipca,5,0.10546169499009331,219,0.2294006485044159,False,True
+IPCA mensal,bcb_ipca,6,0.004695741467377497,218,0.22992619477969786,False,True
+IPCA mensal,bcb_ipca,7,-0.05412415293724844,217,0.23045536969086844,False,True
+IPCA mensal,bcb_ipca,8,-0.19467130183615555,216,0.23098821518760554,False,True
+IPCA mensal,bcb_ipca,9,-0.09315899256301972,215,0.23152477390169837,False,True
+IPCA mensal,bcb_ipca,10,-0.027850346006919154,214,0.23206508916137436,False,True
+IPCA mensal,bcb_ipca,11,-0.05003060448102838,213,0.23260920500599525,False,True
+IPCA mensal,bcb_ipca,12,0.0030161870788212213,212,0.23315716620113436,False,True
+IGP-M mensal,bcb_igpm,0,0.03256183041324845,222,0.2278453719378858,False,False
+IGP-M mensal,bcb_igpm,1,0.021702842723534954,222,0.2278453719378858,False,True
+IGP-M mensal,bcb_igpm,2,0.03416299017841396,222,0.2278453719378858,False,True
+IGP-M mensal,bcb_igpm,3,-0.01383227021325677,221,0.22836027738990147,False,True
+IGP-M mensal,bcb_igpm,4,0.005911364948972001,220,0.22887868958348775,False,True
+IGP-M mensal,bcb_igpm,5,0.09297735514755896,219,0.2294006485044159,False,True
+IGP-M mensal,bcb_igpm,6,0.05418557434430441,218,0.22992619477969786,False,True
+IGP-M mensal,bcb_igpm,7,-0.02616348963636303,217,0.23045536969086844,False,True
+IGP-M mensal,bcb_igpm,8,-0.048949478226280756,216,0.23098821518760554,False,True
+IGP-M mensal,bcb_igpm,9,0.0007053002378061665,215,0.23152477390169837,False,True
+IGP-M mensal,bcb_igpm,10,-0.010716822162115641,214,0.23206508916137436,False,True
+IGP-M mensal,bcb_igpm,11,-0.08179795688596131,213,0.23260920500599525,False,True
+IGP-M mensal,bcb_igpm,12,-0.023269317338495542,212,0.23315716620113436,False,True
+INCC mensal,bcb_incc,0,0.0013383585294788843,222,0.2278453719378858,False,False
+INCC mensal,bcb_incc,1,0.04334695349088242,222,0.2278453719378858,False,True
+INCC mensal,bcb_incc,2,-0.002191836303064942,222,0.2278453719378858,False,True
+INCC mensal,bcb_incc,3,-0.04572619308364239,221,0.22836027738990147,False,True
+INCC mensal,bcb_incc,4,-0.018765508594099613,220,0.22887868958348775,False,True
+INCC mensal,bcb_incc,5,0.0001415611480169216,219,0.2294006485044159,False,True
+INCC mensal,bcb_incc,6,-0.03884633749798565,218,0.22992619477969786,False,True
+INCC mensal,bcb_incc,7,-0.17674286106009876,217,0.23045536969086844,False,True
+INCC mensal,bcb_incc,8,-0.1262954429693442,216,0.23098821518760554,False,True
+INCC mensal,bcb_incc,9,0.09280679196955115,215,0.23152477390169837,False,True
+INCC mensal,bcb_incc,10,0.09879892733323552,214,0.23206508916137436,False,True
+INCC mensal,bcb_incc,11,0.03661857962641212,213,0.23260920500599525,False,True
+INCC mensal,bcb_incc,12,-0.05324846857664526,212,0.23315716620113436,False,True
+Dolar PTAX,bcb_ptax,0,-0.09885438624453198,222,0.2278453719378858,False,False
+Dolar PTAX,bcb_ptax,1,-0.00029483948293546226,222,0.2278453719378858,False,True
+Dolar PTAX,bcb_ptax,2,0.02011473091508707,221,0.22836027738990147,False,True
+Dolar PTAX,bcb_ptax,3,-0.035436584164049004,220,0.22887868958348775,False,True
+Dolar PTAX,bcb_ptax,4,0.0011547977218055428,219,0.2294006485044159,False,True
+Dolar PTAX,bcb_ptax,5,-0.03609786558976284,218,0.22992619477969786,False,True
+Dolar PTAX,bcb_ptax,6,0.001184261702809439,217,0.23045536969086844,False,True
+Dolar PTAX,bcb_ptax,7,0.029921862024533216,216,0.23098821518760554,False,True
+Dolar PTAX,bcb_ptax,8,0.032445085856993926,215,0.23152477390169837,False,True
+Dolar PTAX,bcb_ptax,9,0.05239760751939327,214,0.23206508916137436,False,True
+Dolar PTAX,bcb_ptax,10,-0.04908996403712704,213,0.23260920500599525,False,True
+Dolar PTAX,bcb_ptax,11,0.05119946351654726,212,0.23315716620113436,False,True
+Dolar PTAX,bcb_ptax,12,-0.022226093866077552,211,0.2337090182540463,False,True
+IBC-Br,bcb_ibcbr,0,0.0534322877790556,221,0.22836027738990147,False,False
+IBC-Br,bcb_ibcbr,1,0.20455555941227024,222,0.2278453719378858,False,False
+IBC-Br,bcb_ibcbr,2,-0.13396109179065718,221,0.22836027738990147,False,False
+IBC-Br,bcb_ibcbr,3,0.03699346569692095,220,0.22887868958348775,False,True
+IBC-Br,bcb_ibcbr,4,0.0774656047286626,219,0.2294006485044159,False,True
+IBC-Br,bcb_ibcbr,5,-0.10172192498265394,218,0.22992619477969786,False,True
+IBC-Br,bcb_ibcbr,6,-0.032523899109562424,217,0.23045536969086844,False,True
+IBC-Br,bcb_ibcbr,7,-0.08492576294947693,216,0.23098821518760554,False,True
+IBC-Br,bcb_ibcbr,8,0.13928139215703939,215,0.23152477390169837,False,True
+IBC-Br,bcb_ibcbr,9,0.00022275729650431952,214,0.23206508916137436,False,True
+IBC-Br,bcb_ibcbr,10,-0.17164566229624667,213,0.23260920500599525,False,True
+IBC-Br,bcb_ibcbr,11,0.030000443666023217,212,0.23315716620113436,False,True
+IBC-Br,bcb_ibcbr,12,0.12753574155018266,211,0.2337090182540463,False,True
+Saldo cred. imob.,bcb_credimob_saldo,0,-0.04362133095421257,222,0.2278453719378858,False,False
+Saldo cred. imob.,bcb_credimob_saldo,1,-0.052130041216733404,221,0.22836027738990147,False,False
+Saldo cred. imob.,bcb_credimob_saldo,2,-0.08741536830328048,220,0.22887868958348775,False,True
+Saldo cred. imob.,bcb_credimob_saldo,3,0.17928235264517103,219,0.2294006485044159,False,True
+Saldo cred. imob.,bcb_credimob_saldo,4,-0.04983817053483305,218,0.22992619477969786,False,True
+Saldo cred. imob.,bcb_credimob_saldo,5,-0.026096779278127234,217,0.23045536969086844,False,True
+Saldo cred. imob.,bcb_credimob_saldo,6,0.07693428150701236,216,0.23098821518760554,False,True
+Saldo cred. imob.,bcb_credimob_saldo,7,0.012972493032621402,215,0.23152477390169837,False,True
+Saldo cred. imob.,bcb_credimob_saldo,8,0.017976693690106092,214,0.23206508916137436,False,True
+Saldo cred. imob.,bcb_credimob_saldo,9,-0.12705870851130427,213,0.23260920500599525,False,True
+Saldo cred. imob.,bcb_credimob_saldo,10,0.12884116107954283,212,0.23315716620113436,False,True
+Saldo cred. imob.,bcb_credimob_saldo,11,0.003099014145681459,211,0.2337090182540463,False,True
+Saldo cred. imob.,bcb_credimob_saldo,12,-0.05275331531993029,210,0.23426480742954114,False,True
+Juros financ. imob. (mercado),bcb_credimob_juros_mercado,0,-0.004358950831696531,185,0.24959209966706922,False,False
+Juros financ. imob. (mercado),bcb_credimob_juros_mercado,1,-0.029240861606717464,184,0.25026942004307207,False,False
+Juros financ. imob. (mercado),bcb_credimob_juros_mercado,2,0.020042511046588083,183,0.25095228466847613,False,True
+Juros financ. imob. (mercado),bcb_credimob_juros_mercado,3,-0.0994715631559083,182,0.2516407695964168,False,True
+Juros financ. imob. (mercado),bcb_credimob_juros_mercado,4,-0.020240270045387504,181,0.2523349523486502,False,True
+Juros financ. imob. (mercado),bcb_credimob_juros_mercado,5,-0.04406153769154833,180,0.2530349119522179,False,True
+Juros financ. imob. (mercado),bcb_credimob_juros_mercado,6,-0.06969080946935127,179,0.2537407289772366,False,True
+Juros financ. imob. (mercado),bcb_credimob_juros_mercado,7,-0.08067570981912023,178,0.25445248557585426,False,True
+Juros financ. imob. (mercado),bcb_credimob_juros_mercado,8,0.03650591260766609,177,0.2551702655224148,False,True
+Juros financ. imob. (mercado),bcb_credimob_juros_mercado,9,0.07492402870311413,176,0.2558941542548758,False,True
+Juros financ. imob. (mercado),bcb_credimob_juros_mercado,10,0.05317969179777723,175,0.25662423891752706,False,True
+Juros financ. imob. (mercado),bcb_credimob_juros_mercado,11,-0.09333960798633337,174,0.2573606084050562,False,True
+Juros financ. imob. (mercado),bcb_credimob_juros_mercado,12,-0.12247282317137866,173,0.2581033534080145,False,True
+Juros financ. imob. (regulada),bcb_credimob_juros_regulada,0,-0.08959062197295821,185,0.24959209966706922,False,False
+Juros financ. imob. (regulada),bcb_credimob_juros_regulada,1,0.038869554949437564,184,0.25026942004307207,False,False
+Juros financ. imob. (regulada),bcb_credimob_juros_regulada,2,-0.04556287036280398,183,0.25095228466847613,False,True
+Juros financ. imob. (regulada),bcb_credimob_juros_regulada,3,0.12372109878148659,182,0.2516407695964168,False,True
+Juros financ. imob. (regulada),bcb_credimob_juros_regulada,4,-0.053490352418380814,181,0.2523349523486502,False,True
+Juros financ. imob. (regulada),bcb_credimob_juros_regulada,5,-0.11023174423427308,180,0.2530349119522179,False,True
+Juros financ. imob. (regulada),bcb_credimob_juros_regulada,6,-0.004803412558368018,179,0.2537407289772366,False,True
+Juros financ. imob. (regulada),bcb_credimob_juros_regulada,7,-0.006582691151502853,178,0.25445248557585426,False,True
+Juros financ. imob. (regulada),bcb_credimob_juros_regulada,8,0.004384058225198049,177,0.2551702655224148,False,True
+Juros financ. imob. (regulada),bcb_credimob_juros_regulada,9,0.011096017563608025,176,0.2558941542548758,False,True
+Juros financ. imob. (regulada),bcb_credimob_juros_regulada,10,0.018169901053609223,175,0.25662423891752706,False,True
+Juros financ. imob. (regulada),bcb_credimob_juros_regulada,11,0.0038153234369466575,174,0.2573606084050562,False,True
+Juros financ. imob. (regulada),bcb_credimob_juros_regulada,12,-0.15259910190633125,173,0.2581033534080145,False,True
+Confianca do consumidor,ipea_icc,0,0.04097475904013774,222,0.2278453719378858,False,False
+Confianca do consumidor,ipea_icc,1,-0.006326779920819591,222,0.2278453719378858,False,False
+Confianca do consumidor,ipea_icc,2,0.1623518993540179,221,0.22836027738990147,False,True
+Confianca do consumidor,ipea_icc,3,-0.04607665410696654,220,0.22887868958348775,False,True
+Confianca do consumidor,ipea_icc,4,-0.06701498780661255,219,0.2294006485044159,False,True
+Confianca do consumidor,ipea_icc,5,-0.052923892683152465,218,0.22992619477969786,False,True
+Confianca do consumidor,ipea_icc,6,0.08320281296187491,217,0.23045536969086844,False,True
+Confianca do consumidor,ipea_icc,7,0.0011256813273515626,216,0.23098821518760554,False,True
+Confianca do consumidor,ipea_icc,8,0.053901218497993834,215,0.23152477390169837,False,True
+Confianca do consumidor,ipea_icc,9,0.1721589190920692,214,0.23206508916137436,False,True
+Confianca do consumidor,ipea_icc,10,0.054711020486201516,213,0.23260920500599525,False,True
+Confianca do consumidor,ipea_icc,11,-0.05775821454597979,212,0.23315716620113436,False,True
+Confianca do consumidor,ipea_icc,12,-0.09398706069218468,211,0.2337090182540463,False,True
+Desocupacao Brasil,ipea_desocupacao_br_mensal,0,-0.1321307014441091,173,0.2581033534080145,False,False
+Desocupacao Brasil,ipea_desocupacao_br_mensal,1,-0.03520232062705508,173,0.2581033534080145,False,False
+Desocupacao Brasil,ipea_desocupacao_br_mensal,2,0.02574050575823747,172,0.2588525664597334,False,False
+Desocupacao Brasil,ipea_desocupacao_br_mensal,3,0.10915523772491703,171,0.2596083419847486,False,True
+Desocupacao Brasil,ipea_desocupacao_br_mensal,4,-0.07092120462896251,170,0.260370776348788,False,True
+Desocupacao Brasil,ipea_desocupacao_br_mensal,5,-0.09510939597869096,169,0.2611399679103846,False,True
+Desocupacao Brasil,ipea_desocupacao_br_mensal,6,0.10651985236376783,168,0.2619160170741759,False,True
+Desocupacao Brasil,ipea_desocupacao_br_mensal,7,-0.04603455629646697,167,0.26269902634595693,False,True
+Desocupacao Brasil,ipea_desocupacao_br_mensal,8,0.03135159116550869,166,0.2634891003895538,False,True
+Desocupacao Brasil,ipea_desocupacao_br_mensal,9,-0.009559573209335913,165,0.2642863460855909,False,True
+Desocupacao Brasil,ipea_desocupacao_br_mensal,10,0.10073186531336879,164,0.26509087259222514,False,True
+Desocupacao Brasil,ipea_desocupacao_br_mensal,11,-0.06315375357005935,163,0.2659027914079271,False,True
+Desocupacao Brasil,ipea_desocupacao_br_mensal,12,-0.021731746299747553,162,0.2667222164363905,False,True
