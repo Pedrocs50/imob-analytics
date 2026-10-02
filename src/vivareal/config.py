@@ -27,6 +27,10 @@ class SegmentoConfig:
     max_bedrooms: int
     max_bathrooms: int
     max_parking_spaces: int
+    # Valores POSITIVOS fora da faixa viram ausentes (a linha e mantida). Zero significa
+    # "sem taxa" e tambem e mantido. Faixas definidas na analise exploratoria (docs/ANALISE_EXPLORATORIA.md).
+    monthly_condo_range: tuple[float, float] = (50, 5_000)
+    yearly_iptu_range: tuple[float, float] = (50, 30_000)
 
 
 APARTAMENTO = SegmentoConfig(

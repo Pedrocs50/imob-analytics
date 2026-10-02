@@ -25,8 +25,9 @@ def construir_datasets(config: VivaRealConfig | None = None) -> dict[str, pd.Dat
 
     datasets: dict[str, pd.DataFrame] = {}
     logs: dict[str, list[tuple[str, int]]] = {}
+    ajustes: dict[str, list[dict]] = {}
     for seg in cfg.segmentos:
-        datasets[seg.nome], logs[seg.nome] = limpar_segmento(base, seg, cfg.outlier_iqr_factor)
+        datasets[seg.nome], logs[seg.nome], ajustes[seg.nome] = limpar_segmento(base, seg, cfg.outlier_iqr_factor)
         print(f"[VIVAREAL] {seg.nome}: {len(datasets[seg.nome])} registros limpos")
 
     datasets["residencial"] = pd.concat(
@@ -38,7 +39,7 @@ def construir_datasets(config: VivaRealConfig | None = None) -> dict[str, pd.Dat
     for nome, df in datasets.items():
         df.to_csv(os.path.join(cfg.output_dir, f"{nome}.csv"), index=False, encoding="utf-8")
 
-    _escrever_relatorio(cfg, len(bruto), n_residencial, removidas, len(base), logs, datasets)
+    _escrever_relatorio(cfg, len(bruto), n_residencial, removidas, len(base), logs, ajustes, datasets)
     print(f"[VIVAREAL] Datasets em {cfg.output_dir} | relatorio em {cfg.report_path}")
     return datasets
 
@@ -50,6 +51,7 @@ def _escrever_relatorio(
     removidas: int,
     n_dedup: int,
     logs: dict[str, list[tuple[str, int]]],
+    ajustes: dict[str, list[dict]],
     datasets: dict[str, pd.DataFrame],
 ) -> None:
     linhas = [
@@ -73,6 +75,10 @@ def _escrever_relatorio(
         for etapa, restantes in log:
             linhas.append(f"| {etapa} (-{anterior - restantes}) | {restantes} |")
             anterior = restantes
+        linhas += ["", f"Ajustes de valores no segmento {nome} (nenhuma linha removida):", ""]
+        tabela = pd.DataFrame(ajustes[nome])
+        linhas += ["| " + " | ".join(tabela.columns) + " |", "|" + "---|" * len(tabela.columns)]
+        linhas += ["| " + " | ".join(str(v) for v in linha) + " |" for linha in tabela.itertuples(index=False)]
         linhas.append("")
 
     linhas += ["## Arquivos gerados", "", "| Arquivo | Linhas |", "|---|---|"]
@@ -82,6 +88,8 @@ def _escrever_relatorio(
         "",
         "Valores ausentes foram mantidos (sem imputacao). `em_condominio` so existe",
         "para casas; fica vazio em apartamentos. Coordenadas lat/lon = 0 viraram vazias.",
+        "Taxas de condominio e IPTU positivas fora da faixa plausivel viraram ausentes (zero = sem taxa,",
+        "mantido). `condominio_informado` e `iptu_informado` indicam se a taxa existe apos o ajuste.",
         "",
     ]
 

@@ -1,5 +1,5 @@
 segmento,variavel,n com valor,mediana,p1,p99,maximo,zeros (sem taxa),positivos abaixo do limite inferior,acima do limite superior,limites (inferior; superior)
-apartamento,condominio mensal (R$),3763,417.0,0.0,1080.0,620000.0,169,6,9,50; 5000
-apartamento,IPTU anual (R$),2832,90.0,0.0,1200.0,83412.0,512,265,1,50; 30000
-casa,condominio mensal (R$),6553,270.0,0.0,1400.0,2500000.0,3033,23,8,50; 5000
-casa,IPTU anual (R$),6972,137.0,0.0,4600.0,1813921.0,1725,313,19,50; 30000
+apartamento,condominio mensal (R$),3748,417.0,0.0,1000.0,1800.0,169,0,0,50; 5000
+apartamento,IPTU anual (R$),2566,100.0,0.0,1200.0,29034.0,512,0,0,50; 30000
+casa,condominio mensal (R$),6522,270.0,0.0,1309.4799999999996,2471.0,3033,0,0,50; 5000
+casa,IPTU anual (R$),6640,150.0,0.0,4006.0999999999967,20909.0,1725,0,0,50; 30000

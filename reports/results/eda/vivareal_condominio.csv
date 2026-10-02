@@ -1,6 +1,6 @@
 analise,valor A,valor B,n A,n B,p (Mann-Whitney)
 casa fora x dentro de condominio (preco_m2 mediana),3840.0,6020.657642973567,7614,2640.0,0.0
-casa fora de condominio: % sem valor de condominio,47.50459679537693,,7614,,
-casa em condominio: % sem valor de condominio,3.1818181818181817,,2640,,
-"apartamento: Spearman(condominio, preco_m2) entre os que tem taxa > 0",0.18675197740084565,,3594,,1.447860130744855e-29
-"casa: Spearman(condominio, preco_m2) entre os que tem taxa > 0",0.04284033580720664,,3520,,0.01102316227420914
+casa fora de condominio: % sem valor de condominio,47.75413711583924,,7614,,
+casa em condominio: % sem valor de condominio,3.6363636363636362,,2640,,
+"apartamento: Spearman(condominio, preco_m2) entre os que tem taxa > 0",0.19265394419320667,,3579,,2.8820025184567906e-31
+"casa: Spearman(condominio, preco_m2) entre os que tem taxa > 0",0.03802153121145142,,3489,,0.02471336896435484

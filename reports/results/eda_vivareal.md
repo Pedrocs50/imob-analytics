@@ -20,8 +20,8 @@ Gerado por `python main.py eda-vivareal`. Nao editar manualmente. Fonte: `data/p
 | banheiros | 0.0 | 0.0 | 0.0 |
 | suites | 15.6 | 13.1 | 13.8 |
 | vagas | 2.5 | 3.9 | 3.5 |
-| IPTU anual | 29.1 | 32.0 | 31.2 |
-| condominio | 5.7 | 36.1 | 27.6 |
+| IPTU anual | 35.7 | 35.2 | 35.4 |
+| condominio | 6.1 | 36.4 | 27.9 |
 | latitude | 52.2 | 51.5 | 51.7 |
 | longitude | 52.2 | 51.5 | 51.7 |
 
@@ -45,12 +45,12 @@ Gerado por `python main.py eda-vivareal`. Nao editar manualmente. Fonte: `data/p
 | apartamento | banheiros | 3992 | 0.255 | 0.000 |
 | apartamento | vagas | 3894 | 0.253 | 0.000 |
 | apartamento | n. comodidades | 3992 | 0.228 | 0.000 |
-| apartamento | condominio | 3763 | 0.165 | 0.000 |
+| apartamento | condominio | 3748 | 0.171 | 0.000 |
 | apartamento | area util | 3992 | 0.109 | 0.000 |
 | apartamento | quartos | 3992 | 0.109 | 0.000 |
 | apartamento | longitude | 1908 | 0.109 | 0.000 |
-| apartamento | IPTU anual | 2832 | 0.053 | 0.005 |
-| casa | condominio | 6553 | 0.511 | 0.000 |
+| apartamento | IPTU anual | 2566 | 0.018 | 0.359 |
+| casa | condominio | 6522 | 0.512 | 0.000 |
 | casa | casa em condominio | 10254 | 0.436 | 0.000 |
 | casa | latitude | 4974 | 0.357 | 0.000 |
 | casa | n. comodidades | 10254 | 0.356 | 0.000 |
@@ -59,7 +59,7 @@ Gerado por `python main.py eda-vivareal`. Nao editar manualmente. Fonte: `data/p
 | casa | vagas | 9852 | 0.228 | 0.000 |
 | casa | longitude | 4974 | 0.178 | 0.000 |
 | casa | quartos | 10254 | 0.161 | 0.000 |
-| casa | IPTU anual | 6972 | 0.151 | 0.000 |
+| casa | IPTU anual | 6640 | 0.145 | 0.000 |
 | casa | area util | 10254 | -0.031 | 0.001 |
 
 ## 5. Multicolinearidade (VIF; acima de 5 merece atencao, acima de 10 e problema)
@@ -118,19 +118,19 @@ Os 12 bairros com mais anuncios por segmento:
 | analise | valor A | valor B | n A | n B | p (Mann-Whitney) |
 |---|---|---|---|---|---|
 | casa fora x dentro de condominio (preco_m2 mediana) | 3840.000 | 6020.658 | 7614 | 2640.000 | 0.000 |
-| casa fora de condominio: % sem valor de condominio | 47.505 |  | 7614 |  |  |
-| casa em condominio: % sem valor de condominio | 3.182 |  | 2640 |  |  |
-| apartamento: Spearman(condominio, preco_m2) entre os que tem taxa > 0 | 0.187 |  | 3594 |  | 0.000 |
-| casa: Spearman(condominio, preco_m2) entre os que tem taxa > 0 | 0.043 |  | 3520 |  | 0.011 |
+| casa fora de condominio: % sem valor de condominio | 47.754 |  | 7614 |  |  |
+| casa em condominio: % sem valor de condominio | 3.636 |  | 2640 |  |  |
+| apartamento: Spearman(condominio, preco_m2) entre os que tem taxa > 0 | 0.193 |  | 3579 |  | 0.000 |
+| casa: Spearman(condominio, preco_m2) entre os que tem taxa > 0 | 0.038 |  | 3489 |  | 0.025 |
 
 Valores implausiveis que a limpeza atual nao trata (pendencia para o `vivareal-prep`):
 
 | segmento | variavel | n com valor | mediana | p1 | p99 | maximo | zeros (sem taxa) | positivos abaixo do limite inferior | acima do limite superior | limites (inferior; superior) |
 |---|---|---|---|---|---|---|---|---|---|---|
-| apartamento | condominio mensal (R$) | 3763 | 417.0 | 0.0 | 1080.0 | 620000.0 | 169 | 6 | 9 | 50; 5000 |
-| apartamento | IPTU anual (R$) | 2832 | 90.0 | 0.0 | 1200.0 | 83412.0 | 512 | 265 | 1 | 50; 30000 |
-| casa | condominio mensal (R$) | 6553 | 270.0 | 0.0 | 1400.0 | 2500000.0 | 3033 | 23 | 8 | 50; 5000 |
-| casa | IPTU anual (R$) | 6972 | 137.0 | 0.0 | 4600.0 | 1813921.0 | 1725 | 313 | 19 | 50; 30000 |
+| apartamento | condominio mensal (R$) | 3748 | 417.0 | 0.0 | 1000.0 | 1800.0 | 169 | 0 | 0 | 50; 5000 |
+| apartamento | IPTU anual (R$) | 2566 | 100.0 | 0.0 | 1200.0 | 29034.0 | 512 | 0 | 0 | 50; 30000 |
+| casa | condominio mensal (R$) | 6522 | 270.0 | 0.0 | 1309.5 | 2471.0 | 3033 | 0 | 0 | 50; 5000 |
+| casa | IPTU anual (R$) | 6640 | 150.0 | 0.0 | 4006.1 | 20909.0 | 1725 | 0 | 0 | 50; 30000 |
 
 ## 8. Coordenadas
 

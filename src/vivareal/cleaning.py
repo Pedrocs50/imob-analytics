@@ -33,7 +33,9 @@ OUTPUT_COLUMNS = [
     "suites",
     "parking_spaces",
     "yearly_iptu",
+    "iptu_informado",
     "monthly_condo",
+    "condominio_informado",
     "amenities_count",
     "sale_price",
     "preco_m2",
@@ -80,13 +82,32 @@ def _registrar(log: list[tuple[str, int]], etapa: str, df: pd.DataFrame) -> None
     log.append((etapa, len(df)))
 
 
+def _anular_implausiveis(df: pd.DataFrame, coluna: str, faixa: tuple[float, float], rotulo: str) -> dict:
+    """Transforma em ausente (NaN) os valores POSITIVOS fora da faixa. Zero e mantido
+    ('sem taxa') e nenhuma linha e removida. Retorna o resumo do ajuste."""
+    baixo, alto = faixa
+    valores = df[coluna]
+    abaixo = (valores > 0) & (valores < baixo)
+    acima = valores > alto
+    df.loc[abaixo | acima, coluna] = float("nan")
+    return {
+        "variavel": rotulo,
+        "faixa plausivel": f"{baixo:g} a {alto:g}",
+        "zeros mantidos (sem taxa)": int((valores == 0).sum()),
+        "positivos abaixo do minimo -> ausente": int(abaixo.sum()),
+        "acima do maximo -> ausente": int(acima.sum()),
+        "informados ao final": int(df[coluna].notna().sum()),
+    }
+
+
 def limpar_segmento(
     df: pd.DataFrame,
     seg: SegmentoConfig,
     outlier_iqr_factor: float,
-) -> tuple[pd.DataFrame, list[tuple[str, int]]]:
-    """Aplica as regras de limpeza de um segmento (df ja deduplicado e
-    restrito a usage_type). Retorna o dataset e o log (etapa, linhas restantes)."""
+) -> tuple[pd.DataFrame, list[tuple[str, int]], list[dict]]:
+    """Aplica as regras de limpeza de um segmento (df ja deduplicado e restrito a
+    usage_type). Retorna o dataset, o log (etapa, linhas restantes) e os ajustes de
+    valores que nao removem linhas (taxas implausiveis viram ausentes)."""
     log: list[tuple[str, int]] = []
 
     df = df[df["property_type"].isin(seg.property_types)].copy()
@@ -125,6 +146,15 @@ def limpar_segmento(
     df = df[df["preco_m2"].between(q1 - outlier_iqr_factor * iqr, q3 + outlier_iqr_factor * iqr)]
     _registrar(log, f"outliers de preco_m2 por IQR (fator {outlier_iqr_factor:g}) por property_type", df)
 
+    ajustes = [
+        _anular_implausiveis(df, "monthly_condo", seg.monthly_condo_range, "condominio mensal (R$)"),
+        _anular_implausiveis(df, "yearly_iptu", seg.yearly_iptu_range, "IPTU anual (R$)"),
+    ]
+    # a ausencia da taxa carrega informacao (ex.: casas fora de condominio quase nunca tem
+    # taxa), entao ela vira indicador em vez de ser imputada
+    df["condominio_informado"] = df["monthly_condo"].notna().astype(int)
+    df["iptu_informado"] = df["yearly_iptu"].notna().astype(int)
+
     df["segmento"] = seg.nome
     # em_condominio so faz sentido para casas (CONDOMINIUM = casa em condominio)
     if seg.nome == "casa":
@@ -132,4 +162,4 @@ def limpar_segmento(
     else:
         df["em_condominio"] = pd.NA
 
-    return df[OUTPUT_COLUMNS].reset_index(drop=True), log
+    return df[OUTPUT_COLUMNS].reset_index(drop=True), log, ajustes

@@ -87,7 +87,7 @@ Ordem sugerida do pipeline atual:
 
 | Comando | O que faz |
 |---|---|
-| `python main.py vivareal-prep` | Gera `apartamento.csv`, `casa.csv` e `residencial.csv` em `data/processed/vivareal/` (1 registro por anuncio, limpeza por segmento) e o relatorio `reports/results/vivareal_limpeza.md`. Le o banco original so em modo leitura. |
+| `python main.py vivareal-prep` | Gera `apartamento.csv`, `casa.csv` e `residencial.csv` em `data/processed/vivareal/` (1 registro por anuncio, limpeza por segmento, taxas de condominio/IPTU implausiveis viram ausentes) e o relatorio `reports/results/vivareal_limpeza.md`. Le o banco original so em modo leitura. |
 | `python main.py series-coletar` | Coleta 14 series macro (BCB, IPEA, IBGE) pelas APIs publicas. |
 | `python main.py series-fipezap` | Le o Excel do FipeZAP. |
 | `python main.py series-painel` | Valida as series, testa vazamento temporal e gera os paineis mensal e trimestral. Termina com erro se houver vazamento. |
@@ -137,7 +137,7 @@ resultado atual.
 
 ## Proximos passos
 
-1. ajustar a limpeza do VivaReal (condominio e IPTU implausiveis)
-2. regressao linear multipla por segmento e ARIMA/ARIMAX no FipeZAP
-3. LSTM e comparacao ARIMA x LSTM
-4. geolocalizacao e interpretabilidade dos modelos
+1. regressao linear multipla por segmento (VivaReal) e ARIMA/ARIMAX no FipeZAP
+   (confirmar antes a unidade do IPTU, cuja mediana de R$ 100 a R$ 150 por ano e suspeita)
+2. LSTM e comparacao ARIMA x LSTM
+3. geolocalizacao e interpretabilidade dos modelos

@@ -83,6 +83,8 @@ Observacoes:
    confirmados em fontes) e teste automatico de vazamento temporal.
 6. (feito) Analise exploratoria das series e dos 3 datasets VivaReal (meta 3):
    `docs/ANALISE_EXPLORATORIA.md`.
-7. Proximo: ajustar a limpeza do VivaReal (condominio e IPTU implausiveis),
-   depois ARIMA/ARIMAX e regressao linear multipla (meta 4), com os alvos e
-   cuidados descritos na analise exploratoria.
+7. (feito) Limpeza do VivaReal ajustada: taxas de condominio/IPTU implausiveis viram
+   ausentes e ha indicadores `condominio_informado` e `iptu_informado`.
+8. Proximo: regressao linear multipla por segmento e ARIMA/ARIMAX no FipeZAP
+   (meta 4), com os alvos e cuidados descritos na analise exploratoria. Pendencia:
+   confirmar a unidade do IPTU (mediana de R$ 100 a R$ 150 por ano e suspeita).

@@ -137,8 +137,8 @@ Base: `data/processed/vivareal/{apartamento,casa,residencial}.csv` (3.992,
 3. **Condominio (casas):** casas em condominio custam R$ 6.021/m2 contra R$
    3.840 (mediana, +57%, p < 0,001). A taxa de condominio correlaciona 0,51 com o
    preco, mas isso vem sobretudo de ela ser um **indicador de condominio**: a
-   taxa esta ausente em 47,5% das casas fora de condominio e em so 3,2% das
-   casas em condominio. Entre quem tem taxa positiva, a correlacao cai para
+   taxa esta ausente em 47,8% das casas fora de condominio e em so 3,6% das
+   casas em condominio (numeros apos o ajuste de valores implausiveis, item 8). Entre quem tem taxa positiva, a correlacao cai para
    0,04. Consequencia: a taxa e redundante com `em_condominio`, e o fato de
    estar **ausente** carrega informacao, entao imputar por mediana esconderia
    isso. Para apartamentos a taxa correlaciona 0,19 entre quem tem valor.
@@ -153,21 +153,30 @@ Base: `data/processed/vivareal/{apartamento,casa,residencial}.csv` (3.992,
    apartamento e -0,03 em casa. O tamanho vem mais por suites, banheiros e vagas
    (0,25 a 0,32 em apartamento).
 6. **Sem multicolinearidade entre as variaveis de tamanho:** VIF de 1,4 a 2,6.
-7. **Valores ausentes:** suites 13-16%, IPTU ~30%, condominio 36% nas casas,
-   coordenadas ~52%.
-8. **Valores implausiveis que a limpeza atual nao trata:** taxa de condominio
-   acima de R$ 5.000 (9 apartamentos, 8 casas; maximos de R$ 620 mil e R$ 2,5
-   milhoes), IPTU anual acima de R$ 30.000 (1 e 19; maximo de R$ 1,8 milhao) e
-   alguns valores positivos abaixo de R$ 50. Zeros sao legitimos (imovel sem
-   taxa) e nao devem ser removidos.
+7. **Valores ausentes (apos o ajuste do item 8):** suites 13-16%, IPTU ~35%,
+   condominio 36% nas casas, coordenadas ~52%.
+8. **Valores implausiveis (tratados em `vivareal-prep`):** antes do ajuste havia
+   taxa de condominio acima de R$ 5.000 (9 apartamentos, 8 casas; maximos de R$
+   620 mil e R$ 2,5 milhoes), IPTU anual acima de R$ 30.000 (1 e 19; maximo de
+   R$ 1,8 milhao) e valores positivos abaixo de R$ 50 (condominio: 6 e 23;
+   IPTU: 265 e 313). Agora esses valores viram **ausentes** (nenhuma linha foi
+   removida) e zeros, que significam "sem taxa", foram mantidos. O ajuste
+   mudou pouco os resultados, com uma excecao: o IPTU dos apartamentos perdeu a
+   correlacao com o preco (Spearman 0,053 -> 0,018, p = 0,36), ou seja, ela vinha
+   dos valores absurdos.
+   **Pendencia:** a mediana do "IPTU anual" e de apenas R$ 100 (apartamento) e R$ 150
+   (casa), valor baixo demais para um imposto anual; pode ser mensal ou estar mal
+   preenchido pelos anunciantes. A unidade nao foi confirmada; tratar o IPTU com
+   cautela e confirmar com o orientador antes de usa-lo como variavel.
 9. **Tempo:** 2026-T1 concentra a maioria dos anuncios (1.788 apartamentos e
    3.591 casas). As medianas por trimestre de criacao nao mostram tendencia e
    tem viés de sobrevivencia; nao servem como serie de precos.
 
-## Decisoes para as proximas etapas (a confirmar)
+## Decisoes para as proximas etapas
 
-1. **Ajustar `vivareal-prep`:** tratar condominio > R$ 5.000 e IPTU > R$ 30.000
-   como ausentes (nao remover a linha) e criar indicadores de "taxa informada".
+1. **(feito) Ajuste do `vivareal-prep`:** condominio fora de R$ 50 a R$ 5.000 e IPTU
+   fora de R$ 50 a R$ 30.000 viram ausentes (nao se remove a linha) e as colunas
+   `condominio_informado` e `iptu_informado` indicam se a taxa existe.
 2. **Variaveis de partida por segmento:** area, quartos, banheiros, suites, vagas,
    comodidades, bairro suavizado, `em_condominio` (casas) e, como teste separado,
    coordenadas. Condominio e IPTU entram como teste comparativo (com e sem),
