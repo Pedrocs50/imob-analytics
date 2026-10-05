@@ -20,6 +20,15 @@ data/*
 *.db-wal
 *.sqlite
 
+# Malha completa de setores censitarios do IBGE (estado inteiro, ~335 MB): so o recorte de
+# Jacarei (data/raw/ibge/jacarei_setores_2022.*) e versionado
+data/raw/SP_setores_CD2022/
+*.shp
+*.dbf
+*.shx
+*.gpkg-wal
+*.gpkg-shm
+
 # Modelos serializados: grandes (>100 MB estoura o limite do GitHub) e regeneraveis
 # com `python main.py jacarei-train`
 *.pkl
@@ -231,3 +240,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Arquivos nacionais originais do Censo 2022 (so o recorte de Jacarei, em CSV pequeno, e versionado)
+data/raw/ibge/censo2022_originais/
+
+# Temporarios do CatBoost
+catboost_info/

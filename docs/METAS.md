@@ -21,10 +21,10 @@ Ultima verificacao do repositorio: 2026-09-29.
 | 1 | Mapeamento e coleta de dados publicos | Atingida | Scraper, base VivaReal do orientador, FipeZAP (Excel) e 14 series BCB/IBGE/IPEA coletadas por API. Fontes documentadas em `docs/SERIES_TEMPORAIS.md`. Faltam registros municipais. |
 | 2 | Tratamento, padronizacao e organizacao | Atingida para VivaReal e series temporais | `python main.py vivareal-prep` (3 datasets limpos) e `series-coletar` / `series-fipezap` / `series-painel` (banco `series_temporais.db`, validacao e paineis mensal/trimestral). O fluxo legado (`cleaner.py`) segue separado. |
 | 3 | Estatistica descritiva e exploratoria | Atingida | `python main.py eda-series` e `eda-vivareal`: estacionariedade, autocorrelacao, sazonalidade, correlacao cruzada, Granger e estabilidade por subperiodo (series); distribuicao, ausentes, correlacoes, VIF, bairros, condominio e coordenadas (VivaReal). Leitura em `docs/ANALISE_EXPLORATORIA.md`; relatorios em `reports/results/eda_*.md`; figuras em `reports/figures/eda_*.png`. |
-| 4 | Regressao linear multipla e ARIMA | Nao iniciada | Existe apenas o Random Forest baseline. |
-| 5 | LSTM multivariado | Nao iniciada | - |
-| 6 | Comparacao ARIMA x LSTM (RMSE, MAE, R2) | Nao iniciada | Depende das metas 4 e 5. |
-| 7 | Sensibilidade e relevancia das variaveis | Nao iniciada | O Random Forest pode fornecer importancia de variaveis como ponto de partida. |
+| 4 | Regressao linear multipla e ARIMA | Atingida para precos (demanda nao coberta) | **Regressao linear multipla** por segmento (`reg-linear`; R2 de 0,45-0,49 em apartamento e 0,58-0,63 nos demais; `docs/MODELOS_PRECIFICACAO.md`) e **ARIMA** do FipeZAP (`arima`; walk-forward com benchmarks; `docs/MODELOS_TEMPORAIS.md`). O meta cita "preco e demanda": nao ha serie de demanda no projeto. |
+| 5 | LSTM multivariado | Atingida (univariado/painel; sem preditores macro) | `python main.py lstm`: LSTM e gradient boosting global em painel de 50 cidades, com variantes por semelhanca (`docs/MODELOS_LSTM.md`). O LSTM usa so o crescimento passado das series; nao foi testado com preditores macro. |
+| 6 | Comparacao ARIMA x LSTM (RMSE, MAE, R2) | Atingida com ressalvas | Mesmo walk-forward e Diebold-Mariano: ARIMA melhor no indice nacional; redes menores em SJC aos 6 e 12 meses, sem significancia. Nenhum modelo e uniformemente melhor (`docs/MODELOS_LSTM.md`). |
+| 7 | Sensibilidade e relevancia das variaveis | Parcial | Importancia por permutacao do gradient boosting (`ajuste-gb`; `docs/DIARIO_MODELAGEM.md`, secao 4) e coeficientes da regressao linear. Falta sensibilidade/cenarios formais. |
 | 8 | Visualizacoes interativas | Nao iniciada | Os graficos atuais sao PNGs estaticos. |
 | 9 | Relatorios analiticos automaticos | Nao iniciada | - |
 
@@ -85,6 +85,18 @@ Observacoes:
    `docs/ANALISE_EXPLORATORIA.md`.
 7. (feito) Limpeza do VivaReal ajustada: taxas de condominio/IPTU implausiveis viram
    ausentes e ha indicadores `condominio_informado` e `iptu_informado`.
-8. Proximo: regressao linear multipla por segmento e ARIMA/ARIMAX no FipeZAP
-   (meta 4), com os alvos e cuidados descritos na analise exploratoria. Pendencia:
-   confirmar a unidade do IPTU (mediana de R$ 100 a R$ 150 por ano e suspeita).
+8. (feito) Regressao linear multipla por segmento: `docs/MODELOS_PRECIFICACAO.md`.
+9. (feito) ARIMA do FipeZAP nacional, SJC e preco real: `docs/MODELOS_TEMPORAIS.md`.
+10. (feito) Modelos com latitude e longitude e gradient boosting: `docs/ANALISE_GEOGRAFICA.md`.
+11. (feito) Combinacao, ARIMAX, cidades vizinhas e avaliacao ampliada: `docs/MODELOS_TEMPORAIS.md`
+    (sem ganho significativo no nacional).
+12. (feito) Coordenadas imputadas e setores censitarios do IBGE (mapas estatico e interativo):
+    `docs/ANALISE_GEOGRAFICA.md`.
+13. (feito) Censo 2022 por setor (renda, densidade, domicilios), ajuste de parametros e importancia das
+    variaveis; tudo registrado em `docs/DIARIO_MODELAGEM.md` (evolucao do R2).
+14. (feito) LSTM e modelos globais em painel de 50 cidades com semelhanca: `docs/MODELOS_LSTM.md`.
+15. (feito) Modelos avancados de precificacao (terreno, texto, Optuna, LightGBM/CatBoost, conjunto, intervalos conformais):
+    R2 temporal 0,71 / 0,79 / 0,80 (apartamento / casa / residencial): `docs/MODELOS_AVANCADOS.md`.
+16. (feito) Projecao de preco de Jacarei (precificacao x tendencia do FipeZAP de SJC): `docs/PROJECAO_JACAREI.md`.
+17. Proximo: comando para precificar um imovel; variaveis de qualidade e arquivos de domicilios/entorno do Censo; metas 7 a 9.
+    Pendencia: confirmar a unidade do IPTU (mediana de R$ 100 a R$ 150 por ano e suspeita).

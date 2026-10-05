@@ -23,10 +23,16 @@ src/
   pricing/                  trilha de precificacao
     config.py               limites de limpeza e hiperparametros do baseline
     random_forest.py        baseline atual
+    linear_regression.py    regressao linear multipla por segmento
+    geo.py                  modelos com lat/lon (imputacao, kNN, setor IBGE, gradient boosting) e mapas
+    censo.py                variaveis do Censo 2022 por setor (renda, densidade, domicilios)
+    ajuste.py               ajuste de parametros e importancia das variaveis
+    modelos_avancados.py    LightGBM/CatBoost, Optuna, conjunto e intervalos conformais
+    projecao.py             valor estimado por anuncio x tendencia do FipeZAP
   timeseries/               trilha temporal: catalogo, clientes de API, FipeZAP,
                             banco, validacao e paineis (feito; ver docs/SERIES_TEMPORAIS.md).
-                            arima.py e lstm.py serao criados aqui
-  analysis/                 analise exploratoria: series_eda.py, vivareal_eda.py, utils.py
+                            arima.py, arima_plus.py e lstm_painel.py (feitos)
+  analysis/                 analise exploratoria: series_eda.py, vivareal_eda.py, mapa_setores.py, utils.py
   evaluation/               RMSE, MAE, R2 e comparacao, compartilhados pelas trilhas
 data/
   raw/                      originais, preservados (nunca sobrescrever)

@@ -4,7 +4,7 @@ import os
 
 import pandas as pd
 
-from src.vivareal.cleaning import deduplicar, limpar_segmento, preparar_base
+from src.vivareal.cleaning import adicionar_texto, deduplicar, limpar_segmento, preparar_base
 from src.vivareal.config import VivaRealConfig
 from src.vivareal.loader import carregar_listings
 
@@ -21,6 +21,7 @@ def construir_datasets(config: VivaRealConfig | None = None) -> dict[str, pd.Dat
     base = base[base["usage_type"] == cfg.usage_type]
     n_residencial = len(base)
     base, removidas = deduplicar(base)
+    base = adicionar_texto(base)
     print(f"[VIVAREAL] {n_residencial} residenciais; {removidas} duplicatas removidas por external_id")
 
     datasets: dict[str, pd.DataFrame] = {}

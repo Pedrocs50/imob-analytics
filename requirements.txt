@@ -30,3 +30,9 @@ seaborn==0.13.2
 scikit-learn>=1.6,<2
 openpyxl>=3.1,<4
 statsmodels>=0.14,<1
+geopandas>=1.0,<2
+torch>=2.4
+folium>=0.17
+lightgbm>=4.0
+catboost>=1.2
+optuna>=3.5

@@ -1,14 +1,17 @@
 from __future__ import annotations
 
 import json
+import re
 
 import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
 
 from src.vivareal.config import SegmentoConfig
 
 NUMERIC_COLUMNS = [
     "sale_price",
     "usable_area_m2",
+    "total_area_m2",
     "bedrooms",
     "bathrooms",
     "suites",
@@ -25,9 +28,11 @@ OUTPUT_COLUMNS = [
     "property_type",
     "em_condominio",
     "neighborhood",
+    "street",
     "lat",
     "lon",
     "usable_area_m2",
+    "total_area_m2",
     "bedrooms",
     "bathrooms",
     "suites",
@@ -54,13 +59,33 @@ def _contar_amenidades(valor) -> int:
     return len(itens) if isinstance(itens, list) else 0
 
 
+def _limpar_texto(texto) -> str:
+    """Texto do anuncio sem precos, numeros nem HTML. O preco aparece em 19% dos titulos e 8% das
+    descricoes: usa-lo vazaria o alvo, entao so palavras (4+ letras) sobrevivem."""
+    t = str(texto).lower()
+    t = re.sub(r"<[^>]+>", " ", t)
+    t = re.sub(r"r\$\s*[\d\.,]+", " ", t)
+    return re.sub(r"\d+", " ", t)
+
+
+def adicionar_texto(df: pd.DataFrame, min_df: int = 150, max_features: int = 150) -> pd.DataFrame:
+    """Indicadores de palavras e pares de palavras do titulo e da descricao (colunas `txt_*`). O vocabulario usa so a
+    frequencia das palavras, nunca o preco."""
+    texto = (df["title"].fillna("") + " " + df["description"].fillna("")).map(_limpar_texto)
+    vec = CountVectorizer(min_df=min_df, max_df=0.6, binary=True, ngram_range=(1, 2),
+                          token_pattern=r"(?u)\b[a-zA-ZÀ-ú]{4,}\b", max_features=max_features)
+    matriz = vec.fit_transform(texto).toarray()
+    colunas = ["txt_" + p.replace(" ", "_") for p in vec.get_feature_names_out()]
+    return pd.concat([df.reset_index(drop=True), pd.DataFrame(matriz, columns=colunas)], axis=1)
+
+
 def preparar_base(df: pd.DataFrame) -> pd.DataFrame:
     """Converte tipos e cria colunas derivadas. Nao remove linhas."""
     df = df.copy()
     for col in NUMERIC_COLUMNS:
         df[col] = pd.to_numeric(df[col], errors="coerce")
-    for col in ("property_type", "usage_type", "neighborhood"):
-        df[col] = df[col].astype("string").str.strip()
+    for col in ("property_type", "usage_type", "neighborhood", "street"):
+        df[col] = df[col].astype("string").str.strip().replace("", pd.NA)
 
     # lat/lon = 0 e um valor de preenchimento, nao uma coordenada
     coordenada_invalida = (df["lat"] == 0) & (df["lon"] == 0)
@@ -162,4 +187,6 @@ def limpar_segmento(
     else:
         df["em_condominio"] = pd.NA
 
-    return df[OUTPUT_COLUMNS].reset_index(drop=True), log, ajustes
+    # terreno (area total) e indicadores de texto: informacao do anuncio que antes ficava de fora
+    extras = [c for c in df.columns if c.startswith("txt_")]
+    return df[OUTPUT_COLUMNS + extras].reset_index(drop=True), log, ajustes

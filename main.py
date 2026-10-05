@@ -21,6 +21,15 @@ Uso:
     python main.py series-painel
     python main.py eda-series
     python main.py eda-vivareal
+    python main.py reg-linear
+    python main.py arima
+    python main.py reg-geo
+    python main.py arima-plus
+    python main.py mapa-setores
+    python main.py ajuste-gb
+    python main.py lstm
+    python main.py modelos-avancados
+    python main.py projecao
     python main.py all
 """
 
@@ -222,6 +231,69 @@ def cmd_eda_vivareal():
     print("[EDA] vivareal: relatorio em reports/results/eda_vivareal.md; tabelas em reports/results/eda/; figuras em reports/figures/")
 
 
+def cmd_reg_linear():
+    from src.pricing.linear_regression import executar
+
+    executar()
+    print("[REGRESSAO] relatorio em reports/results/regressao_linear.md; figuras em reports/figures/")
+
+
+def cmd_arima():
+    from src.timeseries.arima import executar
+
+    executar()
+    print("[ARIMA] relatorio em reports/results/arima.md; figuras em reports/figures/")
+
+
+def cmd_reg_geo():
+    from src.pricing.geo import executar
+
+    executar()
+    print("[GEO] relatorio em reports/results/regressao_geo.md; mapas em reports/figures/")
+
+
+def cmd_arima_plus():
+    from src.timeseries.arima_plus import executar
+
+    executar()
+    print("[ARIMA+] relatorio em reports/results/arima_plus.md")
+
+
+def cmd_mapa_setores():
+    from src.analysis.mapa_setores import executar
+
+    executar()
+    print("[MAPA] relatorio em reports/results/mapa_setores.md; mapa interativo em reports/figures/mapa_setores_interativo.html")
+
+
+def cmd_ajuste_gb():
+    from src.pricing.ajuste import executar
+
+    executar()
+    print("[AJUSTE] relatorio em reports/results/ajuste_gradient_boosting.md")
+
+
+def cmd_lstm():
+    from src.timeseries.lstm_painel import executar
+
+    executar()
+    print("[LSTM] relatorio em reports/results/lstm.md")
+
+
+def cmd_modelos_avancados():
+    from src.pricing.modelos_avancados import executar
+
+    executar()
+    print("[AVANCADOS] relatorio em reports/results/modelos_avancados.md")
+
+
+def cmd_projecao():
+    from src.pricing.projecao import executar
+
+    executar()
+    print("[PROJECAO] relatorio em reports/results/projecao_jacarei.md")
+
+
 COMANDOS = {
     "scrape": cmd_scrape,
     "clean": cmd_clean,
@@ -233,6 +305,15 @@ COMANDOS = {
     "series-painel": cmd_series_painel,
     "eda-series": cmd_eda_series,
     "eda-vivareal": cmd_eda_vivareal,
+    "reg-linear": cmd_reg_linear,
+    "arima": cmd_arima,
+    "reg-geo": cmd_reg_geo,
+    "arima-plus": cmd_arima_plus,
+    "mapa-setores": cmd_mapa_setores,
+    "ajuste-gb": cmd_ajuste_gb,
+    "lstm": cmd_lstm,
+    "modelos-avancados": cmd_modelos_avancados,
+    "projecao": cmd_projecao,
     "all": cmd_all,
 }
 

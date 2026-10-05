@@ -1,0 +1,7 @@
+periodo,h (meses),modelo,n,MAPE (%)
+origens de 2020 em diante,3,"ARIMA(0,2,3)",42,1.192514331797855
+origens de 2020 em diante,3,Tendencia (12 meses),42,1.2644963030536753
+origens de 2020 em diante,3,Combinacao ARIMA + tendencia,42,1.1046372811086904
+origens de 2020 em diante,12,"ARIMA(0,2,3)",33,5.455278022400107
+origens de 2020 em diante,12,Tendencia (12 meses),33,3.446461710302434
+origens de 2020 em diante,12,Combinacao ARIMA + tendencia,33,3.7898203239445705

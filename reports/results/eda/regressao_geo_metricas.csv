@@ -1,0 +1,406 @@
+segmento,modelo,validacao,subconjunto,n teste,RMSE,MAE,MAPE (%),R2
+apartamento,OLS base (sem coordenadas),holdout aleatorio (20%),todos os anuncios,799,1351.8060970508816,1031.2435536250293,17.719926761463512,0.43902600967656236
+apartamento,OLS base (sem coordenadas),holdout aleatorio (20%),so com coordenadas reais,386,1360.4649896069473,1033.7324430118344,17.583402952751694,0.488300336462265
+apartamento,OLS base (sem coordenadas),holdout aleatorio (20%),so sem coordenadas reais,413,1343.6628358106414,1028.9173761351824,17.847525284860026,0.3809337863186819
+apartamento,OLS base (sem coordenadas),5-fold,todos os anuncios,3992,1314.850407024954,1016.396660993848,17.270936886519635,0.4759911962626028
+apartamento,OLS base (sem coordenadas),5-fold,so com coordenadas reais,1907,1315.6255977588032,1012.6431384623687,17.442438438928054,0.5021868682119489
+apartamento,OLS base (sem coordenadas),5-fold,so sem coordenadas reais,2085,1314.1409952622148,1019.829738915925,17.114076713645364,0.4494139822422003
+apartamento,OLS base (sem coordenadas),temporal (teste apos 2026-03-01),todos os anuncios,998,1311.0653382531393,1012.3742162519146,16.995829292891727,0.4877431077421357
+apartamento,OLS base (sem coordenadas),temporal (teste apos 2026-03-01),so com coordenadas reais,632,1364.3127265618753,1056.5321540813625,17.42549409127057,0.4851016894982504
+apartamento,OLS base (sem coordenadas),temporal (teste apos 2026-03-01),so sem coordenadas reais,366,1213.6314022846605,936.1233509289342,16.253894449789467,0.49331367717199726
+apartamento,"OLS + vizinhos (kNN, so coord. reais)",holdout aleatorio (20%),todos os anuncios,799,1223.5961443443462,919.9900951482742,15.724445901604625,0.5403893078083511
+apartamento,"OLS + vizinhos (kNN, so coord. reais)",holdout aleatorio (20%),so com coordenadas reais,386,1093.670495345428,815.0483794379586,13.34159368752674,0.6693158469062377
+apartamento,"OLS + vizinhos (kNN, so coord. reais)",holdout aleatorio (20%),so sem coordenadas reais,413,1333.633082625136,1018.0712144320073,17.95151843098493,0.3901413157103809
+apartamento,"OLS + vizinhos (kNN, so coord. reais)",5-fold,todos os anuncios,3992,1204.9203134063102,914.2534029277,15.396204009455804,0.5599494730370047
+apartamento,"OLS + vizinhos (kNN, so coord. reais)",5-fold,so com coordenadas reais,1907,1087.2487514791956,820.5603662878427,13.685830698646848,0.6600151584024069
+apartamento,"OLS + vizinhos (kNN, so coord. reais)",5-fold,so sem coordenadas reais,2085,1303.2763921120631,999.9477055042987,16.9605598385746,0.45848024082800365
+apartamento,"OLS + vizinhos (kNN, so coord. reais)",temporal (teste apos 2026-03-01),todos os anuncios,998,1186.7160737644585,884.8835193965652,14.56554754728126,0.5803059728929463
+apartamento,"OLS + vizinhos (kNN, so coord. reais)",temporal (teste apos 2026-03-01),so com coordenadas reais,632,1179.3070883801406,868.0607030821155,13.719582097866276,0.6152776436764663
+apartamento,"OLS + vizinhos (kNN, so coord. reais)",temporal (teste apos 2026-03-01),so sem coordenadas reais,366,1199.4019886871013,913.9327541253417,16.02634034517817,0.5051254722994298
+apartamento,OLS + vizinhos (coord. imputadas),holdout aleatorio (20%),todos os anuncios,799,1250.0151297311693,942.9692132433195,16.030778988117323,0.5203278952100995
+apartamento,OLS + vizinhos (coord. imputadas),holdout aleatorio (20%),so com coordenadas reais,386,1113.2266917874174,835.0252579103008,13.621508277178304,0.6573840216750164
+apartamento,OLS + vizinhos (coord. imputadas),holdout aleatorio (20%),so sem coordenadas reais,413,1365.5286484308267,1043.8562998257532,18.28254289713054,0.36062135939390116
+apartamento,OLS + vizinhos (coord. imputadas),5-fold,todos os anuncios,3992,1213.8973245750433,923.8766464524515,15.583575303481709,0.5533680351712889
+apartamento,OLS + vizinhos (coord. imputadas),5-fold,so com coordenadas reais,1907,1107.3054239416472,843.2245742553295,14.113242302594026,0.6473559395593704
+apartamento,OLS + vizinhos (coord. imputadas),5-fold,so sem coordenadas reais,2085,1303.78117031093,997.6433139248309,16.92838347263893,0.45806068238886166
+apartamento,OLS + vizinhos (coord. imputadas),temporal (teste apos 2026-03-01),todos os anuncios,998,1196.7387187794789,897.1496820295406,14.88401167490184,0.5731868185814649
+apartamento,OLS + vizinhos (coord. imputadas),temporal (teste apos 2026-03-01),so com coordenadas reais,632,1206.42165318139,890.7845664202281,14.25828810651502,0.5973832368368682
+apartamento,OLS + vizinhos (coord. imputadas),temporal (teste apos 2026-03-01),so sem coordenadas reais,366,1179.8313857678183,908.1408106226702,15.964496088072524,0.5211434180949344
+apartamento,Gradient boosting sem coordenadas,holdout aleatorio (20%),todos os anuncios,799,1102.0271099306988,811.8973208797754,13.759564231484243,0.6271806195737488
+apartamento,Gradient boosting sem coordenadas,holdout aleatorio (20%),so com coordenadas reais,386,1107.9309975186109,814.1513076863201,13.60659775897174,0.6606359629009589
+apartamento,Gradient boosting sem coordenadas,holdout aleatorio (20%),so sem coordenadas reais,413,1096.4804516545203,809.7906891429078,13.90253047455888,0.5877522644753603
+apartamento,Gradient boosting sem coordenadas,5-fold,todos os anuncios,3992,1070.6417986443787,799.0885508049117,13.354687434578521,0.6525644272448032
+apartamento,Gradient boosting sem coordenadas,5-fold,so com coordenadas reais,1907,1082.4804794106606,796.7151469966885,13.44580077690354,0.6629907154865153
+apartamento,Gradient boosting sem coordenadas,5-fold,so sem coordenadas reais,2085,1059.698008525033,801.2593330889795,13.27135259342082,0.6419814844817648
+apartamento,Gradient boosting sem coordenadas,temporal (teste apos 2026-03-01),todos os anuncios,998,1129.0394344086833,829.9009398467011,13.500551691978876,0.6201104379862478
+apartamento,Gradient boosting sem coordenadas,temporal (teste apos 2026-03-01),so com coordenadas reais,632,1179.0190714217085,858.253315886613,13.751237494750345,0.6154655388109944
+apartamento,Gradient boosting sem coordenadas,temporal (teste apos 2026-03-01),so sem coordenadas reais,366,1037.080616179312,780.942738597454,13.067673475171313,0.630009472680715
+apartamento,Gradient boosting com lat/lon reais,holdout aleatorio (20%),todos os anuncios,799,1050.5976897450767,777.3023766390809,13.187499479487416,0.6611661373755138
+apartamento,Gradient boosting com lat/lon reais,holdout aleatorio (20%),so com coordenadas reais,386,1009.6991253660165,740.1681365553253,12.25778083866508,0.7181459034304467
+apartamento,Gradient boosting com lat/lon reais,holdout aleatorio (20%),so sem coordenadas reais,413,1087.432736590289,812.0089545381842,14.05643748277415,0.5945275995482979
+apartamento,Gradient boosting com lat/lon reais,5-fold,todos os anuncios,3992,1028.3384167170823,772.2636976508521,12.841513267462423,0.6794778743649212
+apartamento,Gradient boosting com lat/lon reais,5-fold,so com coordenadas reais,1907,975.1706818388545,718.4812542109698,11.865362751793706,0.7264964354873206
+apartamento,Gradient boosting com lat/lon reais,5-fold,so sem coordenadas reais,2085,1074.666446811157,821.4546423222457,13.73432815157765,0.6317958913985857
+apartamento,Gradient boosting com lat/lon reais,temporal (teste apos 2026-03-01),todos os anuncios,998,1047.1353345192204,766.5168563712177,12.429218086370208,0.6732280511128153
+apartamento,Gradient boosting com lat/lon reais,temporal (teste apos 2026-03-01),so com coordenadas reais,632,1047.6161866212115,749.60904381985,11.774734323008737,0.6964026291538632
+apartamento,Gradient boosting com lat/lon reais,temporal (teste apos 2026-03-01),so sem coordenadas reais,366,1046.3044904111448,795.712860558279,13.559364912721158,0.6233987566964122
+apartamento,Gradient boosting com lat/lon imputadas,holdout aleatorio (20%),todos os anuncios,799,1036.9793939096478,767.4475821849322,12.976991632516462,0.669893423383861
+apartamento,Gradient boosting com lat/lon imputadas,holdout aleatorio (20%),so com coordenadas reais,386,999.7904712949547,732.6062040934663,12.114397744876431,0.7236506942441396
+apartamento,Gradient boosting com lat/lon imputadas,holdout aleatorio (20%),so sem coordenadas reais,413,1070.5697874923997,800.0111946384575,13.783193183676392,0.6070055130116885
+apartamento,Gradient boosting com lat/lon imputadas,5-fold,todos os anuncios,3992,1008.5585246581337,750.7212824788626,12.454982526090088,0.6916896514075195
+apartamento,Gradient boosting com lat/lon imputadas,5-fold,so com coordenadas reais,1907,972.7727276537539,710.2713027975587,11.771618235371784,0.7278398775325099
+apartamento,Gradient boosting com lat/lon imputadas,5-fold,so sem coordenadas reais,2085,1040.211834964457,787.7179785231056,13.080006843787833,0.6550272169141605
+apartamento,Gradient boosting com lat/lon imputadas,temporal (teste apos 2026-03-01),todos os anuncios,998,1035.5746537422938,759.672380967236,12.325896370371355,0.6804035375523045
+apartamento,Gradient boosting com lat/lon imputadas,temporal (teste apos 2026-03-01),so com coordenadas reais,632,1056.7073479901605,761.8343741575393,12.003469981851179,0.6911105603118473
+apartamento,Gradient boosting com lat/lon imputadas,temporal (teste apos 2026-03-01),so sem coordenadas reais,366,998.0303125580418,755.9391031085703,12.882654505739533,0.657348186102106
+apartamento,Gradient boosting + setor IBGE,holdout aleatorio (20%),todos os anuncios,799,1023.7254190265695,765.5492916361645,12.937826912324407,0.6782778979647652
+apartamento,Gradient boosting + setor IBGE,holdout aleatorio (20%),so com coordenadas reais,386,992.4158611466542,737.815423761559,12.230995746401232,0.727712449715791
+apartamento,Gradient boosting + setor IBGE,holdout aleatorio (20%),so sem coordenadas reais,413,1052.1461128996825,791.47004950444,13.598448776843405,0.620415384608234
+apartamento,Gradient boosting + setor IBGE,5-fold,todos os anuncios,3992,1006.9583434726933,748.95758741475,12.416940858252914,0.6926672070575337
+apartamento,Gradient boosting + setor IBGE,5-fold,so com coordenadas reais,1907,967.0558594931667,710.7164013622009,11.764374988199272,0.731029382266272
+apartamento,Gradient boosting + setor IBGE,5-fold,so sem coordenadas reais,2085,1042.1173692726506,783.934058303101,13.013796068896696,0.6537621677220167
+apartamento,Gradient boosting + setor IBGE,temporal (teste apos 2026-03-01),todos os anuncios,998,1034.274409528534,753.2431851404153,12.202009787606718,0.6812055899581984
+apartamento,Gradient boosting + setor IBGE,temporal (teste apos 2026-03-01),so com coordenadas reais,632,1053.263305274173,748.4928569724862,11.761479043141376,0.6931207569871787
+apartamento,Gradient boosting + setor IBGE,temporal (teste apos 2026-03-01),so sem coordenadas reais,366,1000.6368437551176,761.445937605255,12.962707685153427,0.6555560583126507
+apartamento,Gradient boosting imputadas + vizinhos,holdout aleatorio (20%),todos os anuncios,799,1016.3919928113025,752.4439313552982,12.658738457751628,0.6828706818803343
+apartamento,Gradient boosting imputadas + vizinhos,holdout aleatorio (20%),so com coordenadas reais,386,951.1631547445305,698.0609280867534,11.267409262036248,0.749878843219415
+apartamento,Gradient boosting imputadas + vizinhos,holdout aleatorio (20%),so sem coordenadas reais,413,1073.780082449868,803.2716293254152,13.959109086192637,0.6046450506792553
+apartamento,Gradient boosting imputadas + vizinhos,5-fold,todos os anuncios,3992,1011.0035885089577,750.5368721026242,12.478978580554507,0.6901929563902021
+apartamento,Gradient boosting imputadas + vizinhos,5-fold,so com coordenadas reais,1907,953.0574051675494,700.9751279292171,11.560453361910486,0.7387599012579932
+apartamento,Gradient boosting imputadas + vizinhos,5-fold,so sem coordenadas reais,2085,1061.2360504276533,795.8674457902441,13.319087737367047,0.6409414767092876
+apartamento,Gradient boosting imputadas + vizinhos,temporal (teste apos 2026-03-01),todos os anuncios,998,1026.4978468305953,745.8189440553941,12.042499869056284,0.6859815074535867
+apartamento,Gradient boosting imputadas + vizinhos,temporal (teste apos 2026-03-01),so com coordenadas reais,632,1046.2298207860233,741.2304151398754,11.547516644660794,0.6972056303490235
+apartamento,Gradient boosting imputadas + vizinhos,temporal (teste apos 2026-03-01),so sem coordenadas reais,366,991.5010868809543,753.7423054614267,12.897224999706422,0.6618168536778748
+apartamento,Gradient boosting imputadas + vizinhos + setor,holdout aleatorio (20%),todos os anuncios,799,1015.1528489812708,757.7978488351719,12.734274970034882,0.6836434728799207
+apartamento,Gradient boosting imputadas + vizinhos + setor,holdout aleatorio (20%),so com coordenadas reais,386,956.6562991391534,706.4683545104232,11.391842397915465,0.7469815084419477
+apartamento,Gradient boosting imputadas + vizinhos + setor,holdout aleatorio (20%),so sem coordenadas reais,413,1066.9295608882555,805.7716619328788,13.98894560644674,0.6096735442020187
+apartamento,Gradient boosting imputadas + vizinhos + setor,5-fold,todos os anuncios,3992,1005.6099691446334,746.5239654318884,12.365932252947237,0.6934897280655652
+apartamento,Gradient boosting imputadas + vizinhos + setor,5-fold,so com coordenadas reais,1907,959.1130665714699,706.8962843223547,11.632386414537148,0.7354295510067765
+apartamento,Gradient boosting imputadas + vizinhos + setor,5-fold,so sem coordenadas reais,2085,1046.3297466592394,782.7685639335098,13.036854034169318,0.6509574316099103
+apartamento,Gradient boosting imputadas + vizinhos + setor,temporal (teste apos 2026-03-01),todos os anuncios,998,1012.1364374231672,734.6319417541679,11.849293199781918,0.6947067101629363
+apartamento,Gradient boosting imputadas + vizinhos + setor,temporal (teste apos 2026-03-01),so com coordenadas reais,632,1031.0255021805087,730.8185118504839,11.361571099194828,0.7059423912053127
+apartamento,Gradient boosting imputadas + vizinhos + setor,temporal (teste apos 2026-03-01),so sem coordenadas reais,366,978.6613210726609,741.216880822824,12.691479996424107,0.6705189663427805
+apartamento,OLS + vizinhos + Censo,holdout aleatorio (20%),todos os anuncios,799,1252.3796267790724,942.2821903544713,16.060299030276013,0.5185115076401339
+apartamento,OLS + vizinhos + Censo,holdout aleatorio (20%),so com coordenadas reais,386,1119.819480761766,835.1831512264865,13.744010132180426,0.6533139011562156
+apartamento,OLS + vizinhos + Censo,holdout aleatorio (20%),so sem coordenadas reais,413,1364.6816234643095,1042.3795973845008,18.225159840602643,0.3614143148648967
+apartamento,OLS + vizinhos + Censo,5-fold,todos os anuncios,3992,1211.6405647670952,919.4280417420637,15.520644227931104,0.5550271608877693
+apartamento,OLS + vizinhos + Censo,5-fold,so com coordenadas reais,1907,1105.7974331900034,837.8987656037439,14.056064145502651,0.6483157865241219
+apartamento,OLS + vizinhos + Censo,5-fold,so sem coordenadas reais,2085,1300.9294231495835,993.9970247616204,16.860190615073098,0.4604288462282683
+apartamento,OLS + vizinhos + Censo,temporal (teste apos 2026-03-01),todos os anuncios,998,1193.9936323524562,894.5200611881057,14.816345363238245,0.5751426261382344
+apartamento,OLS + vizinhos + Censo,temporal (teste apos 2026-03-01),so com coordenadas reais,632,1208.0540733997022,892.0557093942942,14.243262496292388,0.596292930804559
+apartamento,OLS + vizinhos + Censo,temporal (teste apos 2026-03-01),so sem coordenadas reais,366,1169.3164335165288,898.7754446134853,15.80593107883874,0.5296407625094224
+apartamento,Gradient boosting + Censo,holdout aleatorio (20%),todos os anuncios,799,1040.582495846973,777.2922838625063,13.079958458120394,0.6675954529164096
+apartamento,Gradient boosting + Censo,holdout aleatorio (20%),so com coordenadas reais,386,1010.5234863160239,747.9840164314082,12.237861436634196,0.7176854804094852
+apartamento,Gradient boosting + Censo,holdout aleatorio (20%),so sem coordenadas reais,413,1067.911738867857,804.6845144397555,13.867003131954956,0.6089545716993907
+apartamento,Gradient boosting + Censo,5-fold,todos os anuncios,3992,1000.8408011050002,747.7475041588482,12.411875063189619,0.6963901222561517
+apartamento,Gradient boosting + Censo,5-fold,so com coordenadas reais,1907,949.5432554240891,699.9607208925213,11.50777977770496,0.7406828584917244
+apartamento,Gradient boosting + Censo,5-fold,so sem coordenadas reais,2085,1045.5576467986932,791.4546483741408,13.238786194805563,0.6514723673404509
+apartamento,Gradient boosting + Censo,temporal (teste apos 2026-03-01),todos os anuncios,998,1028.0285198185013,750.4148501071585,12.12749448693154,0.6850443053035015
+apartamento,Gradient boosting + Censo,temporal (teste apos 2026-03-01),so com coordenadas reais,632,1049.0447033473542,748.2637677769708,11.676859189734927,0.6955741012679919
+apartamento,Gradient boosting + Censo,temporal (teste apos 2026-03-01),so sem coordenadas reais,366,990.6892302540505,754.1292873549144,12.90564068318362,0.6623704462590813
+apartamento,Gradient boosting imputadas + vizinhos + Censo,holdout aleatorio (20%),todos os anuncios,799,1024.2833596805604,755.8599601737627,12.715347507570526,0.6779271188362406
+apartamento,Gradient boosting imputadas + vizinhos + Censo,holdout aleatorio (20%),so com coordenadas reais,386,966.3203097010619,705.5116691065481,11.36554327543611,0.741843772392309
+apartamento,Gradient boosting imputadas + vizinhos + Censo,holdout aleatorio (20%),so sem coordenadas reais,413,1075.6369104063144,802.9167164738714,13.976907879492767,0.6032765379660912
+apartamento,Gradient boosting imputadas + vizinhos + Censo,5-fold,todos os anuncios,3992,1008.5031487666974,749.0569149652358,12.45463397557191,0.6917235066400542
+apartamento,Gradient boosting imputadas + vizinhos + Censo,5-fold,so com coordenadas reais,1907,953.2451721174347,698.8651750093968,11.508384892441068,0.7386569544925905
+apartamento,Gradient boosting imputadas + vizinhos + Censo,5-fold,so sem coordenadas reais,2085,1056.5161427695937,794.9637006226865,13.32010016335633,0.6441282406426992
+apartamento,Gradient boosting imputadas + vizinhos + Censo,temporal (teste apos 2026-03-01),todos os anuncios,998,1026.2591819008835,747.975448231572,12.112431948104534,0.6861275116349903
+apartamento,Gradient boosting imputadas + vizinhos + Censo,temporal (teste apos 2026-03-01),so com coordenadas reais,632,1051.6448243265395,747.3606018749621,11.691395656331872,0.6940631549594038
+apartamento,Gradient boosting imputadas + vizinhos + Censo,temporal (teste apos 2026-03-01),so sem coordenadas reais,366,980.8783449940852,749.0371501369752,12.839467293460613,0.6690244866803041
+apartamento,Gradient boosting imputadas + vizinhos + setor + Censo,holdout aleatorio (20%),todos os anuncios,799,1016.8516295692237,750.8505294569104,12.594155963048609,0.6825837901068804
+apartamento,Gradient boosting imputadas + vizinhos + setor + Censo,holdout aleatorio (20%),so com coordenadas reais,386,957.1800985636418,698.706393110501,11.239609024767175,0.7467043614189004
+apartamento,Gradient boosting imputadas + vizinhos + setor + Censo,holdout aleatorio (20%),so sem coordenadas reais,413,1069.6167288382549,799.5857271075496,13.860148985268058,0.6077049164207938
+apartamento,Gradient boosting imputadas + vizinhos + setor + Censo,5-fold,todos os anuncios,3992,1002.4916494999072,741.6017090496034,12.270744157840557,0.6953877105932725
+apartamento,Gradient boosting imputadas + vizinhos + setor + Censo,5-fold,so com coordenadas reais,1907,953.6868383217112,695.5113611338301,11.408505021208816,0.7384147227257757
+apartamento,Gradient boosting imputadas + vizinhos + setor + Censo,5-fold,so sem coordenadas reais,2085,1045.136313552264,783.7572454886346,13.059372471297022,0.651753206358219
+apartamento,Gradient boosting imputadas + vizinhos + setor + Censo,temporal (teste apos 2026-03-01),todos os anuncios,998,1018.3717160791016,735.358528811752,11.851043298672788,0.6909335977564907
+apartamento,Gradient boosting imputadas + vizinhos + setor + Censo,temporal (teste apos 2026-03-01),so com coordenadas reais,632,1042.2690935128278,734.2733681100582,11.400554025413928,0.6994938768074869
+apartamento,Gradient boosting imputadas + vizinhos + setor + Censo,temporal (teste apos 2026-03-01),so sem coordenadas reais,366,975.7293427417015,737.2323582201411,12.628937344300114,0.6724901981887065
+apartamento,GB completo + terreno e texto (sem vizinhos),holdout aleatorio (20%),todos os anuncios,799,994.921686401046,744.5225556824578,12.670656992335246,0.6961272764248589
+apartamento,GB completo + terreno e texto (sem vizinhos),holdout aleatorio (20%),so com coordenadas reais,386,926.1959053191634,705.5633135213661,11.688087949909189,0.7628374536515945
+apartamento,GB completo + terreno e texto (sem vizinhos),holdout aleatorio (20%),so sem coordenadas reais,413,1055.1151348685407,780.9348255957299,13.588990286224977,0.6182700833684641
+apartamento,GB completo + terreno e texto (sem vizinhos),5-fold,todos os anuncios,3992,998.1619219864795,740.6791792917165,12.341533122212443,0.6980132488593558
+apartamento,GB completo + terreno e texto (sem vizinhos),5-fold,so com coordenadas reais,1907,954.7831243146488,704.2561778877173,11.71889472157041,0.7378129799109989
+apartamento,GB completo + terreno e texto (sem vizinhos),5-fold,so sem coordenadas reais,2085,1036.2486412713658,773.9926870506741,12.911015822463934,0.6576508930090879
+apartamento,GB completo + terreno e texto (sem vizinhos),temporal (teste apos 2026-03-01),todos os anuncios,998,1037.3383215810027,762.8478973548653,12.403045805920046,0.6793140130428812
+apartamento,GB completo + terreno e texto (sem vizinhos),temporal (teste apos 2026-03-01),so com coordenadas reais,632,1071.8881590227468,780.6402896356681,12.304704645584422,0.6821717088302198
+apartamento,GB completo + terreno e texto (sem vizinhos),temporal (teste apos 2026-03-01),so sem coordenadas reais,366,974.799827213028,732.124422159599,12.572858957100689,0.6731138966465251
+apartamento,GB completo + terreno e texto,holdout aleatorio (20%),todos os anuncios,799,1000.2316556639776,735.4395482798396,12.436637733478651,0.6928750392412728
+apartamento,GB completo + terreno e texto,holdout aleatorio (20%),so com coordenadas reais,386,907.8499039214853,666.3922936954702,10.781947433329501,0.7721397890151005
+apartamento,GB completo + terreno e texto,holdout aleatorio (20%),so sem coordenadas reais,413,1079.4496060554206,799.9728176976764,13.983152154441294,0.6004591066304834
+apartamento,GB completo + terreno e texto,5-fold,todos os anuncios,3992,993.8064958359477,737.8385940432702,12.25940249982159,0.7006429052006712
+apartamento,GB completo + terreno e texto,5-fold,so com coordenadas reais,1907,932.7493708514581,691.3755153339449,11.402818449332852,0.7497744522913415
+apartamento,GB completo + terreno e texto,5-fold,so sem coordenadas reais,2085,1046.5366899164585,780.3350406133823,13.042858511467639,0.6508193505713659
+apartamento,GB completo + terreno e texto,temporal (teste apos 2026-03-01),todos os anuncios,998,1014.9601917984601,738.637516210898,12.069791523743923,0.6930008614691354
+apartamento,GB completo + terreno e texto,temporal (teste apos 2026-03-01),so com coordenadas reais,632,1037.0825579801367,741.358266996118,11.640071921121553,0.7024771903899387
+apartamento,GB completo + terreno e texto,temporal (teste apos 2026-03-01),so sem coordenadas reais,366,975.5795193627081,733.9393891719387,12.811821001496215,0.6725907688198527
+casa,OLS base (sem coordenadas),holdout aleatorio (20%),todos os anuncios,2051,1210.89172292322,910.3564252130101,22.45235257646264,0.6105118365256441
+casa,OLS base (sem coordenadas),holdout aleatorio (20%),so com coordenadas reais,987,1215.7032824484193,895.7990005602649,21.61952082529465,0.6035701273209753
+casa,OLS base (sem coordenadas),holdout aleatorio (20%),so sem coordenadas reais,1064,1206.4112113050562,923.8603520290436,23.224913608796108,0.616790852543299
+casa,OLS base (sem coordenadas),5-fold,todos os anuncios,10254,1236.3526868960485,940.4491980076644,23.16882720393771,0.5970010914658727
+casa,OLS base (sem coordenadas),5-fold,so com coordenadas reais,4973,1222.0591200882952,920.8040413094573,22.429276652441672,0.6039731627645496
+casa,OLS base (sem coordenadas),5-fold,so sem coordenadas reais,5281,1249.6631647490535,958.9486042300056,23.86524547558887,0.5904984587693931
+casa,OLS base (sem coordenadas),temporal (teste apos 2026-02-26),todos os anuncios,2564,1305.3616284602376,971.6856098566193,22.255253336602156,0.5829126202318238
+casa,OLS base (sem coordenadas),temporal (teste apos 2026-02-26),so com coordenadas reais,1675,1310.0892331968873,963.720458234973,22.561327152401027,0.5688761794927324
+casa,OLS base (sem coordenadas),temporal (teste apos 2026-02-26),so sem coordenadas reais,889,1296.407320054188,986.6930665115776,21.67856757567627,0.5954433568148156
+casa,"OLS + vizinhos (kNN, so coord. reais)",holdout aleatorio (20%),todos os anuncios,2051,1176.5586171020584,885.6990329260107,21.819584512216363,0.6322854787155902
+casa,"OLS + vizinhos (kNN, so coord. reais)",holdout aleatorio (20%),so com coordenadas reais,987,1154.2332083063066,852.0434674065724,20.69169101354142,0.64264626573779
+casa,"OLS + vizinhos (kNN, so coord. reais)",holdout aleatorio (20%),so sem coordenadas reais,1064,1196.896112994065,916.9189983091737,22.86585413927667,0.6228118400807598
+casa,"OLS + vizinhos (kNN, so coord. reais)",5-fold,todos os anuncios,10254,1197.5974696015573,908.0834973258268,22.386740925477557,0.6218702432215346
+casa,"OLS + vizinhos (kNN, so coord. reais)",5-fold,so com coordenadas reais,4973,1160.680846039484,873.4914331537698,21.55340885114705,0.642755279190655
+casa,"OLS + vizinhos (kNN, so coord. reais)",5-fold,so sem coordenadas reais,5281,1231.3496062310182,940.6580731879058,23.171471167031346,0.6024128359194008
+casa,"OLS + vizinhos (kNN, so coord. reais)",temporal (teste apos 2026-02-26),todos os anuncios,2564,1260.7984829976394,933.0262554134282,21.39624835903195,0.6109040416156699
+casa,"OLS + vizinhos (kNN, so coord. reais)",temporal (teste apos 2026-02-26),so com coordenadas reais,1675,1252.061286221557,913.873855241727,21.514734478609128,0.6062220089469121
+casa,"OLS + vizinhos (kNN, so coord. reais)",temporal (teste apos 2026-02-26),so sem coordenadas reais,889,1277.0981783068307,969.1120487628096,21.173003983000715,0.6074048241627054
+casa,OLS + vizinhos (coord. imputadas),holdout aleatorio (20%),todos os anuncios,2051,1184.124878208301,892.7472891661079,22.05268084512146,0.6275408445596242
+casa,OLS + vizinhos (coord. imputadas),holdout aleatorio (20%),so com coordenadas reais,987,1162.4050736847153,856.9004662826953,20.860561306062653,0.6375682899405076
+casa,OLS + vizinhos (coord. imputadas),holdout aleatorio (20%),so sem coordenadas reais,1064,1203.9225712938496,925.9999340776945,23.158528575432587,0.6183702244382646
+casa,OLS + vizinhos (coord. imputadas),5-fold,todos os anuncios,10254,1202.7980971866323,912.3452789152371,22.56157135569906,0.6185790173583023
+casa,OLS + vizinhos (coord. imputadas),5-fold,so com coordenadas reais,4973,1168.3811245829943,879.1970719605349,21.73569822118247,0.6379994344966337
+casa,OLS + vizinhos (coord. imputadas),5-fold,so sem coordenadas reais,5281,1234.330774313159,943.5602066156223,23.339277679870804,0.6004853427593495
+casa,OLS + vizinhos (coord. imputadas),temporal (teste apos 2026-02-26),todos os anuncios,2564,1265.540230474738,937.9538171638636,21.578631395824175,0.6079718296372567
+casa,OLS + vizinhos (coord. imputadas),temporal (teste apos 2026-02-26),so com coordenadas reais,1675,1263.8701211454306,925.7176016381054,21.853652373956262,0.598759134890144
+casa,OLS + vizinhos (coord. imputadas),temporal (teste apos 2026-02-26),so sem coordenadas reais,889,1268.6809758087463,961.0085539531153,21.06045351239196,0.6125628663432466
+casa,Gradient boosting sem coordenadas,holdout aleatorio (20%),todos os anuncios,2051,1018.7101697150272,752.4560354382675,18.779660427875637,0.7243329071245774
+casa,Gradient boosting sem coordenadas,holdout aleatorio (20%),so com coordenadas reais,987,1019.5599497225417,736.2207526559057,18.12588716720551,0.721171778393428
+casa,Gradient boosting sem coordenadas,holdout aleatorio (20%),so sem coordenadas reais,1064,1017.9212526835261,767.5163964403268,19.38612114994463,0.7271816976009102
+casa,Gradient boosting sem coordenadas,5-fold,todos os anuncios,10254,1013.3104549245855,747.5047123218282,18.524957520307908,0.7292900846805037
+casa,Gradient boosting sem coordenadas,5-fold,so com coordenadas reais,4973,999.4344776623365,734.8010273528763,18.162669166297608,0.7351202004635753
+casa,Gradient boosting sem coordenadas,5-fold,so sem coordenadas reais,5281,1026.2056369494785,759.4674893244028,18.866116388797444,0.7238542300022734
+casa,Gradient boosting sem coordenadas,temporal (teste apos 2026-02-26),todos os anuncios,2564,1067.3653825029435,768.3341038673819,17.772542347237767,0.7211365530395082
+casa,Gradient boosting sem coordenadas,temporal (teste apos 2026-02-26),so com coordenadas reais,1675,1081.0706674522705,781.3940519479323,18.52360181678489,0.7064321907050894
+casa,Gradient boosting sem coordenadas,temporal (teste apos 2026-02-26),so sem coordenadas reais,889,1041.052596111081,743.7273400485722,16.35744154690995,0.7391194322475998
+casa,Gradient boosting com lat/lon reais,holdout aleatorio (20%),todos os anuncios,2051,1005.1108077901408,744.02426397677,18.579368280400903,0.7316438647719885
+casa,Gradient boosting com lat/lon reais,holdout aleatorio (20%),so com coordenadas reais,987,995.6226958709805,719.5533709232353,17.808128914780326,0.7341107551961403
+casa,Gradient boosting com lat/lon reais,holdout aleatorio (20%),so sem coordenadas reais,1064,1013.8328936911947,766.7242371382724,19.294794270877887,0.7293687808618989
+casa,Gradient boosting com lat/lon reais,5-fold,todos os anuncios,10254,1005.9484865678451,743.025887282956,18.45688843442322,0.7332093537219251
+casa,Gradient boosting com lat/lon reais,5-fold,so com coordenadas reais,4973,978.8449266389669,723.6283515706979,18.076229258558197,0.7459214671872858
+casa,Gradient boosting com lat/lon reais,5-fold,so sem coordenadas reais,5281,1030.8200033507435,761.2921143416686,18.815346696414657,0.7213652501285874
+casa,Gradient boosting com lat/lon reais,temporal (teste apos 2026-02-26),todos os anuncios,2564,1058.1394792135789,762.3486423919962,17.707643778009718,0.7259364991883506
+casa,Gradient boosting com lat/lon reais,temporal (teste apos 2026-02-26),so com coordenadas reais,1675,1061.7374568535758,769.3098856299257,18.336294768143894,0.7168382795712075
+casa,Gradient boosting com lat/lon reais,temporal (teste apos 2026-02-26),so sem coordenadas reais,889,1051.326931675774,749.2326891596772,16.523177626744545,0.7339446676780221
+casa,Gradient boosting com lat/lon imputadas,holdout aleatorio (20%),todos os anuncios,2051,1010.3107504322326,748.9441961674122,18.752400522870772,0.7288600002533826
+casa,Gradient boosting com lat/lon imputadas,holdout aleatorio (20%),so com coordenadas reais,987,1002.3879647871553,727.9619278512021,18.10009133744038,0.7304850368862457
+casa,Gradient boosting com lat/lon imputadas,holdout aleatorio (20%),so sem coordenadas reais,1064,1017.6050280064222,768.4080108554756,19.35750312251344,0.7273511772710946
+casa,Gradient boosting com lat/lon imputadas,5-fold,todos os anuncios,10254,1003.0751859377315,741.0512204868115,18.414358116877214,0.7347312506419355
+casa,Gradient boosting com lat/lon imputadas,5-fold,so com coordenadas reais,4973,981.8393775419098,724.7758773905398,18.109709300505074,0.7443645516473469
+casa,Gradient boosting com lat/lon imputadas,5-fold,so sem coordenadas reais,5281,1022.6694166650743,756.3773483447474,18.701239117410946,0.7257541022066348
+casa,Gradient boosting com lat/lon imputadas,temporal (teste apos 2026-02-26),todos os anuncios,2564,1051.2947579062293,759.9302615408704,17.581281178374457,0.7294706666570643
+casa,Gradient boosting com lat/lon imputadas,temporal (teste apos 2026-02-26),so com coordenadas reais,1675,1062.2070364839321,770.8650010994911,18.25130514554996,0.7165877536448269
+casa,Gradient boosting com lat/lon imputadas,temporal (teste apos 2026-02-26),so sem coordenadas reais,889,1030.420560911604,739.3276870069114,16.31886256755448,0.7444208509223014
+casa,Gradient boosting + setor IBGE,holdout aleatorio (20%),todos os anuncios,2051,1013.6444148026605,746.5538361110079,18.61612646013589,0.7270677180021452
+casa,Gradient boosting + setor IBGE,holdout aleatorio (20%),so com coordenadas reais,987,1001.3743174502736,715.1448307011182,17.59113065819694,0.7310298458889717
+casa,Gradient boosting + setor IBGE,holdout aleatorio (20%),so sem coordenadas reais,1064,1024.8952162938122,775.68982139255,19.566944934302946,0.7234306362633978
+casa,Gradient boosting + setor IBGE,5-fold,todos os anuncios,10254,1003.713944614384,739.1491023128428,18.327918225008492,0.7343932965817263
+casa,Gradient boosting + setor IBGE,5-fold,so com coordenadas reais,4973,972.6133811653528,713.3242351032459,17.68123537044317,0.7491462110894931
+casa,Gradient boosting + setor IBGE,5-fold,so sem coordenadas reais,5281,1032.1442742294537,763.4678041937983,18.93688505624374,0.720648878892098
+casa,Gradient boosting + setor IBGE,temporal (teste apos 2026-02-26),todos os anuncios,2564,1048.4066847818578,754.3264281750307,17.50767277383922,0.7309549988142472
+casa,Gradient boosting + setor IBGE,temporal (teste apos 2026-02-26),so com coordenadas reais,1675,1055.305630005267,763.0573913729213,18.095177377825973,0.7202585803993414
+casa,Gradient boosting + setor IBGE,temporal (teste apos 2026-02-26),so sem coordenadas reais,889,1035.2832048369628,737.8760756930659,16.40073215327925,0.7420029589241033
+casa,Gradient boosting imputadas + vizinhos,holdout aleatorio (20%),todos os anuncios,2051,1019.8756677069356,750.4167477923008,18.684764800206626,0.7237017693484885
+casa,Gradient boosting imputadas + vizinhos,holdout aleatorio (20%),so com coordenadas reais,987,1009.1389457314243,729.1643271376466,18.03113877655755,0.7268425002924478
+casa,Gradient boosting imputadas + vizinhos,holdout aleatorio (20%),so sem coordenadas reais,1064,1029.7353056939382,770.1311643206313,19.291088940565302,0.7208122587820411
+casa,Gradient boosting imputadas + vizinhos,5-fold,todos os anuncios,10254,1000.2220971648819,736.4076783551188,18.295303059610294,0.7362381345764899
+casa,Gradient boosting imputadas + vizinhos,5-fold,so com coordenadas reais,4973,974.1116357367911,715.2886717119255,17.842427937991292,0.7483727643626847
+casa,Gradient boosting imputadas + vizinhos,5-fold,so sem coordenadas reais,5281,1024.2013717597417,756.294976222303,18.721765468209288,0.7249318480707931
+casa,Gradient boosting imputadas + vizinhos,temporal (teste apos 2026-02-26),todos os anuncios,2564,1052.9903579717934,757.7616179953241,17.46123924364696,0.7285973065057503
+casa,Gradient boosting imputadas + vizinhos,temporal (teste apos 2026-02-26),so com coordenadas reais,1675,1060.1615778781727,764.3742034026476,17.990298139164842,0.7176782187531614
+casa,Gradient boosting imputadas + vizinhos,temporal (teste apos 2026-02-26),so sem coordenadas reais,889,1039.3443488965343,745.3025847475548,16.46441848999967,0.7399748796591213
+casa,Gradient boosting imputadas + vizinhos + setor,holdout aleatorio (20%),todos os anuncios,2051,1017.3460912775627,750.4872233487163,18.6927181863609,0.7250706631432313
+casa,Gradient boosting imputadas + vizinhos + setor,holdout aleatorio (20%),so com coordenadas reais,987,1006.3226128326089,723.0789885580623,17.747489227983433,0.7283650437656642
+casa,Gradient boosting imputadas + vizinhos + setor,holdout aleatorio (20%),so sem coordenadas reais,1064,1027.4660834151373,775.9119674637308,19.56954241748737,0.7220413920855462
+casa,Gradient boosting imputadas + vizinhos + setor,5-fold,todos os anuncios,10254,999.02865806081,735.7999374690194,18.25723031109043,0.7368671867227223
+casa,Gradient boosting imputadas + vizinhos + setor,5-fold,so com coordenadas reais,4973,968.0962185688996,710.3247160938944,17.603917862230784,0.7514709086612088
+casa,Gradient boosting imputadas + vizinhos + setor,5-fold,so sem coordenadas reais,5281,1027.30591255878,759.789385660365,18.872440083515922,0.7232617574454091
+casa,Gradient boosting imputadas + vizinhos + setor,temporal (teste apos 2026-02-26),todos os anuncios,2564,1056.7475854415654,758.7613743461708,17.620537486329642,0.7266570400873382
+casa,Gradient boosting imputadas + vizinhos + setor,temporal (teste apos 2026-02-26),so com coordenadas reais,1675,1064.719720370605,765.0805700781199,18.16189078340327,0.7152453267212193
+casa,Gradient boosting imputadas + vizinhos + setor,temporal (teste apos 2026-02-26),so sem coordenadas reais,889,1041.5611923647118,746.855128169551,16.60055236529666,0.7388644685879858
+casa,OLS + vizinhos + Censo,holdout aleatorio (20%),todos os anuncios,2051,1173.2571325960494,887.0787591396065,21.950519799289175,0.6343462353973657
+casa,OLS + vizinhos + Censo,holdout aleatorio (20%),so com coordenadas reais,987,1145.183553559037,845.7817679136981,20.618325077628583,0.6482278938589197
+casa,OLS + vizinhos + Censo,holdout aleatorio (20%),so sem coordenadas reais,1064,1198.7113867956562,925.3871523162718,23.186305692408542,0.62166684678874
+casa,OLS + vizinhos + Censo,5-fold,todos os anuncios,10254,1191.8997349108454,905.0949515269912,22.291810018534083,0.6254596928699442
+casa,OLS + vizinhos + Censo,5-fold,so com coordenadas reais,4973,1151.7003916513052,868.5346369684358,21.38576044303079,0.6482620618074639
+casa,OLS + vizinhos + Censo,5-fold,so sem coordenadas reais,5281,1228.5526249061163,939.5229849107624,23.145016710254943,0.6042170040885992
+casa,OLS + vizinhos + Censo,temporal (teste apos 2026-02-26),todos os anuncios,2564,1250.1233060757318,927.1394501499313,21.303165030084337,0.6174650959048978
+casa,OLS + vizinhos + Censo,temporal (teste apos 2026-02-26),so com coordenadas reais,1675,1241.6631618741867,912.7455500596056,21.550891272488368,0.6127353487199474
+casa,OLS + vizinhos + Censo,temporal (teste apos 2026-02-26),so sem coordenadas reais,889,1265.9097855832035,954.2595656182053,20.836414235903526,0.6142535819981879
+casa,Gradient boosting + Censo,holdout aleatorio (20%),todos os anuncios,2051,1006.9031196893263,741.0892841992221,18.6034494482579,0.7306859470376592
+casa,Gradient boosting + Censo,holdout aleatorio (20%),so com coordenadas reais,987,995.9324527530712,713.006892332866,17.731260392622527,0.7339452832039437
+casa,Gradient boosting + Censo,holdout aleatorio (20%),so sem coordenadas reais,1064,1016.9740525203769,767.1393977068288,19.412519559077555,0.7276891893344013
+casa,Gradient boosting + Censo,5-fold,todos os anuncios,10254,998.4116289643829,734.8680087409131,18.265857583807843,0.7371921232726342
+casa,Gradient boosting + Censo,5-fold,so com coordenadas reais,4973,968.9969564965925,712.6777037736732,17.759762067358608,0.7510082196922079
+casa,Gradient boosting + Censo,5-fold,so sem coordenadas reais,5281,1025.3396069687415,755.7641243633487,18.742436452071818,0.7243201202604272
+casa,Gradient boosting + Censo,temporal (teste apos 2026-02-26),todos os anuncios,2564,1040.0147478478923,748.4813419346314,17.315766380612423,0.7352448844801942
+casa,Gradient boosting + Censo,temporal (teste apos 2026-02-26),so com coordenadas reais,1675,1043.3062246851046,751.9437986747008,17.789125635704146,0.7265840403360557
+casa,Gradient boosting + Censo,temporal (teste apos 2026-02-26),so sem coordenadas reais,889,1033.7846726209075,741.9575904839942,16.423891518656703,0.7427492997696601
+casa,Gradient boosting imputadas + vizinhos + Censo,holdout aleatorio (20%),todos os anuncios,2051,1013.9201238889606,747.285710381462,18.678893879957993,0.7269192238302272
+casa,Gradient boosting imputadas + vizinhos + Censo,holdout aleatorio (20%),so com coordenadas reais,987,1004.3218800598453,723.1881099496567,17.925184632576272,0.7294440788583274
+casa,Gradient boosting imputadas + vizinhos + Censo,holdout aleatorio (20%),so sem coordenadas reais,1064,1022.7432257960297,769.6394055188601,19.37805837917393,0.7245908520278157
+casa,Gradient boosting imputadas + vizinhos + Censo,5-fold,todos os anuncios,10254,996.3598848636553,733.6930828712884,18.21109720897522,0.7382711581114689
+casa,Gradient boosting imputadas + vizinhos + Censo,5-fold,so com coordenadas reais,4973,967.9739166327005,711.6869788956526,17.670052934206698,0.7515336992568448
+casa,Gradient boosting imputadas + vizinhos + Censo,5-fold,so sem coordenadas reais,5281,1022.3700477215837,754.4157405253005,18.720586544029917,0.7259146402779886
+casa,Gradient boosting imputadas + vizinhos + Censo,temporal (teste apos 2026-02-26),todos os anuncios,2564,1043.9116151471244,747.6823321800939,17.254330169041072,0.7332571272113865
+casa,Gradient boosting imputadas + vizinhos + Censo,temporal (teste apos 2026-02-26),so com coordenadas reais,1675,1047.3283692477228,749.2193126536372,17.68046360492274,0.7244718353059714
+casa,Gradient boosting imputadas + vizinhos + Censo,temporal (teste apos 2026-02-26),so sem coordenadas reais,889,1037.4433995841578,744.7864465859599,16.451435337655475,0.7409251759580991
+casa,Gradient boosting imputadas + vizinhos + setor + Censo,holdout aleatorio (20%),todos os anuncios,2051,1016.0434649573453,748.2135993444107,18.640316949761733,0.7257742603077091
+casa,Gradient boosting imputadas + vizinhos + setor + Censo,holdout aleatorio (20%),so com coordenadas reais,987,1002.9952398404596,720.4414777475408,17.678905841650522,0.730158378352386
+casa,Gradient boosting imputadas + vizinhos + setor + Censo,holdout aleatorio (20%),so sem coordenadas reais,1064,1027.999347016455,773.9758963520331,19.532152253996475,0.7217527914675087
+casa,Gradient boosting imputadas + vizinhos + setor + Censo,5-fold,todos os anuncios,10254,1002.0218806297581,738.1357188340418,18.31675246381935,0.7352880629034737
+casa,Gradient boosting imputadas + vizinhos + setor + Censo,5-fold,so com coordenadas reais,4973,968.92184746291,711.5545395276315,17.625764619981766,0.7510468179707483
+casa,Gradient boosting imputadas + vizinhos + setor + Censo,5-fold,so sem coordenadas reais,5281,1032.2215387134931,763.1666229603014,18.967440316007252,0.7206070538708407
+casa,Gradient boosting imputadas + vizinhos + setor + Censo,temporal (teste apos 2026-02-26),todos os anuncios,2564,1051.3270236772285,754.0823511731461,17.337060538452743,0.7294540605218146
+casa,Gradient boosting imputadas + vizinhos + setor + Censo,temporal (teste apos 2026-02-26),so com coordenadas reais,1675,1056.7877892243978,757.838302882999,17.783435334671267,0.7194722442392448
+casa,Gradient boosting imputadas + vizinhos + setor + Censo,temporal (teste apos 2026-02-26),so sem coordenadas reais,889,1040.960348105567,747.0056142620056,16.496028160875646,0.7391656636213213
+casa,GB completo + terreno e texto (sem vizinhos),holdout aleatorio (20%),todos os anuncios,2051,926.4112850934687,683.8858107980352,16.854715191660176,0.7720228519418437
+casa,GB completo + terreno e texto (sem vizinhos),holdout aleatorio (20%),so com coordenadas reais,987,911.3814155977619,656.6995743880246,16.2240902988389,0.7772018752031611
+casa,GB completo + terreno e texto (sem vizinhos),holdout aleatorio (20%),so sem coordenadas reais,1064,940.1386645982967,709.1046222046896,17.43970275671149,0.7672825408496335
+casa,GB completo + terreno e texto (sem vizinhos),5-fold,todos os anuncios,10254,926.7545436274207,680.435084439163,16.76485404063957,0.773562389253337
+casa,GB completo + terreno e texto (sem vizinhos),5-fold,so com coordenadas reais,4973,896.2712911250192,654.2283928944289,16.182212887594776,0.7869806007365915
+casa,GB completo + terreno e texto (sem vizinhos),5-fold,so sem coordenadas reais,5281,954.5704107068271,705.113341786628,17.313514228878862,0.7610618264188801
+casa,GB completo + terreno e texto (sem vizinhos),temporal (teste apos 2026-02-26),todos os anuncios,2564,962.5126275039297,690.3143018757978,16.274206790329874,0.7732338450331208
+casa,GB completo + terreno e texto (sem vizinhos),temporal (teste apos 2026-02-26),so com coordenadas reais,1675,957.3347302001935,689.3026760860588,16.914172347253967,0.769788034187395
+casa,GB completo + terreno e texto (sem vizinhos),temporal (teste apos 2026-02-26),so sem coordenadas reais,889,972.1935815350876,692.2203459678259,15.068422417047703,0.7724892684169996
+casa,GB completo + terreno e texto,holdout aleatorio (20%),todos os anuncios,2051,929.1408501424718,681.9300418553728,16.72975369389669,0.7706774555686807
+casa,GB completo + terreno e texto,holdout aleatorio (20%),so com coordenadas reais,987,914.1604760324324,653.9369565792147,16.108176073433878,0.775841054245943
+casa,GB completo + terreno e texto,holdout aleatorio (20%),so sem coordenadas reais,1064,942.8243361308935,707.8973117497037,17.30634872340496,0.7659510449889048
+casa,GB completo + terreno e texto,5-fold,todos os anuncios,10254,926.8205435121586,681.1327164164195,16.779207724472982,0.7735301360780601
+casa,GB completo + terreno e texto,5-fold,so com coordenadas reais,4973,896.2689312306378,655.1563608061017,16.18407529822666,0.7869817225010095
+casa,GB completo + terreno e texto,5-fold,so sem coordenadas reais,5281,954.6969095326668,705.5940715480444,17.339630666287594,0.7609984944723023
+casa,GB completo + terreno e texto,temporal (teste apos 2026-02-26),todos os anuncios,2564,963.0542305685248,687.4569596627136,16.12771576200645,0.7729785719168629
+casa,GB completo + terreno e texto,temporal (teste apos 2026-02-26),so com coordenadas reais,1675,956.7687927395702,682.6345820099282,16.65201421013599,0.7700601376877791
+casa,GB completo + terreno e texto,temporal (teste apos 2026-02-26),so sem coordenadas reais,889,974.7867597457312,696.5429917981639,15.139864355238192,0.7712739493315621
+residencial,OLS base (sem coordenadas),holdout aleatorio (20%),todos os anuncios,2850,1256.984994321549,962.8142136704635,20.8413053909021,0.6210939029054687
+residencial,OLS base (sem coordenadas),holdout aleatorio (20%),so com coordenadas reais,1349,1244.046354693672,949.7511359213449,20.542228742170977,0.6394445542014993
+residencial,OLS base (sem coordenadas),holdout aleatorio (20%),so sem coordenadas reais,1501,1268.5007934513121,974.5544481032151,21.110095796723748,0.6036567104771224
+residencial,OLS base (sem coordenadas),5-fold,todos os anuncios,14246,1282.4457746657085,985.7766606713802,21.942649148659854,0.6144014562981
+residencial,OLS base (sem coordenadas),5-fold,so com coordenadas reais,6880,1273.0890317847263,970.27148748608,21.44143519052271,0.6236659602352859
+residencial,OLS base (sem coordenadas),5-fold,so sem coordenadas reais,7366,1291.123927302421,1000.2588208010119,22.410793600463215,0.605572104833265
+residencial,OLS base (sem coordenadas),temporal (teste apos 2026-02-27),todos os anuncios,3562,1337.5032443774512,1011.0383884554011,21.10021300353269,0.5964574479763773
+residencial,OLS base (sem coordenadas),temporal (teste apos 2026-02-27),so com coordenadas reais,2374,1361.4803070704095,1023.2483114140824,21.735793571475675,0.5918855303334349
+residencial,OLS base (sem coordenadas),temporal (teste apos 2026-02-27),so sem coordenadas reais,1188,1288.253266519739,986.6390979638951,19.830121868602845,0.5959217587852901
+residencial,"OLS + vizinhos (kNN, so coord. reais)",holdout aleatorio (20%),todos os anuncios,2850,1222.4681020156404,932.2609643302455,20.176615968016883,0.6416177604726533
+residencial,"OLS + vizinhos (kNN, so coord. reais)",holdout aleatorio (20%),so com coordenadas reais,1349,1159.4447318469115,882.4930889411312,19.182455397348072,0.6868163821419222
+residencial,"OLS + vizinhos (kNN, so coord. reais)",holdout aleatorio (20%),so sem coordenadas reais,1501,1276.4571268892473,976.9890548698294,21.07010205051669,0.5986692024865652
+residencial,"OLS + vizinhos (kNN, so coord. reais)",5-fold,todos os anuncios,14246,1237.7275105080525,949.7760266656611,21.232112664879665,0.640823883111622
+residencial,"OLS + vizinhos (kNN, so coord. reais)",5-fold,so com coordenadas reais,6880,1182.2163803954902,900.0147068522115,20.153972394021,0.6754737029332797
+residencial,"OLS + vizinhos (kNN, so coord. reais)",5-fold,so sem coordenadas reais,7366,1287.4160257284448,996.2541532359206,22.239118511133757,0.6078343195588419
+residencial,"OLS + vizinhos (kNN, so coord. reais)",temporal (teste apos 2026-02-27),todos os anuncios,3562,1276.8267691054634,960.6904824874424,20.09452048253807,0.632240748932493
+residencial,"OLS + vizinhos (kNN, so coord. reais)",temporal (teste apos 2026-02-27),so com coordenadas reais,2374,1276.2767261771123,949.041253577391,20.241857707398413,0.6413680609696121
+residencial,"OLS + vizinhos (kNN, so coord. reais)",temporal (teste apos 2026-02-27),so sem coordenadas reais,1188,1277.9252197139406,983.9693288110637,19.800094075283486,0.6023748531762648
+residencial,OLS + vizinhos (coord. imputadas),holdout aleatorio (20%),todos os anuncios,2850,1232.400844489204,937.3569651172118,20.279726083792905,0.6357702784513355
+residencial,OLS + vizinhos (coord. imputadas),holdout aleatorio (20%),so com coordenadas reais,1349,1181.9564780472515,898.6765889935423,19.594431376952233,0.674536789618071
+residencial,OLS + vizinhos (coord. imputadas),holdout aleatorio (20%),so sem coordenadas reais,1501,1276.0365703898315,972.1203411270922,20.895623858295277,0.5989336132016037
+residencial,OLS + vizinhos (coord. imputadas),5-fold,todos os anuncios,14246,1247.321805502431,956.5688774362319,21.412986580785624,0.6352339650453578
+residencial,OLS + vizinhos (coord. imputadas),5-fold,so com coordenadas reais,6880,1200.8237286522622,916.6551258840198,20.507693040514347,0.6651776258000994
+residencial,OLS + vizinhos (coord. imputadas),5-fold,so sem coordenadas reais,7366,1289.2381892360972,993.8491666948823,22.258549920056105,0.6067234188393019
+residencial,OLS + vizinhos (coord. imputadas),temporal (teste apos 2026-02-27),todos os anuncios,3562,1287.161431212316,967.9090102228085,20.22944652710759,0.6262633539880895
+residencial,OLS + vizinhos (coord. imputadas),temporal (teste apos 2026-02-27),so com coordenadas reais,2374,1297.9568546989763,968.3697126176799,20.584387411757575,0.6290804042816227
+residencial,OLS + vizinhos (coord. imputadas),temporal (teste apos 2026-02-27),so sem coordenadas reais,1188,1265.3128620680848,966.988381026323,19.520162301384463,0.6101847672541058
+residencial,Gradient boosting sem coordenadas,holdout aleatorio (20%),todos os anuncios,2850,1048.7054114622595,777.7552394728164,16.964757022625573,0.7362585282195675
+residencial,Gradient boosting sem coordenadas,holdout aleatorio (20%),so com coordenadas reais,1349,1015.1579191759109,760.2087905544306,16.77378537775125,0.7599143807764792
+residencial,Gradient boosting sem coordenadas,holdout aleatorio (20%),so sem coordenadas reais,1501,1077.9652559105814,793.5248328045299,17.136389766753133,0.7137802818955946
+residencial,Gradient boosting sem coordenadas,5-fold,todos os anuncios,14246,1055.9293138106773,787.8658501346187,17.560784887369092,0.7385870752415575
+residencial,Gradient boosting sem coordenadas,5-fold,so com coordenadas reais,6880,1049.479892383437,779.2773312451911,17.357827990869346,0.7442567419578756
+residencial,Gradient boosting sem coordenadas,5-fold,so sem coordenadas reais,7366,1061.9178321717009,795.8877086683224,17.750350926999594,0.7331829426010925
+residencial,Gradient boosting sem coordenadas,temporal (teste apos 2026-02-27),todos os anuncios,3562,1101.1607644057328,807.7117196604493,16.92155531090712,0.726472431392431
+residencial,Gradient boosting sem coordenadas,temporal (teste apos 2026-02-27),so com coordenadas reais,2374,1119.905832996875,819.4761160166291,17.5313100632144,0.7238644776052614
+residencial,Gradient boosting sem coordenadas,temporal (teste apos 2026-02-27),so sem coordenadas reais,1188,1062.7121099456126,784.2027323291607,15.7030723294446,0.7250243612302144
+residencial,Gradient boosting com lat/lon reais,holdout aleatorio (20%),todos os anuncios,2850,1041.5562875380383,772.9829521339308,16.913371880117996,0.7398421725100419
+residencial,Gradient boosting com lat/lon reais,holdout aleatorio (20%),so com coordenadas reais,1349,988.802988828281,743.6568148951563,16.581819758807995,0.7722184864273076
+residencial,Gradient boosting com lat/lon reais,holdout aleatorio (20%),so sem coordenadas reais,1501,1086.7848244380896,799.3393539561205,17.211349103067487,0.709077605155116
+residencial,Gradient boosting com lat/lon reais,5-fold,todos os anuncios,14246,1048.341109995084,784.0111974296331,17.517901408279716,0.7423307481913001
+residencial,Gradient boosting com lat/lon reais,5-fold,so com coordenadas reais,6880,1023.6849844921785,762.9851229342491,17.119186732822502,0.7566739447342122
+residencial,Gradient boosting com lat/lon reais,5-fold,so sem coordenadas reais,7366,1070.8578259332874,803.6499963066684,17.890309359290526,0.7286715133205603
+residencial,Gradient boosting com lat/lon reais,temporal (teste apos 2026-02-27),todos os anuncios,3562,1086.994780334012,799.613173565563,16.82010079021754,0.7334648043977917
+residencial,Gradient boosting com lat/lon reais,temporal (teste apos 2026-02-27),so com coordenadas reais,2374,1095.708076541613,802.850590950643,17.23803510349838,0.7356684571807229
+residencial,Gradient boosting com lat/lon reais,temporal (teste apos 2026-02-27),so sem coordenadas reais,1188,1069.370187148199,793.1437889930211,15.984935756775862,0.721568026849645
+residencial,Gradient boosting com lat/lon imputadas,holdout aleatorio (20%),todos os anuncios,2850,1039.600163011479,772.4479349729177,16.90747197385008,0.7408184485598048
+residencial,Gradient boosting com lat/lon imputadas,holdout aleatorio (20%),so com coordenadas reais,1349,991.4748607695891,743.3466987734915,16.59136370495908,0.7709858338093302
+residencial,Gradient boosting com lat/lon imputadas,holdout aleatorio (20%),so sem coordenadas reais,1501,1081.025558971493,798.602210544554,17.19156927880275,0.7121528408897583
+residencial,Gradient boosting com lat/lon imputadas,5-fold,todos os anuncios,14246,1044.4369101063564,779.9033678779903,17.433596963606167,0.7442463823524716
+residencial,Gradient boosting com lat/lon imputadas,5-fold,so com coordenadas reais,6880,1025.7710199935752,764.0330653296978,17.157704396334235,0.7556812487970862
+residencial,Gradient boosting com lat/lon imputadas,5-fold,so sem coordenadas reais,7366,1061.5748495706591,794.7265665655073,17.691286464397766,0.7333552701143061
+residencial,Gradient boosting com lat/lon imputadas,temporal (teste apos 2026-02-27),todos os anuncios,3562,1083.6848364619066,799.3178587837814,16.90854526240706,0.7350855543047394
+residencial,Gradient boosting com lat/lon imputadas,temporal (teste apos 2026-02-27),so com coordenadas reais,2374,1098.6309233848713,809.1208490540112,17.488402029430542,0.734256345498432
+residencial,Gradient boosting com lat/lon imputadas,temporal (teste apos 2026-02-27),so sem coordenadas reais,1188,1053.1825927199232,779.7283815939455,15.74980791820358,0.7299337554983845
+residencial,Gradient boosting + setor IBGE,holdout aleatorio (20%),todos os anuncios,2850,1029.6868416855266,761.0012032970466,16.670359300586217,0.7457378393203775
+residencial,Gradient boosting + setor IBGE,holdout aleatorio (20%),so com coordenadas reais,1349,969.1989165065452,723.9826117397923,16.103351558236415,0.7811609738824539
+residencial,Gradient boosting + setor IBGE,holdout aleatorio (20%),so sem coordenadas reais,1501,1081.1658292006985,794.2710767219207,17.17994853738161,0.7120781358909702
+residencial,Gradient boosting + setor IBGE,5-fold,todos os anuncios,14246,1037.7895601469263,771.1647586497801,17.30793169983484,0.7474915255801636
+residencial,Gradient boosting + setor IBGE,5-fold,so com coordenadas reais,6880,1000.8246787678904,739.3387278626024,16.668595562093806,0.7674202169514465
+residencial,Gradient boosting + setor IBGE,5-fold,so sem coordenadas reais,7366,1071.1640069566101,800.8909454290065,17.905085192593226,0.7285163339713674
+residencial,Gradient boosting + setor IBGE,temporal (teste apos 2026-02-27),todos os anuncios,3562,1076.4397634564189,787.8809876804211,16.59591491112661,0.7386159323743151
+residencial,Gradient boosting + setor IBGE,temporal (teste apos 2026-02-27),so com coordenadas reais,2374,1087.3493516299,791.289645686075,16.985873141170018,0.7396860364859092
+residencial,Gradient boosting + setor IBGE,temporal (teste apos 2026-02-27),so sem coordenadas reais,1188,1054.3008151814117,781.0694101506043,15.816654946376563,0.7293599623788296
+residencial,Gradient boosting imputadas + vizinhos,holdout aleatorio (20%),todos os anuncios,2850,1035.7331564318447,767.499676115895,16.78111562362092,0.7427430206217709
+residencial,Gradient boosting imputadas + vizinhos,holdout aleatorio (20%),so com coordenadas reais,1349,975.2722354145559,731.8103375901816,16.246399211579984,0.7784097462532802
+residencial,Gradient boosting imputadas + vizinhos,holdout aleatorio (20%),so sem coordenadas reais,1501,1087.2064099247461,799.5749044111564,17.261683538239993,0.7088518521898909
+residencial,Gradient boosting imputadas + vizinhos,5-fold,todos os anuncios,14246,1037.6280058909485,776.249293556495,17.404949628109332,0.7475701362061749
+residencial,Gradient boosting imputadas + vizinhos,5-fold,so com coordenadas reais,6880,999.652414991698,745.3666094863045,16.779310320250016,0.7679647382574446
+residencial,Gradient boosting imputadas + vizinhos,5-fold,so sem coordenadas reais,7366,1071.8834953906974,805.0943745234933,17.98930999168143,0.7281515066308037
+residencial,Gradient boosting imputadas + vizinhos,temporal (teste apos 2026-02-27),todos os anuncios,3562,1080.421654813895,792.0180012918572,16.76014154816879,0.7366785680584624
+residencial,Gradient boosting imputadas + vizinhos,temporal (teste apos 2026-02-27),so com coordenadas reais,2374,1087.015682035137,793.7959232369843,17.129830299446446,0.7398457745270641
+residencial,Gradient boosting imputadas + vizinhos,temporal (teste apos 2026-02-27),so sem coordenadas reais,1188,1067.1226412342937,788.4651505361908,16.021386417248607,0.7227371842214673
+residencial,Gradient boosting imputadas + vizinhos + setor,holdout aleatorio (20%),todos os anuncios,2850,1029.674956251899,762.169445792168,16.684855624988852,0.7457437090634318
+residencial,Gradient boosting imputadas + vizinhos + setor,holdout aleatorio (20%),so com coordenadas reais,1349,962.3133147395948,722.1202687063028,16.062526334993343,0.7842593796866861
+residencial,Gradient boosting imputadas + vizinhos + setor,holdout aleatorio (20%),so sem coordenadas reais,1501,1086.658135156078,798.1630100085786,17.244164227389877,0.7091454283345578
+residencial,Gradient boosting imputadas + vizinhos + setor,5-fold,todos os anuncios,14246,1033.0468325428794,768.7895503453256,17.262110215445023,0.749794193622016
+residencial,Gradient boosting imputadas + vizinhos + setor,5-fold,so com coordenadas reais,6880,991.1895365377702,734.0990931971094,16.579733849753165,0.7718768462657386
+residencial,Gradient boosting imputadas + vizinhos + setor,5-fold,so sem coordenadas reais,7366,1070.6654451873585,801.1911720096925,17.8994641926321,0.7287689934652597
+residencial,Gradient boosting imputadas + vizinhos + setor,temporal (teste apos 2026-02-27),todos os anuncios,3562,1073.1862948957198,782.5578368989212,16.467088414027074,0.7401935769925974
+residencial,Gradient boosting imputadas + vizinhos + setor,temporal (teste apos 2026-02-27),so com coordenadas reais,2374,1080.9970235138749,783.1927308145524,16.79851533859201,0.7427186763949767
+residencial,Gradient boosting imputadas + vizinhos + setor,temporal (teste apos 2026-02-27),so sem coordenadas reais,1188,1057.405157509689,781.2891179126348,15.804792522682654,0.7277638406297666
+residencial,OLS + vizinhos + Censo,holdout aleatorio (20%),todos os anuncios,2850,1221.5397664036968,929.546936327529,20.10167824961333,0.6421618608384481
+residencial,OLS + vizinhos + Censo,holdout aleatorio (20%),so com coordenadas reais,1349,1164.0360044257998,886.5148373264875,19.35058809715616,0.6843311263948847
+residencial,OLS + vizinhos + Censo,holdout aleatorio (20%),so sem coordenadas reais,1501,1271.0025094551886,968.2213544170726,20.776708639796357,0.602091845712023
+residencial,OLS + vizinhos + Censo,5-fold,todos os anuncios,14246,1238.1190230900743,948.4892266073705,21.19913644567181,0.6405966211202803
+residencial,OLS + vizinhos + Censo,5-fold,so com coordenadas reais,6880,1186.974188316871,905.5495589706329,20.228789818983,0.6728563466181043
+residencial,OLS + vizinhos + Censo,5-fold,so sem coordenadas reais,7366,1284.0507343071943,988.59578557299,22.105460745375723,0.609881873520213
+residencial,OLS + vizinhos + Censo,temporal (teste apos 2026-02-27),todos os anuncios,3562,1274.4100071612454,957.467418148435,20.022646844393666,0.6336316117213738
+residencial,OLS + vizinhos + Censo,temporal (teste apos 2026-02-27),so com coordenadas reais,2374,1282.0226833680847,956.3956110345572,20.359506609592906,0.6381315802684494
+residencial,OLS + vizinhos + Censo,temporal (teste apos 2026-02-27),so sem coordenadas reais,1188,1259.0595858970753,959.6092279871095,19.34949441797699,0.614028241730454
+residencial,Gradient boosting + Censo,holdout aleatorio (20%),todos os anuncios,2850,1030.6787170046382,762.9330117490108,16.70864455499941,0.7452477527829393
+residencial,Gradient boosting + Censo,holdout aleatorio (20%),so com coordenadas reais,1349,965.4333028104348,721.8695631075872,16.040308563550486,0.7828581742401053
+residencial,Gradient boosting + Censo,holdout aleatorio (20%),so sem coordenadas reais,1501,1085.9775322202704,799.8381364773792,17.309300952377555,0.7095096541683494
+residencial,Gradient boosting + Censo,5-fold,todos os anuncios,14246,1036.797040328847,773.5874358647745,17.295240051715012,0.7479742820677234
+residencial,Gradient boosting + Censo,5-fold,so com coordenadas reais,6880,1004.501690685915,748.3815546553102,16.787485740778347,0.7657080896537124
+residencial,Gradient boosting + Censo,5-fold,so sem coordenadas reais,7366,1066.0782997228775,797.1302627343257,17.769493331547253,0.7310881321297515
+residencial,Gradient boosting + Censo,temporal (teste apos 2026-02-27),todos os anuncios,3562,1070.9926837854507,787.3399391113473,16.564414398827722,0.7412545890489405
+residencial,Gradient boosting + Censo,temporal (teste apos 2026-02-27),so com coordenadas reais,2374,1077.7115009784418,789.0209630620462,16.91493201210979,0.7442802329651028
+residencial,Gradient boosting + Censo,temporal (teste apos 2026-02-27),so sem coordenadas reais,1188,1057.4384765921122,783.9807212166004,15.863969269255653,0.7277466839100788
+residencial,Gradient boosting imputadas + vizinhos + Censo,holdout aleatorio (20%),todos os anuncios,2850,1026.9818167490762,758.9078311077843,16.588337059557094,0.7470719965387342
+residencial,Gradient boosting imputadas + vizinhos + Censo,holdout aleatorio (20%),so com coordenadas reais,1349,958.4892707353338,718.1907745813695,15.92985489457049,0.7859705945598584
+residencial,Gradient boosting imputadas + vizinhos + Censo,holdout aleatorio (20%),so sem coordenadas reais,1501,1084.855052791646,795.5016414036763,17.18013748631721,0.710109852447036
+residencial,Gradient boosting imputadas + vizinhos + Censo,5-fold,todos os anuncios,14246,1034.332566557783,772.3995347726841,17.30521197354825,0.749170991848011
+residencial,Gradient boosting imputadas + vizinhos + Censo,5-fold,so com coordenadas reais,6880,994.589487125698,741.3295237998801,16.67454649622084,0.7703091588447233
+residencial,Gradient boosting imputadas + vizinhos + Censo,5-fold,so sem coordenadas reais,7366,1070.121126804218,801.419583034005,17.894266885849717,0.7290447070321218
+residencial,Gradient boosting imputadas + vizinhos + Censo,temporal (teste apos 2026-02-27),todos os anuncios,3562,1071.4699828561631,783.9611343974873,16.50629113742926,0.7410239124712849
+residencial,Gradient boosting imputadas + vizinhos + Censo,temporal (teste apos 2026-02-27),so com coordenadas reais,2374,1078.2370008726919,785.6236157254459,16.830909644961913,0.7440307905625417
+residencial,Gradient boosting imputadas + vizinhos + Censo,temporal (teste apos 2026-02-27),so sem coordenadas reais,1188,1057.81766030859,780.6389705316842,15.857600618167867,0.7275513958896507
+residencial,Gradient boosting imputadas + vizinhos + setor + Censo,holdout aleatorio (20%),todos os anuncios,2850,1026.1307545867003,761.3105289239004,16.670760201107683,0.747491026862099
+residencial,Gradient boosting imputadas + vizinhos + setor + Censo,holdout aleatorio (20%),so com coordenadas reais,1349,957.8528575098169,719.0529360992873,15.994111580382183,0.7862547206904467
+residencial,Gradient boosting imputadas + vizinhos + setor + Censo,holdout aleatorio (20%),so sem coordenadas reais,1501,1083.8306418970362,799.2888718422233,17.278887442519206,0.7106570710164923
+residencial,Gradient boosting imputadas + vizinhos + setor + Censo,5-fold,todos os anuncios,14246,1032.9934800213484,769.0689144663118,17.284138968393513,0.7498200371085624
+residencial,Gradient boosting imputadas + vizinhos + setor + Censo,5-fold,so com coordenadas reais,6880,987.4998932520107,731.717097576907,16.510078298340453,0.7735720346342496
+residencial,Gradient boosting imputadas + vizinhos + setor + Censo,5-fold,so sem coordenadas reais,7366,1073.745910673407,803.9563024922558,18.00712802757965,0.7272060034327574
+residencial,Gradient boosting imputadas + vizinhos + setor + Censo,temporal (teste apos 2026-02-27),todos os anuncios,3562,1071.1170226512456,780.9846842110823,16.43674052818474,0.7411945065125151
+residencial,Gradient boosting imputadas + vizinhos + setor + Censo,temporal (teste apos 2026-02-27),so com coordenadas reais,2374,1079.8928737284778,781.0681554905135,16.744316882850523,0.7432439915093245
+residencial,Gradient boosting imputadas + vizinhos + setor + Censo,temporal (teste apos 2026-02-27),so sem coordenadas reais,1188,1053.3610826991912,780.817882176259,15.822105624164054,0.7298422078342768
+residencial,GB completo + terreno e texto (sem vizinhos),holdout aleatorio (20%),todos os anuncios,2850,974.5607430870305,715.7928115026957,15.539638218523933,0.7722338221580305
+residencial,GB completo + terreno e texto (sem vizinhos),holdout aleatorio (20%),so com coordenadas reais,1349,912.3395998210176,673.8128317580753,14.89201561055023,0.8060847408897036
+residencial,GB completo + terreno e texto (sem vizinhos),holdout aleatorio (20%),so sem coordenadas reais,1501,1027.2704681963528,753.5216540579875,16.12167879024713,0.7400680710602761
+residencial,GB completo + terreno e texto (sem vizinhos),5-fold,todos os anuncios,14246,981.2666570045815,728.8433775533288,16.20898315450942,0.7742480829599193
+residencial,GB completo + terreno e texto (sem vizinhos),5-fold,so com coordenadas reais,6880,942.1410881058812,696.8268543957511,15.586297316939197,0.7938953272010661
+residencial,GB completo + terreno e texto (sem vizinhos),5-fold,so sem coordenadas reais,7366,1016.4514136441767,758.7474882408301,16.790584914281766,0.7555415739633553
+residencial,GB completo + terreno e texto (sem vizinhos),temporal (teste apos 2026-02-27),todos os anuncios,3562,1013.5301233559272,738.9159993060863,15.71851088027652,0.7682749578558938
+residencial,GB completo + terreno e texto (sem vizinhos),temporal (teste apos 2026-02-27),so com coordenadas reais,2374,1017.8818727100771,740.6238360470231,16.157010180705505,0.7718849046403887
+residencial,GB completo + terreno e texto (sem vizinhos),temporal (teste apos 2026-02-27),so sem coordenadas reais,1188,1004.777488676313,735.5032009702417,14.84225049372903,0.7541881850576816
+residencial,GB completo + terreno e texto,holdout aleatorio (20%),todos os anuncios,2850,976.5979614269693,721.85404246766,15.631057344964605,0.7712805836454901
+residencial,GB completo + terreno e texto,holdout aleatorio (20%),so com coordenadas reais,1349,913.2825118531333,679.4824420259275,14.9278893989876,0.805683707070413
+residencial,GB completo + terreno e texto,holdout aleatorio (20%),so sem coordenadas reais,1501,1030.1868181386624,759.9348479279511,16.26301841033635,0.7385901185272683
+residencial,GB completo + terreno e texto,5-fold,todos os anuncios,14246,979.3251090408128,727.4580554726869,16.1679874939773,0.7751405509763769
+residencial,GB completo + terreno e texto,5-fold,so com coordenadas reais,6880,933.9337168682376,693.0296868708562,15.499455220335816,0.7974706081803681
+residencial,GB completo + terreno e texto,5-fold,so sem coordenadas reais,7366,1019.898616700542,759.6148808841172,16.792410795993774,0.7538806449926103
+residencial,GB completo + terreno e texto,temporal (teste apos 2026-02-27),todos os anuncios,3562,1015.8622985021702,739.9989968505402,15.680179315209822,0.7672073129187144
+residencial,GB completo + terreno e texto,temporal (teste apos 2026-02-27),so com coordenadas reais,2374,1021.7528064737886,740.5745977102,16.05459077885191,0.7701465939835281
+residencial,GB completo + terreno e texto,temporal (teste apos 2026-02-27),so sem coordenadas reais,1188,1003.987669175945,738.8487641562366,14.93198671025501,0.7545744808516678
