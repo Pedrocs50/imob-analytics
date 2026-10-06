@@ -252,3 +252,6 @@ reports/figures/painel_interativo.html
 
 # Relatorio HTML gerado (figuras embutidas, ~1 MB; reproduzivel com `python main.py relatorio`)
 reports/relatorio_analitico.html
+
+# Relatorio final da IC (docx com dados pessoais e campos a preencher; nao versionar)
+reports/Relatorio_Final_IC_IFSP.docx
