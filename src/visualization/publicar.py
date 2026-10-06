@@ -33,7 +33,7 @@ def _index() -> str:
 <li>Os dados são <b>preços pedidos</b> em anúncios de um único dia (março/2026), não preços de venda.</li>
 <li>O FipeZAP <b>não tem Jacareí</b>: a tendência usa São José dos Campos (ou o índice nacional) como referência; é uma premissa.</li>
 <li>Sensibilidade e cenários “e se” são associações aprendidas dos anúncios, não efeitos causais.</li></ul></section></main>
-<footer>Site gerado por <code>python main.py publicar</code>. O painel e o relatório trazem os resultados; os dados brutos (base do orientador) não são publicados.</footer></body></html>"""
+<footer>Site gerado por <code>python main.py publicar</code>. O painel e o relatório trazem os resultados; os dados brutos da base de anúncios não são publicados.</footer></body></html>"""
 
 
 def executar() -> str:

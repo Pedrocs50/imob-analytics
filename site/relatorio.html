@@ -6,7 +6,7 @@ th{color:#52514e;background:#f4f3ef}img{max-width:100%;height:auto;display:block
 blockquote{margin:16px 0;padding:8px 16px;border-left:4px solid #2a78d6;background:#f4f3ef}a{color:#2a78d6;word-break:break-all}.meta{color:#52514e;font-size:14px}
 @media (prefers-color-scheme:dark){body{background:#0d0d0d;color:#f3f2ee}h2{border-color:#2c2c2a}th{background:#1a1a19;color:#c3c2b7}th,td{border-color:#2c2c2a}code{background:#1a1a19}blockquote{background:#1a1a19}em{color:#c3c2b7}}
 </style></head><body><p class="meta"><a href="index.html">← Início</a> · <a href="painel.html">Painel interativo</a></p><h1>Análise e previsão do mercado imobiliário de Jacareí-SP</h1>
-<p class="meta">Relatório analítico da iniciação científica · gerado automaticamente em 06/10/2026 06:32 por <code>python main.py relatorio</code> a partir dos resultados salvos. Números lidos dos arquivos; textos interpretativos conferidos contra os números (Apêndice C).</p>
+<p class="meta">Relatório analítico da iniciação científica · gerado automaticamente em 06/10/2026 06:38 por <code>python main.py relatorio</code> a partir dos resultados salvos. Números lidos dos arquivos; textos interpretativos conferidos contra os números (Apêndice C).</p>
 
 <h2>1. Resumo executivo</h2>
 <ul>
@@ -785,7 +785,7 @@ bairros de renda extrema são mais difíceis de avaliar. Aqui os intervalos conf
 <tr>
 <td>FipeZAP <strong>não tem Jacareí</strong></td>
 <td>A projeção supõe que Jacareí acompanha SJC</td>
-<td>Cenários alternativos (nacional, tendência); confirmar com o orientador</td>
+<td>Cenários alternativos (nacional, tendência); validar a aceitação do proxy</td>
 </tr>
 <tr>
 <td>Poucos dados de SJC (104 meses; 44 origens de teste)</td>
@@ -815,7 +815,7 @@ bairros de renda extrema são mais difíceis de avaliar. Aqui os intervalos conf
 <tr>
 <td>IPTU com unidade não confirmada</td>
 <td>Ficou fora dos modelos</td>
-<td>Confirmar com o orientador</td>
+<td>Confirmar a unidade do campo na fonte</td>
 </tr>
 <tr>
 <td>Literatura comparada por resumos/páginas</td>
@@ -837,7 +837,7 @@ bairros de renda extrema são mais difíceis de avaliar. Aqui os intervalos conf
 <ol>
 <li>Coletar <strong>snapshots periódicos</strong> do VivaReal para formar uma série própria de Jacareí e medir crescimento por área.</li>
 <li>Variáveis de <strong>qualidade do imóvel</strong> (estado, andar, idade do prédio), que são o gargalo dos apartamentos.</li>
-<li>Confirmar com o orientador a <strong>unidade do IPTU</strong> e a aceitação do FipeZAP de SJC como proxy.</li>
+<li>Confirmar a <strong>unidade do IPTU</strong> na fonte e a adequação do FipeZAP de SJC como proxy de Jacareí.</li>
 <li>Preços de transação (ou ajuste de negociação) para sair do preço pedido.</li>
 <li>Atualizar os resultados de SJC quando houver mais meses e refazer a comparação ARIMA x LSTM.</li>
 </ol>
@@ -939,6 +939,6 @@ bairros de renda extrema são mais difíceis de avaliar. Aqui os intervalos conf
 <em>Ressalva de comparabilidade:</em> O Zestimate de imóveis à venda usa o preço anunciado como entrada, o que este projeto não faz (o preço pedido é o alvo); o de imóveis fora do mercado é o mais comparável.<br />
 <a href="https://www.zillow.com/zestimate">https://www.zillow.com/zestimate</a></li>
 </ul>
-<p><em>Os dados deste projeto: VivaReal de Jacareí (base do orientador, não versionada por conter dados pessoais de anunciantes), FipeZAP (planilha pública), BCB/IBGE/IPEA (APIs públicas) e Censo 2022 (IBGE).</em></p>
+<p><em>Os dados deste projeto: VivaReal de Jacareí (base de anúncios fornecida ao projeto, não versionada por conter dados pessoais de anunciantes), FipeZAP (planilha pública), BCB/IBGE/IPEA (APIs públicas) e Censo 2022 (IBGE).</em></p>
 <h2>Apêndice C. Verificação automática do texto</h2>
 <p>Todas as afirmações interpretativas foram checadas contra os números atuais e são sustentadas por eles.</p></body></html>

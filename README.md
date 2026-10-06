@@ -3,6 +3,10 @@
 Iniciacao cientifica sobre analise e previsao do mercado imobiliario de Jacarei-SP: **precificacao** de imoveis (gradient boosting), **series temporais** do
 indice FipeZAP (ARIMA, LSTM) e **projecao de preco**, com dados abertos (anuncios, FipeZAP, IBGE, BCB, IPEA).
 
+### Veja online: **https://pedrocs50.github.io/imob-analytics/**
+
+Painel interativo (mapas, modelos, series e projecao) e relatorio completo, sem instalar nada: [painel](https://pedrocs50.github.io/imob-analytics/painel.html) · [relatorio](https://pedrocs50.github.io/imob-analytics/relatorio.html).
+
 **Resultados principais** (detalhes no [relatorio](reports/relatorio_analitico.md)):
 
 | | Apartamento | Casa |
@@ -42,7 +46,7 @@ python main.py painel --abrir            # 3. gera e abre o painel interativo no
 python main.py relatorio --abrir         #    gera e abre o relatorio
 ```
 
-Sem a base do orientador (veja "Dados"), os passos 1 a 3 funcionam com o que estiver versionado: cartoes cujos dados nao existem mostram um aviso com o comando que os gera.
+Sem a base do VivaReal (veja "Dados"), os passos 1 a 3 funcionam com o que estiver versionado: cartoes cujos dados nao existem mostram um aviso com o comando que os gera.
 
 ## Abrir o painel e o relatorio (HTML)
 
@@ -59,7 +63,7 @@ Para uma imagem pronta, os PNG das analises ficam em `reports/figures/`, e o map
 
 ## Publicar o painel e o relatorio na web (GitHub Pages)
 
-Para qualquer pessoa (orientador, banca) ver **sem instalar nada e sem os dados**: o site e estatico e ja traz os resultados dentro dos HTML.
+Para qualquer pessoa ver **sem instalar nada e sem os dados**: o site e estatico e ja traz os resultados dentro dos HTML.
 
 1. **Gerar o site:** `python main.py publicar` cria a pasta `site/` com `index.html` (pagina inicial), `painel.html` e `relatorio.html` (~4 MB; plotly.js vem de CDN).
 2. **Enviar ao GitHub:** commitar `site/` e `.github/` e dar push no `main`:
@@ -71,8 +75,8 @@ Para qualquer pessoa (orientador, banca) ver **sem instalar nada e sem os dados*
 3. **Ativar uma unica vez no GitHub:** repositorio > *Settings* > *Pages* > *Build and deployment* > **Source: GitHub Actions**. O workflow `.github/workflows/pages.yml` publica `site/` a cada push que o altere.
 4. **Endereco:** https://pedrocs50.github.io/imob-analytics/ (aparece tambem na aba *Actions*, no job "Publicar site").
 
-Para atualizar depois de novos resultados: `python main.py publicar`, commit e push de `site/`. O site **nao tem** a base do orientador nem dados de anunciantes
-(o painel mostra medianas por setor e pontos preco x estimado sem identificador de anuncio); mesmo assim, avise o orientador antes de divulgar o link.
+Para atualizar depois de novos resultados: `python main.py publicar`, commit e push de `site/`. O site **nao tem** a base bruta do VivaReal nem dados de anunciantes
+(o painel mostra medianas por setor e pontos preco x estimado sem identificador de anuncio).
 Os mapas de Jacarei usam Leaflet com mapa de fundo do Esri carregado da internet; sem internet eles nao carregam.
 
 ## Instalacao
@@ -90,14 +94,14 @@ O repositorio e **publico**, entao alguns dados ficam de fora de proposito.
 | Excel do FipeZAP (`data/raw/fipezap-serieshistoricas (2).xlsx`) | Sim | Download manual em [fipe.org.br](https://www.fipe.org.br/pt-br/indices/fipezap/) |
 | Recorte de Jacarei da malha de setores do IBGE (`data/raw/ibge/jacarei_setores_2022.gpkg`, 0,9 MB) e Censo 2022 por setor | Sim | Gerados da malha completa de SP (`SP_setores_CD2022`, 335 MB, **nao versionada**), baixada de [geoftp.ibge.gov.br](https://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_de_setores_censitarios__divisoes_intramunicipais/censo_2022/setores/) e salva em `data/raw/SP_setores_CD2022/` |
 | Respostas das APIs (`data/raw/macro/`) | Sim | `python main.py series-coletar` |
-| **Base VivaReal do orientador** | **Nao** | Pedir ao orientador e salvar em `data/raw/vivareal_jacarei/vivareal_jacarei_20260324.db`. Contem nome, telefone, WhatsApp e CRECI de anunciantes: **nunca versionar**. |
+| **Base VivaReal** (anuncios de Jacarei, coletada em marco/2026) | **Nao** | Obter junto aos responsaveis pelo projeto e salvar em `data/raw/vivareal_jacarei/vivareal_jacarei_20260324.db`. Contem nome, telefone, WhatsApp e CRECI de anunciantes: **nunca versionar**. |
 | `data/database/*.db` (banco do scraper e `series_temporais.db`) | Nao | Gerados pelos comandos abaixo |
 | `data/processed/` (datasets, paineis, `projecao_anuncios.csv`) | Nao | Gerados pelos comandos abaixo |
 | Modelo treinado (`*.pkl`) | Nao | `python main.py jacarei-train` |
 
 ## Como rodar tudo (reproducao completa)
 
-**Pre-requisito:** a base do orientador e o Excel do FipeZAP nos caminhos acima. `python main.py verificar` mostra o que falta. Rode **na ordem**; os tempos sao desta maquina (so CPU).
+**Pre-requisito:** a base do VivaReal e o Excel do FipeZAP nos caminhos acima. `python main.py verificar` mostra o que falta. Rode **na ordem**; os tempos sao desta maquina (so CPU).
 
 | Etapa | Comando | Tempo | O que produz |
 |---|---|---|---|
@@ -152,7 +156,7 @@ main.py                     ponto de entrada (comandos e menu)
 src/
   scraper.py, cleaner.py, database.py, repository.py, stats.py, macro/
                             coleta e fluxo legado (nao usar o macro/ legado para modelar)
-  vivareal/                 carga e limpeza da base do orientador por segmento
+  vivareal/                 carga e limpeza da base do VivaReal por segmento
   pricing/                  precificacao: regressao linear, geografia/Censo, ajuste, modelos avancados,
                             projecao, prever (um imovel) e sensibilidade
   timeseries/               FipeZAP + macro: coleta por API, banco, validacao, paineis "as-of",
@@ -163,7 +167,7 @@ src/
   reporting/                relatorio analitico automatico (meta 9)
   verificar.py              checagem de ambiente e dados
 data/
-  raw/                      dados brutos de fontes publicas (nunca sobrescrever; a base do orientador nao e versionada)
+  raw/                      dados brutos de fontes publicas (nunca sobrescrever; a base bruta do VivaReal nao e versionada)
   processed/                datasets, paineis e projecao (gerados)
 reports/
   results/                  relatorios e tabelas geradas
@@ -201,9 +205,3 @@ Os modelos oficiais do projeto sao os de `modelos-avancados` (comparacao com o R
 - O FipeZAP e media movel trimestral e **nao tem Jacarei** (Sao Jose dos Campos e a cidade coberta mais proxima); a projecao e uma premissa.
 - Cinco defasagens de publicacao sao estimativas e o IBC-Br dessazonalizado e revisado pela fonte (ver `docs/SERIES_TEMPORAIS.md`).
 - Lista completa e ameacas a validade: secao 8 do relatorio.
-
-## Proximos passos
-
-1. Confirmar com o orientador a unidade do IPTU (mediana de R$ 100 a R$ 150 por ano e suspeita) e o uso do FipeZAP de SJC como proxy.
-2. Variaveis de qualidade do imovel e mais arquivos do Censo; snapshots periodicos do VivaReal para formar uma serie propria de Jacarei.
-3. Ler os textos completos dos trabalhos comparados e replicar suas divisoes na base de Jacarei (`docs/COMPARACAO_LITERATURA.md`).
