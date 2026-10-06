@@ -1,0 +1,43 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mercado imobiliário de Jacareí-SP — iniciação científica</title>
+<meta name="description" content="Análise e previsão do mercado imobiliário de Jacareí-SP: precificação de imóveis, séries temporais do índice FipeZAP e projeção de preço."><meta property="og:title" content="Mercado imobiliário de Jacareí-SP"><meta property="og:description" content="Análise e previsão do mercado imobiliário de Jacareí-SP: precificação de imóveis, séries temporais do índice FipeZAP e projeção de preço.">
+<style>
+:root{color-scheme:light;--bg:#f9f9f7;--card:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--line:#e1e0d9;--axis:#c3c2b7;--acc:#2a78d6;--ring:rgba(11,11,11,.10)}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){color-scheme:dark;--bg:#0d0d0d;--card:#1a1a19;--ink:#fff;--ink2:#c3c2b7;--muted:#898781;--line:#2c2c2a;--axis:#383835;--acc:#3987e5;--ring:rgba(255,255,255,.10)}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0d0d0d;--card:#1a1a19;--ink:#fff;--ink2:#c3c2b7;--muted:#898781;--line:#2c2c2a;--axis:#383835;--acc:#3987e5;--ring:rgba(255,255,255,.10)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:20px 16px 8px;max-width:1280px;margin:0 auto;display:flex;gap:16px;align-items:flex-start;justify-content:space-between}
+h1{font-size:22px;margin:0 0 4px}.sub{color:var(--ink2);margin:0;font-size:14px}
+#tema{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 12px;cursor:pointer;font:inherit;font-size:13px}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.abas{max-width:1280px;margin:0 auto;padding:0 16px;display:flex;gap:4px;overflow-x:auto}
+.aba{border:0;background:none;color:var(--ink2);padding:12px 14px;cursor:pointer;font:inherit;font-weight:500;border-bottom:2px solid transparent;white-space:nowrap}
+.aba:hover{color:var(--ink)}.aba[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--acc)}
+main{max-width:1280px;margin:0 auto;padding:20px 16px 48px}
+.painel{display:none}.painel.ativo{display:block}h2{font-size:18px;margin:0 0 4px}.resumo{color:var(--ink2);margin:0 0 16px;max-width:80ch}
+.grade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.cheia{grid-column:1/-1}
+.cartao{background:var(--card);border:1px solid var(--ring);border-radius:12px;padding:16px;min-width:0}
+.corpo{overflow:hidden;max-width:100%}.cartao h3{font-size:15px;margin:0 0 6px}.texto{color:var(--ink2);font-size:13px;margin:0 0 10px}.fonte{color:var(--muted);font-size:11px;margin:8px 0 0}
+.aviso{color:var(--ink2);border-left:3px solid #fab219;padding-left:10px;font-size:13px}.nota{color:var(--muted);font-size:12px;margin:10px 0 0}
+.segmentos{display:flex;gap:6px;margin:0 0 8px;flex-wrap:wrap}.seg{border:1px solid var(--line);background:none;color:var(--ink2);border-radius:999px;padding:4px 12px;cursor:pointer;font:inherit;font-size:13px}
+.seg.ativo{background:var(--acc);border-color:var(--acc);color:#fff}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--ring);border-radius:12px;padding:14px}.kpi-v{font-size:26px;font-weight:600}.kpi-r{font-size:13px;margin-top:2px}.kpi-n{color:var(--muted);font-size:11px;margin-top:2px}
+.lista{margin:0;padding-left:18px;color:var(--ink2);font-size:13px}.lista li{margin:4px 0}code{background:var(--line);padding:1px 5px;border-radius:4px;font-size:12px}
+.rolagem{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:13px}th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}th{color:var(--ink2);font-weight:600}
+header .acoes{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.link{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 12px;font-size:13px;text-decoration:none}.link:hover{border-color:var(--acc)}
+footer{max-width:1280px;margin:0 auto;padding:0 16px 32px;color:var(--muted);font-size:12px}footer a{color:var(--acc)}
+@media (max-width:800px){.grade{grid-template-columns:minmax(0,1fr)}header{flex-direction:column}}
+
+.hero{max-width:880px;margin:0 auto;padding:40px 16px 8px}.hero h1{font-size:30px}.hero p{color:var(--ink2);max-width:70ch}
+.botoes{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}.botao{background:var(--acc);color:#fff;border-radius:10px;padding:12px 20px;text-decoration:none;font-weight:600}
+.botao.sec{background:var(--card);color:var(--ink);border:1px solid var(--line)}</style></head><body>
+<div class="hero"><h1>Mercado imobiliário de Jacareí-SP</h1>
+<p>Iniciação científica: <b>precificação</b> de imóveis com gradient boosting, <b>séries temporais</b> do índice FipeZAP (ARIMA, LSTM) e <b>projeção de preço</b>, com comparação com trabalhos publicados.</p>
+<div class="botoes"><a class="botao" href="painel.html">Abrir o painel interativo</a><a class="botao sec" href="relatorio.html">Ler o relatório completo</a><a class="botao sec" href="https://github.com/Pedrocs50/imob-analytics">Código e documentação</a></div></div>
+<main style="max-width:880px"><div class="kpis"><div class="kpi"><div class="kpi-v">14.246</div><div class="kpi-r">anúncios analisados</div><div class="kpi-n">3.992 apartamentos e 10.254 casas</div></div><div class="kpi"><div class="kpi-v">0,73 · 0,80</div><div class="kpi-r">R² da precificação (apto · casa)</div><div class="kpi-n">teste temporal, conjunto final de modelos</div></div><div class="kpi"><div class="kpi-v">11% · 15%</div><div class="kpi-r">erro típico por imóvel (apto · casa)</div><div class="kpi-n">MAPE no teste temporal</div></div><div class="kpi"><div class="kpi-v">1,18%</div><div class="kpi-r">erro do ARIMA em 12 meses</div><div class="kpi-n">índice FipeZAP nacional (walk-forward)</div></div><div class="kpi"><div class="kpi-v">+8,2%</div><div class="kpi-r">tendência do R$/m² em 12 meses</div><div class="kpi-n">cenário central (ARIMA de SJC)</div></div></div>
+<section class="cartao"><h3>Leia com cuidado</h3><ul class="lista">
+<li>Os dados são <b>preços pedidos</b> em anúncios de um único dia (março/2026), não preços de venda.</li>
+<li>O FipeZAP <b>não tem Jacareí</b>: a tendência usa São José dos Campos (ou o índice nacional) como referência; é uma premissa.</li>
+<li>Sensibilidade e cenários “e se” são associações aprendidas dos anúncios, não efeitos causais.</li></ul></section></main>
+<footer>Site gerado por <code>python main.py publicar</code>. O painel e o relatório trazem os resultados; os dados brutos (base do orientador) não são publicados.</footer></body></html>

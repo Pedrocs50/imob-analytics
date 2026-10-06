@@ -4,82 +4,82 @@ Gerado por `python main.py modelos-avancados`. Nao editar manualmente.
 
 Conjunto de informacao completo: imovel, terreno e palavras do anuncio, coordenadas (imputadas), preco dos vizinhos, setor IBGE e Censo 2022. Divisao **temporal** (teste nos 25% mais recentes). Busca de parametros bayesiana (Optuna/TPE) minimizando o erro medio na validacao cruzada de 3 particoes **so no treino**; tentativas: HistGradientBoosting 40, LightGBM 40, CatBoost 8. O conjunto e a media dos tres modelos ajustados. Os intervalos sao conformais pelo erro relativo fora da amostra no treino.
 
-Tempo total: 65.5 min.
+Tempo total: 70.2 min.
 
 ## apartamento
 
 | modelo | RMSE | MAE | MAPE (%) | R2 |
 |---|---|---|---|---|
-| HistGradientBoosting, parametros padrao | 1027.450 | 743.192 | 11.957 | 0.685 |
-| HistGradientBoosting, ajustado (Optuna) | 1001.011 | 722.719 | 11.677 | 0.701 |
-| LightGBM, parametros padrao | 1017.251 | 739.329 | 11.966 | 0.692 |
-| LightGBM, ajustado (Optuna) | 999.479 | 713.419 | 11.467 | 0.702 |
-| CatBoost, parametros padrao | 1019.487 | 744.931 | 12.186 | 0.690 |
-| CatBoost, ajustado (Optuna) | 1031.604 | 762.468 | 12.471 | 0.683 |
-| Conjunto (media dos 3 ajustados) | 988.575 | 710.778 | 11.499 | 0.709 |
+| HistGradientBoosting, parametros padrao | 984.880 | 708.874 | 11.502 | 0.711 |
+| HistGradientBoosting, ajustado (Optuna) | 962.002 | 690.637 | 11.207 | 0.724 |
+| LightGBM, parametros padrao | 989.961 | 718.632 | 11.714 | 0.708 |
+| LightGBM, ajustado (Optuna) | 960.165 | 686.757 | 11.091 | 0.725 |
+| CatBoost, parametros padrao | 989.000 | 722.963 | 11.771 | 0.709 |
+| CatBoost, ajustado (Optuna) | 987.779 | 730.488 | 11.810 | 0.709 |
+| Conjunto (media dos 3 ajustados) | 950.989 | 684.227 | 11.053 | 0.730 |
 
 Melhores parametros encontrados:
 
-- HistGradientBoosting: {'learning_rate': 0.020777760750325572, 'max_leaf_nodes': 52, 'min_samples_leaf': 6, 'l2_regularization': 0.4076798661111209, 'max_features': 0.6329703120569584} (MAE na validacao interna 758)
-- LightGBM: {'learning_rate': 0.010072451352696996, 'num_leaves': 112, 'min_child_samples': 15, 'subsample': 0.8452404885159948, 'colsample_bytree': 0.6742771278043024, 'reg_lambda': 0.0026139609595683803, 'reg_alpha': 4.675795244814138, 'n_estimators': 1101, 'objective': 'regression'} (MAE na validacao interna 738)
-- CatBoost: {'depth': 6, 'learning_rate': 0.15627571590838057, 'l2_leaf_reg': 1.0725209743171995, 'iterations': 441} (MAE na validacao interna 784)
+- HistGradientBoosting: {'learning_rate': 0.0264891626801987, 'max_leaf_nodes': 52, 'min_samples_leaf': 7, 'l2_regularization': 11.779794101330705, 'max_features': 0.48114598712001183} (MAE na validacao interna 738)
+- LightGBM: {'learning_rate': 0.02798822409768565, 'num_leaves': 99, 'min_child_samples': 21, 'subsample': 0.8827596870565048, 'colsample_bytree': 0.4280696320370853, 'reg_lambda': 0.002281550832662955, 'reg_alpha': 0.005129643551239731, 'n_estimators': 655, 'objective': 'regression'} (MAE na validacao interna 713)
+- CatBoost: {'depth': 5, 'learning_rate': 0.1769230629762758, 'l2_leaf_reg': 1.9721610970573997, 'iterations': 304} (MAE na validacao interna 750)
 
 Intervalos de previsao (R$/m2):
 
 | nivel nominal | cobertura no teste temporal | largura media (R$/m2) | erro relativo no quantil |
 |---|---|---|---|
-| 0.800 | 0.827 | 2403.338 | 0.188 |
-| 0.900 | 0.911 | 3168.338 | 0.248 |
+| 0.800 | 0.823 | 2290.099 | 0.180 |
+| 0.900 | 0.911 | 3084.034 | 0.242 |
 
 ## casa
 
 | modelo | RMSE | MAE | MAPE (%) | R2 |
 |---|---|---|---|---|
-| HistGradientBoosting, parametros padrao | 975.684 | 693.401 | 16.135 | 0.767 |
-| HistGradientBoosting, ajustado (Optuna) | 945.550 | 662.946 | 15.438 | 0.781 |
-| LightGBM, parametros padrao | 972.711 | 690.925 | 16.077 | 0.768 |
-| LightGBM, ajustado (Optuna) | 927.698 | 650.277 | 15.098 | 0.789 |
-| CatBoost, parametros padrao | 964.176 | 683.348 | 15.922 | 0.772 |
-| CatBoost, ajustado (Optuna) | 959.896 | 688.144 | 16.073 | 0.774 |
-| Conjunto (media dos 3 ajustados) | 924.611 | 649.480 | 15.088 | 0.791 |
+| HistGradientBoosting, parametros padrao | 946.163 | 676.292 | 15.884 | 0.781 |
+| HistGradientBoosting, ajustado (Optuna) | 921.291 | 651.401 | 15.303 | 0.792 |
+| LightGBM, parametros padrao | 937.384 | 671.902 | 15.829 | 0.785 |
+| LightGBM, ajustado (Optuna) | 897.199 | 631.387 | 14.860 | 0.803 |
+| CatBoost, parametros padrao | 949.674 | 676.491 | 15.895 | 0.779 |
+| CatBoost, ajustado (Optuna) | 951.160 | 678.870 | 15.999 | 0.779 |
+| Conjunto (media dos 3 ajustados) | 904.811 | 637.873 | 15.005 | 0.800 |
 
 Melhores parametros encontrados:
 
-- HistGradientBoosting: {'learning_rate': 0.021418136071124437, 'max_leaf_nodes': 70, 'min_samples_leaf': 12, 'l2_regularization': 0.8538769722750749, 'max_features': 0.6423857721006483} (MAE na validacao interna 678)
-- LightGBM: {'learning_rate': 0.017500713474250612, 'num_leaves': 70, 'min_child_samples': 17, 'subsample': 0.8553298651410736, 'colsample_bytree': 0.7923581113148196, 'reg_lambda': 0.0019375912493993007, 'reg_alpha': 0.0026821905215968825, 'n_estimators': 1145, 'objective': 'regression'} (MAE na validacao interna 661)
-- CatBoost: {'depth': 6, 'learning_rate': 0.15627571590838057, 'l2_leaf_reg': 1.0725209743171995, 'iterations': 441} (MAE na validacao interna 703)
+- HistGradientBoosting: {'learning_rate': 0.02526478746922359, 'max_leaf_nodes': 85, 'min_samples_leaf': 11, 'l2_regularization': 0.14783152649378856, 'max_features': 0.44803581182389945} (MAE na validacao interna 660)
+- LightGBM: {'learning_rate': 0.015563299833733236, 'num_leaves': 107, 'min_child_samples': 11, 'subsample': 0.8999572812486466, 'colsample_bytree': 0.626423633316612, 'reg_lambda': 0.0018893216468666132, 'reg_alpha': 0.0013987587776078411, 'n_estimators': 1163, 'objective': 'regression'} (MAE na validacao interna 644)
+- CatBoost: {'depth': 6, 'learning_rate': 0.15627571590838057, 'l2_leaf_reg': 1.0725209743171995, 'iterations': 441} (MAE na validacao interna 686)
 
 Intervalos de previsao (R$/m2):
 
 | nivel nominal | cobertura no teste temporal | largura media (R$/m2) | erro relativo no quantil |
 |---|---|---|---|
-| 0.800 | 0.811 | 2207.637 | 0.238 |
-| 0.900 | 0.906 | 3024.961 | 0.327 |
+| 0.800 | 0.819 | 2195.521 | 0.236 |
+| 0.900 | 0.906 | 3002.797 | 0.323 |
 
 ## residencial
 
 | modelo | RMSE | MAE | MAPE (%) | R2 |
 |---|---|---|---|---|
-| HistGradientBoosting, parametros padrao | 1005.525 | 726.510 | 15.096 | 0.772 |
-| HistGradientBoosting, ajustado (Optuna) | 972.798 | 699.181 | 14.746 | 0.787 |
-| LightGBM, parametros padrao | 1003.512 | 728.910 | 15.520 | 0.773 |
-| LightGBM, ajustado (Optuna) | 942.979 | 675.956 | 14.347 | 0.799 |
-| CatBoost, parametros padrao | 1005.993 | 730.281 | 15.359 | 0.772 |
-| CatBoost, ajustado (Optuna) | 982.356 | 712.879 | 14.956 | 0.782 |
-| Conjunto (media dos 3 ajustados) | 947.651 | 679.526 | 14.297 | 0.797 |
+| HistGradientBoosting, parametros padrao | 968.043 | 701.652 | 14.821 | 0.789 |
+| HistGradientBoosting, ajustado (Optuna) | 941.965 | 675.688 | 14.307 | 0.800 |
+| LightGBM, parametros padrao | 979.666 | 715.576 | 15.468 | 0.784 |
+| LightGBM, ajustado (Optuna) | 919.301 | 659.704 | 14.018 | 0.809 |
+| CatBoost, parametros padrao | 982.463 | 714.581 | 15.192 | 0.782 |
+| CatBoost, ajustado (Optuna) | 969.769 | 703.918 | 14.824 | 0.788 |
+| Conjunto (media dos 3 ajustados) | 925.641 | 664.786 | 14.041 | 0.807 |
 
 Melhores parametros encontrados:
 
-- HistGradientBoosting: {'learning_rate': 0.021103020847069942, 'max_leaf_nodes': 77, 'min_samples_leaf': 6, 'l2_regularization': 1.2143614773581008, 'max_features': 0.5057798961506867} (MAE na validacao interna 707)
-- LightGBM: {'learning_rate': 0.02122857173130132, 'num_leaves': 94, 'min_child_samples': 7, 'subsample': 0.8096193217225021, 'colsample_bytree': 0.48092437429255125, 'reg_lambda': 0.02836091724352868, 'reg_alpha': 0.035506741378642875, 'n_estimators': 896, 'objective': 'regression'} (MAE na validacao interna 693)
-- CatBoost: {'depth': 6, 'learning_rate': 0.15627571590838057, 'l2_leaf_reg': 1.0725209743171995, 'iterations': 441} (MAE na validacao interna 742)
+- HistGradientBoosting: {'learning_rate': 0.029072875755800923, 'max_leaf_nodes': 96, 'min_samples_leaf': 9, 'l2_regularization': 1.727311644148852, 'max_features': 0.35904948602092734} (MAE na validacao interna 689)
+- LightGBM: {'learning_rate': 0.012152776973750262, 'num_leaves': 122, 'min_child_samples': 16, 'subsample': 0.8647294835448722, 'colsample_bytree': 0.7146538304742496, 'reg_lambda': 0.008957145718728719, 'reg_alpha': 0.0013332875680414006, 'n_estimators': 1181, 'objective': 'regression'} (MAE na validacao interna 672)
+- CatBoost: {'depth': 6, 'learning_rate': 0.15627571590838057, 'l2_leaf_reg': 1.0725209743171995, 'iterations': 441} (MAE na validacao interna 719)
 
 Intervalos de previsao (R$/m2):
 
 | nivel nominal | cobertura no teste temporal | largura media (R$/m2) | erro relativo no quantil |
 |---|---|---|---|
-| 0.800 | 0.821 | 2389.817 | 0.231 |
-| 0.900 | 0.911 | 3247.976 | 0.314 |
+| 0.800 | 0.814 | 2299.989 | 0.223 |
+| 0.900 | 0.908 | 3184.042 | 0.308 |
 
 ## Figura
 

@@ -1,0 +1,80 @@
+{
+ "apartamento": {
+  "HistGradientBoosting": {
+   "learning_rate": 0.0264891626801987,
+   "max_leaf_nodes": 52,
+   "min_samples_leaf": 7,
+   "l2_regularization": 11.779794101330705,
+   "max_features": 0.48114598712001183
+  },
+  "LightGBM": {
+   "learning_rate": 0.02798822409768565,
+   "num_leaves": 99,
+   "min_child_samples": 21,
+   "subsample": 0.8827596870565048,
+   "colsample_bytree": 0.4280696320370853,
+   "reg_lambda": 0.002281550832662955,
+   "reg_alpha": 0.005129643551239731,
+   "n_estimators": 655,
+   "objective": "regression"
+  },
+  "CatBoost": {
+   "depth": 5,
+   "learning_rate": 0.1769230629762758,
+   "l2_leaf_reg": 1.9721610970573997,
+   "iterations": 304
+  }
+ },
+ "casa": {
+  "HistGradientBoosting": {
+   "learning_rate": 0.02526478746922359,
+   "max_leaf_nodes": 85,
+   "min_samples_leaf": 11,
+   "l2_regularization": 0.14783152649378856,
+   "max_features": 0.44803581182389945
+  },
+  "LightGBM": {
+   "learning_rate": 0.015563299833733236,
+   "num_leaves": 107,
+   "min_child_samples": 11,
+   "subsample": 0.8999572812486466,
+   "colsample_bytree": 0.626423633316612,
+   "reg_lambda": 0.0018893216468666132,
+   "reg_alpha": 0.0013987587776078411,
+   "n_estimators": 1163,
+   "objective": "regression"
+  },
+  "CatBoost": {
+   "depth": 6,
+   "learning_rate": 0.15627571590838057,
+   "l2_leaf_reg": 1.0725209743171995,
+   "iterations": 441
+  }
+ },
+ "residencial": {
+  "HistGradientBoosting": {
+   "learning_rate": 0.029072875755800923,
+   "max_leaf_nodes": 96,
+   "min_samples_leaf": 9,
+   "l2_regularization": 1.727311644148852,
+   "max_features": 0.35904948602092734
+  },
+  "LightGBM": {
+   "learning_rate": 0.012152776973750262,
+   "num_leaves": 122,
+   "min_child_samples": 16,
+   "subsample": 0.8647294835448722,
+   "colsample_bytree": 0.7146538304742496,
+   "reg_lambda": 0.008957145718728719,
+   "reg_alpha": 0.0013332875680414006,
+   "n_estimators": 1181,
+   "objective": "regression"
+  },
+  "CatBoost": {
+   "depth": 6,
+   "learning_rate": 0.15627571590838057,
+   "l2_leaf_reg": 1.0725209743171995,
+   "iterations": 441
+  }
+ }
+}

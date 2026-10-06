@@ -29,11 +29,17 @@ src/
     ajuste.py               ajuste de parametros e importancia das variaveis
     modelos_avancados.py    LightGBM/CatBoost, Optuna, conjunto e intervalos conformais
     projecao.py             valor estimado por anuncio x tendencia do FipeZAP
+    prever.py               avaliacao de um imovel novo (comando `prever`)
+    sensibilidade.py        meta 7: relevancia por grupo, cenarios e efeito do bairro
   timeseries/               trilha temporal: catalogo, clientes de API, FipeZAP,
                             banco, validacao e paineis (feito; ver docs/SERIES_TEMPORAIS.md).
                             arima.py, arima_plus.py e lstm_painel.py (feitos)
   analysis/                 analise exploratoria: series_eda.py, vivareal_eda.py, mapa_setores.py, utils.py
   evaluation/               RMSE, MAE, R2 e comparacao, compartilhados pelas trilhas
+  visualization/publicar.py monta site/ (versao web do painel e do relatorio)
+  verificar.py              checagem de ambiente, dados e comandos disponiveis (python main.py verificar)
+  reporting/                meta 9: relatorio analitico automatico (numeros, referencias, secoes); ver docs/RELATORIO_AUTOMATICO.md
+  visualization/            meta 8: painel interativo (um HTML), uma secao por modulo; ver docs/PAINEL_INTERATIVO.md
 data/
   raw/                      originais, preservados (nunca sobrescrever)
   database/                 banco do fluxo legado (ignorado pelo git)
@@ -47,8 +53,7 @@ notebooks/                  reservado a notebooks Jupyter
 docs/                       metas, auditoria e este documento
 ```
 
-Pastas ainda nao criadas, para quando a etapa comecar: `src/visualization/`
-(meta 8) e `src/reporting/` (meta 9).
+Todas as pastas previstas foram criadas.
 
 ## O que foi feito
 

@@ -10,8 +10,8 @@ Gerado por `python main.py projecao`. Nao editar manualmente. Leitura em `docs/P
 
 | segmento | anuncios | R$/m2 pedido (mediana) | R$/m2 estimado, mar/2026 | R$/m2 estimado, hoje | R$/m2 projetado em 3 meses | R$/m2 projetado em 6 meses | R$/m2 projetado em 12 meses | intervalo 80% (+-) | intervalo 90% (+-) |
 |---|---|---|---|---|---|---|---|---|---|
-| apartamento | 3992 | 6174.757 | 6172.420 | 6444.775 | 6556.346 | 6692.812 | 6974.326 | 0.174 | 0.236 |
-| casa | 10254 | 4375.000 | 4410.084 | 4604.677 | 4684.392 | 4781.895 | 4983.032 | 0.233 | 0.321 |
+| apartamento | 3992 | 6174.757 | 6184.971 | 6457.880 | 6569.677 | 6706.421 | 6988.507 | 0.170 | 0.228 |
+| casa | 10254 | 4375.000 | 4402.429 | 4596.684 | 4676.261 | 4773.594 | 4974.381 | 0.225 | 0.313 |
 
 ## Cenarios de tendencia (variacao do R$/m2 apos o ultimo indice publicado)
 
@@ -29,7 +29,7 @@ Gerado por `python main.py projecao`. Nao editar manualmente. Leitura em `docs/P
 
 ## Incerteza do valor de cada imovel
 
-Intervalo conformal pelo erro relativo fora da amostra: apartamento: +-17% (80%), +-24% (90%); casa: +-23% (80%), +-32% (90%).
+Intervalo conformal pelo erro relativo fora da amostra: apartamento: +-17% (80%), +-23% (90%); casa: +-23% (80%), +-31% (90%).
 
 ## Arquivos
 

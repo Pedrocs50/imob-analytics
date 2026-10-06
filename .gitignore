@@ -187,7 +187,7 @@ venv.bak/
 .ropeproject
 
 # mkdocs documentation
-/site
+# /site  (liberado: a pasta site/ e o site publicado no GitHub Pages)
 
 # mypy
 .mypy_cache/
@@ -246,3 +246,9 @@ data/raw/ibge/censo2022_originais/
 
 # Temporarios do CatBoost
 catboost_info/
+
+# Painel interativo gerado (~7 MB, reproduzivel com `python main.py painel`)
+reports/figures/painel_interativo.html
+
+# Relatorio HTML gerado (figuras embutidas, ~1 MB; reproduzivel com `python main.py relatorio`)
+reports/relatorio_analitico.html

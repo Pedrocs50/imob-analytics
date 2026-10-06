@@ -4,7 +4,7 @@ Data: 2026-10-02. Numeros completos em `reports/results/modelos_avancados.md` (C
 figura `reports/figures/modelos_avancados_real_previsto.png`). Complementa `docs/DIARIO_MODELAGEM.md`.
 
 ```bash
-python main.py modelos-avancados    # ~66 minutos, quase todo na busca de parametros (CPU)
+python main.py modelos-avancados    # ~70 minutos, quase todo na busca de parametros (CPU)
 ```
 
 Implementacao: `src/pricing/modelos_avancados.py` (novas variaveis em `src/vivareal/cleaning.py` e `src/pricing/geo.py`).
@@ -29,27 +29,67 @@ pesquisou-se o que a literatura de precos hedonicos e de dados tabulares sugere 
 **Licao:** informacao nova (terreno e texto) rendeu mais que todo o ajuste de parametros (casa +0,044 contra +0,02) e que o Censo
 (+0,00). Ajustar parametros em apartamentos rendeu pouco por falta de variaveis de qualidade e conservacao do imovel.
 
+## Rodada de melhorias de variaveis (2026-10-05)
+
+Pergunta: ha informacao ja disponivel no VivaReal que o modelo ainda nao usa? Cada ideia foi testada com o **LightGBM ajustado fixo**
+(mesmos parametros), na divisao temporal e em 5-fold aleatorio, para ver se o ganho e consistente. Script de teste descartavel; so o
+que ajudou entrou no pipeline (`src/pricing/geo.py`, `_montar_x`).
+
+| Ideia | Apartamento (temporal \| 5-fold, R2) | Casa (temporal \| 5-fold, R2) | Decisao |
+|---|---|---|---|
+| Base (LightGBM ajustado) | 0,702 \| 0,724 | 0,789 \| 0,797 | - |
+| + **valor da taxa de condominio** (proxy de padrao do predio) | 0,720 \| 0,737 | 0,796 \| 0,801 | **entra** |
+| + IPTU | 0,706 \| 0,727 | 0,788 \| 0,798 | **fora** (ganho ~0; unidade nao confirmada) |
+| + condominio e IPTU por m2 | 0,717 \| 0,735 | 0,795 \| 0,801 | fora |
+| + **contexto**: area relativa ao bairro, no de anuncios na rua e no bairro | 0,714 \| 0,730 | 0,790 \| 0,799 | **entra** |
+| + distancia ao centro | 0,708 \| 0,726 | 0,789 \| 0,797 | entra (barata; ganho so em conjunto) |
+| **Conjunto: condominio + contexto + distancia (+ IPTU)** | **0,730** \| **0,742** | **0,799** \| **0,804** | **entra (sem IPTU: 0,730 \| 0,799, igual)** |
+| Alvo em log (preve log do R$/m2) | 0,675 \| 0,680 | 0,774 \| 0,790 | **descartado** (pior nos dois) |
+| + vizinhos em mais escalas (5 e 40) | 0,720 \| 0,730 | 0,794 \| 0,801 | descartado (piora) |
+| + vizinhos ponderados pelo tamanho | 0,726 \| 0,738 | 0,792 \| 0,798 | descartado |
+| + preco medio da mesma rua | 0,728 \| 0,735 | 0,800 \| 0,803 | descartado (ganho ~0) |
+| + todas as variaveis de vizinhanca juntas | 0,721 \| 0,723 | 0,791 \| 0,797 | descartado (piora) |
+
+Leituras:
+
+- **O ganho vem de variaveis que NAO usam o preco**: taxa de condominio e contexto do anuncio (+0,028 em apartamento, +0,010 em casa).
+- **Mais variaveis de vizinhanca calculadas com o preco pioram o modelo.** No treino cada anuncio exclui o proprio preco (leave-one-out)
+  e no teste usa o treino inteiro; com varias dessas variaveis o modelo aprende uma relacao que no teste fica ligeiramente
+  diferente. Resultado negativo mantido no relatorio.
+- O **IPTU nao acrescenta nada** acima do condominio, em linha com a decisao de mante-lo fora ate confirmar a unidade.
+- O **alvo em log** reduz o peso dos precos altos no ajuste, mas aumenta o erro em R$/m2 (que e a metrica de interesse).
+- Depois da inclusao, `modelos-avancados` foi rodado de novo (busca Optuna refeita com as novas variaveis); os numeros finais estao na
+  secao seguinte. Uma primeira tentativa foi interrompida no meio (o computador suspendeu); a segunda reproduziu exatamente os mesmos
+  numeros do apartamento, o que confirma a reprodutibilidade (sementes fixas).
+
 ## Resultados finais (divisao temporal, teste nos 25% mais recentes)
+
+Rodada final, com as variaveis de condominio e contexto e a busca Optuna refeita (70 min). Entre parenteses, a rodada anterior (so com
+terreno e texto), para mostrar o efeito das variaveis novas.
 
 | Segmento | Melhor modelo unico | R2 | MAE (R$/m2) | **Conjunto**: R2 | MAE | MAPE |
 |---|---|---|---|---|---|---|
-| Apartamento | LightGBM ajustado | 0,702 | 713 | **0,709** | 711 | 11,5% |
-| Casa | LightGBM ajustado | 0,789 | 650 | **0,791** | 649 | 15,1% |
-| Residencial | LightGBM ajustado | 0,799 | 676 | **0,797** | 680 | 14,3% |
+| Apartamento | LightGBM ajustado | 0,725 (0,702) | 687 (713) | **0,730** (0,709) | 684 (711) | 11,1% (11,5%) |
+| Casa | LightGBM ajustado | 0,803 (0,789) | 631 (650) | **0,800** (0,791) | 638 (649) | 15,0% (15,1%) |
+| Residencial | LightGBM ajustado | 0,809 (0,799) | 660 (676) | **0,807** (0,797) | 665 (680) | 14,0% (14,3%) |
 
-Modelos com parametros padrao, para referencia: apartamento 0,685 a 0,692; casa 0,767 a 0,772; residencial 0,772 a 0,773.
+Todos os modelos (R2): HistGradientBoosting ajustado 0,724 / 0,792 / 0,800 e CatBoost ajustado 0,709 / 0,779 / 0,788 (apartamento / casa /
+residencial). Parametros padrao: apartamento 0,708 a 0,711; casa 0,779 a 0,785; residencial 0,782 a 0,789.
 
-No residencial o LightGBM sozinho (0,799) e ligeiramente melhor que o conjunto (0,797): a diferenca esta dentro do ruido.
+- A busca Bayesiana continua rendendo +0,01 a +0,02; as variaveis novas deram +0,02 no apartamento e +0,01 em casa e residencial.
+- **Em casa e residencial o LightGBM sozinho empata ou supera o conjunto** (0,803 x 0,800; 0,809 x 0,807): diferenca dentro do ruido.
+  O conjunto so ganha de forma clara no apartamento (+0,005). Mantido por ser mais estavel e porque os intervalos foram calibrados com ele.
+- **CatBoost ajustado nunca superou os parametros padrao** (so 8 tentativas); continua sendo o mais lento.
 
 Intervalos de previsao (R$/m2, teste temporal):
 
 | Segmento | Nominal | Cobertura observada | Erro relativo do intervalo |
 |---|---|---|---|
-| Apartamento | 80% / 90% | 82,7% / 91,1% | +-18,8% / +-24,8% |
-| Casa | 80% / 90% | 81,1% / 90,6% | +-23,8% / +-32,7% |
-| Residencial | 80% / 90% | 82,1% / 91,1% | +-23,1% / +-31,4% |
+| Apartamento | 80% / 90% | 82,3% / 91,1% | +-18,0% / +-24,2% |
+| Casa | 80% / 90% | 81,9% / 90,6% | +-23,6% / +-32,3% |
+| Residencial | 80% / 90% | 81,4% / 90,8% | +-22,3% / +-30,8% |
 
-A cobertura observada fica 1 a 3 pontos acima da nominal: os intervalos sao bem calibrados e levemente conservadores.
+A cobertura observada fica 0,6 a 2,3 pontos acima da nominal: os intervalos sao bem calibrados e levemente conservadores.
 
 ## Cuidados contra vazamento (ao incluir texto e terreno)
 

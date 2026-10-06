@@ -40,7 +40,7 @@ pela data de criacao, teste nos 25% mais recentes), a mais exigente. Tambem se r
 | Idade do anuncio, comodidades, anunciante | testados | **Descartados**: a idade e colinear com a divisao temporal (piora o teste); os demais nao acrescentam | Evita variavel que "ajuda" so por artefato da divisao |
 | Busca de parametros lenta | LightGBM/CatBoost com milhares de arvores | Optuna (TPE) com 3 particoes **so no treino**; CatBoost limitado (profundidade 4-7, 150-450 iteracoes, 8 tentativas, `border_count` 64) | Execucao de 65 min em vez de horas; ganho de +0,01 a +0,02 de R2 |
 | Incerteza da previsao | erro de 11% a 15% por imovel | **Intervalos conformais** pelo quantil do erro relativo fora da amostra (5 particoes) | Cobertura 81-83% para 80% nominal e ~91% para 90% (teste temporal) |
-| Valor "justo" de um anuncio | o modelo viu o proprio anuncio no treino | **Previsao fora da amostra** (5 particoes) para cada anuncio | Erro relativo mediano honesto: 8,5% (apt), 10,8% (casa) |
+| Valor "justo" de um anuncio | o modelo viu o proprio anuncio no treino | **Previsao fora da amostra** (5 particoes) para cada anuncio | Erro relativo mediano honesto: 8,1% (apt), 10,4% (casa) |
 | Jacarei sem indice proprio | FipeZAP nao cobre | **Proxy**: variacao observada e prevista de Sao Jose dos Campos; cenarios nacional e tendencia de 12 meses como comparacao | Premissa explicita, nao testavel hoje |
 
 Tratamento das series temporais (macro, FipeZAP, defasagens de publicacao, painel "as-of", teste de vazamento) esta em
@@ -65,17 +65,21 @@ Divisao temporal, todos os anuncios; R2 | MAE em R$/m2.
 | - | Random Forest (baseline original) com as mesmas variaveis e divisoes | 0,66 \| 774 | 0,72 \| 768 | 0,74 \| 785 |
 | 10 | Etapa 8 + **terreno e texto do anuncio** (parametros padrao) | 0,69 \| 739 | 0,77 \| 687 | 0,77 \| 740 |
 | 11 | LightGBM ajustado (Optuna, 40 tentativas) | 0,70 \| 713 | 0,79 \| 650 | **0,80** \| 676 |
-| 12 | **Conjunto** (media de HGB + LightGBM + CatBoost ajustados) | **0,709** \| 711 | **0,791** \| 649 | 0,797 \| 680 |
+| 12 | Conjunto (media de HGB + LightGBM + CatBoost ajustados) | 0,709 \| 711 | 0,791 \| 649 | 0,797 \| 680 |
+| 13 | Etapa 12 + **valor do condominio e contexto** (area relativa ao bairro, no de anuncios na rua e no bairro, distancia ao centro), busca refeita | **0,730** \| 684 | **0,800** \| 638 | **0,807** \| 665 |
 
-Ganho acumulado do baseline simples (etapa 0) ao conjunto final: apartamento 0,37 -> 0,71; casa 0,37 -> 0,79; residencial 0,33 -> 0,80.
-MAE de 1.085 -> 711 (apt), 1.208 -> 649 (casa), 1.339 -> 680 (residencial). MAPE do conjunto: 11,5% / 15,1% / 14,3%.
+Ganho acumulado do baseline simples (etapa 0) ao conjunto final (etapa 13): apartamento 0,37 -> 0,73; casa 0,37 -> 0,80; residencial 0,33 -> 0,81.
+MAE de 1.085 -> 684 (apt), 1.208 -> 638 (casa), 1.339 -> 665 (residencial). MAPE do conjunto: 11,1% / 15,0% / 14,0%.
 
-Observacoes das etapas 10 a 12 (`docs/MODELOS_AVANCADOS.md`):
+Observacoes das etapas 10 a 13 (`docs/MODELOS_AVANCADOS.md`):
 
 - **Informacao nova rendeu mais que ajuste**: terreno e texto deram +0,044 de R2 nas casas; o ajuste Bayesiano deu +0,014 a +0,021;
   o Censo, +0,00. Antes de tunar mais, vale buscar variaveis (qualidade, andar, idade do predio) que o VivaReal nao traz.
 - **CatBoost ajustado nao melhorou** (apt 0,690 -> 0,683) com apenas 8 tentativas; o LightGBM ajustado foi o melhor modelo unico.
-- **O conjunto so ganha de forma clara em apartamento** (+0,007 sobre o LightGBM); em casa e residencial a diferenca e ruido.
+- **O conjunto so ganha de forma clara em apartamento** (+0,005 sobre o LightGBM na etapa 13); em casa e residencial o LightGBM sozinho empata (0,803 e 0,809).
+- **Etapa 13 (2026-10-05):** a informacao que nao usa preco (taxa de condominio e contexto do anuncio) deu +0,021 em apartamento e +0,009 a +0,010
+  nas casas e no residencial. Testados e **descartados**: IPTU, alvo em log, vizinhos em varias escalas, preco da rua (mais variaveis de
+  vizinhanca com preco pioram o teste). Aluguel/yield nas series temporais tambem piorou o ARIMA (`docs/MODELOS_TEMPORAIS.md`).
 - Etapa 10 dos apartamentos: R2 praticamente igual (0,693) porque terreno nao se aplica e o texto pouco agrega no teste temporal.
 
 Observacoes:
@@ -152,15 +156,15 @@ um LSTM de controle so com a serie do alvo, mais gradient boosting global. Avali
   com SJC nao sao as vizinhas (Praia Grande, Vila Velha, Blumenau...).
 - Detalhes e ressalvas: `docs/MODELOS_LSTM.md`.
 
-## 7. Projecao de preco de Jacarei (2026-10-02)
+## 7. Projecao de preco de Jacarei (2026-10-02; refeita em 2026-10-05 com o modelo da etapa 13)
 
 Combina o valor estimado de cada anuncio (conjunto LightGBM + HGB, previsao fora da amostra) com a tendencia do FipeZAP de SJC.
 Detalhes e premissas em `docs/PROJECAO_JACAREI.md`.
 
 | Segmento | Estimado hoje (R$/m2, mediana) | Em 12 meses (ARIMA SJC) | Erro relativo mediano | Intervalo 80% do imovel |
 |---|---|---|---|---|
-| Apartamento | 6.445 | 6.974 (+8,2%) | 8,5% | +-17% |
-| Casa | 4.605 | 4.983 (+8,2%) | 10,8% | +-23% |
+| Apartamento | 6.458 | 6.989 (+8,2%) | 8,1% | +-17% |
+| Casa | 4.597 | 4.974 (+8,2%) | 10,4% | +-23% |
 
 Cenarios em 12 meses: ARIMA SJC +8,2% (IC95 -4,5% a +22,6%); tendencia de 12 meses de SJC +9,8%; ARIMA nacional +6,2% (+0,3% a +12,4%).
 Do snapshot (mar/2026) ate o ultimo indice (ago/2026) o indice de SJC subiu 4,4% (nacional 2,4%).
@@ -177,7 +181,12 @@ Maquina local, so CPU (sem GPU). Os tempos orientam a reproducao e justificam as
 | `reg-geo` | minutos (nao medido) | kNN espacial e gradient boosting por segmento | - |
 | `ajuste-gb` | ~7 min | busca aleatoria de 20 combinacoes x 3 particoes x 3 segmentos | busca pequena de proposito |
 | `lstm` | 6,8 min | 3 sementes x reajuste anual x 50 cidades (PyTorch, CPU) | rede de 1 camada com 32 unidades; reajuste anual (nao mensal) |
-| `modelos-avancados` | **65,5 min** | Optuna: 40 tentativas HGB + 40 LightGBM + 8 CatBoost, cada uma com 3 particoes, em 3 segmentos | CatBoost reduzido (era o mais lento); busca so no treino |
+| `modelos-avancados` | **65,5 min** (70,2 min na rodada final) | Optuna: 40 tentativas HGB + 40 LightGBM + 8 CatBoost, cada uma com 3 particoes, em 3 segmentos | CatBoost reduzido (era o mais lento); busca so no treino |
+| `verificar` | segundos | so le o disco: ambiente, dados de entrada, resultados e comandos disponiveis | - |
+| `relatorio` | segundos | le resultados e monta Markdown/HTML (numeros calculados, texto conferido) | nada recalculado |
+| `painel` | segundos | so le resultados salvos e monta o HTML (plotly.js embutido) | tudo em um arquivo, sem servidor |
+| `sensibilidade` | ~2,5 min | refit do conjunto + 5 permutacoes por grupo + cenarios | - |
+| `prever` | ~40 s | treino do conjunto em todo o segmento | - |
 | `projecao` | ~4 min | 5 particoes x 2 modelos x 2 segmentos | parametros lidos do relatorio anterior para nao refazer a busca |
 
 Maior gargalo: a busca de parametros. Se for preciso repetir, reduzir as tentativas do Optuna ou rodar so um segmento.
@@ -200,6 +209,7 @@ Maior gargalo: a busca de parametros. Se for preciso repetir, reduzir as tentati
 | Shapefile do IBGE (centenas de MB) quase entrou no git | pasta em `data/raw/` | `.gitignore` bloqueia `*.shp`, `*.dbf`, `*.shx`, `data/raw/SP_setores_CD2022/` e os originais do Censo; so o CSV de Jacarei (39 KB) e versionado |
 | Banco do orientador tem telefone, nome e CRECI de anunciantes | repositorio publico | `*.db` e `*.pkl` ignorados; nunca versionar |
 | Mapa de SP inteiro em vez de Jacarei | pedido do usuario | Recorte por juncao espacial: so os 544 setores de Jacarei |
+| Corrida longa interrompida (computador suspendeu, 5 h sem processo) | `modelos-avancados` perdeu o relatorio (so grava no fim) | Reiniciada com a suspensao do computador bloqueada durante a sessao; as sementes fixas reproduziram os mesmos numeros |
 | Tarefa em segundo plano que nunca terminava | laço de espera procurava "concluido", mas a projecao termina com "relatorio em" | Tarefa encerrada; em proximas esperas usar a mensagem final real do comando |
 
 ## 10. Ressalvas para o relatorio
@@ -214,7 +224,8 @@ Maior gargalo: a busca de parametros. Se for preciso repetir, reduzir as tentati
 
 ## 11. Pendencias
 
-1. Comando para precificar um imovel qualquer (`prever`), usando os modelos finais e o intervalo conformal.
+1. (feito, 2026-10-05) Comando `prever`: treina o conjunto LightGBM + HGB em todo o segmento, avalia um imovel novo e devolve
+   valor, intervalos conformais (do teste temporal) e projecao de SJC. Detalhes em `docs/PROJECAO_JACAREI.md`.
 2. Variaveis de qualidade e conservacao do imovel (apartamentos estao em R2 ~0,70); mais arquivos do Censo (domicilios e entorno).
 3. Ideias de series nao testadas: razao preco/aluguel (yield do FipeZAP), expectativas do Focus, concessoes de credito, Google Trends;
    ajuste de hiperparametros e conjuntos do LSTM.

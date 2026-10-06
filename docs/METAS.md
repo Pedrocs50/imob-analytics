@@ -1,7 +1,7 @@
 # Metas da iniciacao cientifica e estado atual
 
 Documento de rastreamento. Atualizar o status a cada etapa concluida.
-Ultima verificacao do repositorio: 2026-09-29.
+Ultima verificacao do repositorio: 2026-10-05.
 
 ## Regras do projeto
 
@@ -24,9 +24,9 @@ Ultima verificacao do repositorio: 2026-09-29.
 | 4 | Regressao linear multipla e ARIMA | Atingida para precos (demanda nao coberta) | **Regressao linear multipla** por segmento (`reg-linear`; R2 de 0,45-0,49 em apartamento e 0,58-0,63 nos demais; `docs/MODELOS_PRECIFICACAO.md`) e **ARIMA** do FipeZAP (`arima`; walk-forward com benchmarks; `docs/MODELOS_TEMPORAIS.md`). O meta cita "preco e demanda": nao ha serie de demanda no projeto. |
 | 5 | LSTM multivariado | Atingida (univariado/painel; sem preditores macro) | `python main.py lstm`: LSTM e gradient boosting global em painel de 50 cidades, com variantes por semelhanca (`docs/MODELOS_LSTM.md`). O LSTM usa so o crescimento passado das series; nao foi testado com preditores macro. |
 | 6 | Comparacao ARIMA x LSTM (RMSE, MAE, R2) | Atingida com ressalvas | Mesmo walk-forward e Diebold-Mariano: ARIMA melhor no indice nacional; redes menores em SJC aos 6 e 12 meses, sem significancia. Nenhum modelo e uniformemente melhor (`docs/MODELOS_LSTM.md`). |
-| 7 | Sensibilidade e relevancia das variaveis | Parcial | Importancia por permutacao do gradient boosting (`ajuste-gb`; `docs/DIARIO_MODELAGEM.md`, secao 4) e coeficientes da regressao linear. Falta sensibilidade/cenarios formais. |
-| 8 | Visualizacoes interativas | Nao iniciada | Os graficos atuais sao PNGs estaticos. |
-| 9 | Relatorios analiticos automaticos | Nao iniciada | - |
+| 7 | Sensibilidade e relevancia das variaveis | Atingida | `python main.py sensibilidade`: relevancia por grupo de variaveis (permutacao), cenarios "e se?" e efeito do bairro no modelo final (`docs/SENSIBILIDADE.md`). Tambem ha a importancia do `ajuste-gb` e os coeficientes da regressao linear. Falta analise de interacoes. |
+| 8 | Visualizacoes interativas | Atingida | `python main.py painel`: painel HTML unico (offline) com mapas por setor, evolucao dos modelos, sensibilidade, series e projecao, com seletores, tooltips e tema claro/escuro (`docs/PAINEL_INTERATIVO.md`). Tambem existe `mapa_setores_interativo.html`. |
+| 9 | Relatorios analiticos automaticos | Atingida | `python main.py relatorio`: relatorio em Markdown e HTML com resultados, projecao, limitacoes e comparacao com a literatura; numeros lidos dos arquivos e afirmacoes conferidas automaticamente (`docs/RELATORIO_AUTOMATICO.md`, `docs/COMPARACAO_LITERATURA.md`). |
 
 ## Dados disponiveis
 
@@ -96,7 +96,12 @@ Observacoes:
     variaveis; tudo registrado em `docs/DIARIO_MODELAGEM.md` (evolucao do R2).
 14. (feito) LSTM e modelos globais em painel de 50 cidades com semelhanca: `docs/MODELOS_LSTM.md`.
 15. (feito) Modelos avancados de precificacao (terreno, texto, Optuna, LightGBM/CatBoost, conjunto, intervalos conformais):
-    R2 temporal 0,71 / 0,79 / 0,80 (apartamento / casa / residencial): `docs/MODELOS_AVANCADOS.md`.
+    R2 temporal 0,73 / 0,80 / 0,81 (apartamento / casa / residencial): `docs/MODELOS_AVANCADOS.md`.
 16. (feito) Projecao de preco de Jacarei (precificacao x tendencia do FipeZAP de SJC): `docs/PROJECAO_JACAREI.md`.
-17. Proximo: comando para precificar um imovel; variaveis de qualidade e arquivos de domicilios/entorno do Censo; metas 7 a 9.
+17. (feito) Comando `prever`: avalia um imovel novo (valor, intervalos e projecao): `docs/PROJECAO_JACAREI.md`.
+18. (feito) Sensibilidade e relevancia das variaveis (meta 7): `docs/SENSIBILIDADE.md`. Nova rodada de variaveis (condominio e contexto):
+    R2 0,73 / 0,80 / 0,81; aluguel/yield e outras ideias testadas e descartadas (`docs/MODELOS_AVANCADOS.md`).
+19. (feito) Painel interativo (meta 8): `docs/PAINEL_INTERATIVO.md`.
+20. (feito) Relatorio analitico automatico e comparacao com a literatura (meta 9): `docs/RELATORIO_AUTOMATICO.md`, `docs/COMPARACAO_LITERATURA.md`.
+21. Todas as 9 metas atingidas. Refinamentos possiveis: variaveis de qualidade do imovel, arquivos de domicilios/entorno do Censo e snapshots periodicos do VivaReal.
     Pendencia: confirmar a unidade do IPTU (mediana de R$ 100 a R$ 150 por ano e suspeita).

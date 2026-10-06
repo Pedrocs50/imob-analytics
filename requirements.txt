@@ -36,3 +36,5 @@ folium>=0.17
 lightgbm>=4.0
 catboost>=1.2
 optuna>=3.5
+plotly>=5.24
+markdown>=3.5

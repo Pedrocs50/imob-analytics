@@ -225,6 +225,15 @@ def _montar_x(df: pd.DataFrame, segmento: str) -> tuple[pd.DataFrame, list[str],
         terreno = df["total_area_m2"].where(df["total_area_m2"] > 0)
         x["log_terreno"], x["razao_terreno_construida"] = np.log(terreno), terreno / df["usable_area_m2"]
         extras += ["log_terreno", "razao_terreno_construida"]
+    # valor da taxa de condominio (proxy de padrao) e contexto sem preco: tamanho relativo ao bairro, quantos anuncios na rua e no bairro
+    # (liquidez/densidade) e distancia ao centro. O IPTU foi testado e nao acrescentou nada (unidade nao confirmada): fica de fora.
+    x["valor_condominio"] = df["monthly_condo"]
+    x["area_rel_bairro"] = df["usable_area_m2"] / df.groupby("neighborhood")["usable_area_m2"].transform("median")
+    x["n_anuncios_rua"] = df.groupby(["neighborhood", "street"])["usable_area_m2"].transform("size").where(df["street"].notna())
+    x["n_anuncios_bairro"] = df.groupby("neighborhood")["usable_area_m2"].transform("size")
+    x["dist_centro_km"] = np.hypot((imp["lat_i"] - imp["lat_i"].median()) * KM_POR_GRAU_LAT,
+                                   (imp["lon_i"] - imp["lon_i"].median()) * KM_POR_GRAU_LON_EQUADOR * np.cos(np.radians(imp["lat_i"].median())))
+    extras += ["valor_condominio", "area_rel_bairro", "n_anuncios_rua", "n_anuncios_bairro", "dist_centro_km"]
     texto = [c for c in df.columns if c.startswith("txt_")]
     x[texto] = df[texto]
     x.attrs["extras"] = extras + texto

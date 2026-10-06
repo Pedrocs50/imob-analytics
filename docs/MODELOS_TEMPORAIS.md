@@ -140,6 +140,29 @@ valido para a meta 6. O que ainda pode mudar o quadro e **mais dados** (modelo g
 as 50 cidades, base do LSTM) e **informacao nova** (expectativas do Focus, concessoes de
 credito, Google Trends), nao um arranjo diferente de ARIMA.
 
+## Teste adicional: aluguel e razao preco/aluguel (2026-10-05)
+
+Hipotese da literatura: quando o preco de venda sobe mais que o aluguel (yield cai), o preco tende a se corrigir (reversao a media).
+Testado com o mesmo walk-forward do ARIMAX (preditores defasados em 12 meses, ARMA(0,3) em `d2 log(preco)`), com as series de
+**aluguel do proprio FipeZAP** (nacional e SJC): (a) yield (aluguel/preco); (b) crescimento do aluguel em 12 meses; (c) razao
+preco/aluguel como desvio da media movel de 60 meses; (d) as tres juntas.
+
+MAPE (%) aos 12 meses; entre parenteses, p do Diebold-Mariano contra o ARIMA:
+
+| Modelo | Nacional (140 origens) | SJC (44 origens) |
+|---|---|---|
+| ARIMA(0,2,3) | **1,18** | **5,46** |
+| ARIMAX com yield | 1,37 (0,38) | 6,64 (0,01, pior) |
+| ARIMAX com crescimento do aluguel | 2,03 (0,04, pior) | 7,62 (0,20) |
+| ARIMAX com razao preco/aluguel | 1,93 (0,03, pior) | 9,37 (0,46) |
+| ARIMAX com as tres | 2,25 (0,05, pior) | 61,60 (0,14) |
+
+**Resultado negativo:** nenhuma combinacao melhora o ARIMA e varias o **pioram** de forma significativa (nacional: crescimento do aluguel,
+razao e conjunto, p < 0,05 aos 12 meses). Com series curtas, os coeficientes extras sao estimados com ruido e as previsoes se afastam;
+em SJC o conjunto chega a explodir aos 12 meses (61,6%). Nao ha evidencia de reversao preco/aluguel util para previsao nestes dados.
+Fica como mais uma tecnica descartada para o relatorio. Metodo reproduzivel reaproveitando `walk_forward` de `arima_plus.py`
+(a funcao ja aceita qualquer preditor defasado); nao foi criado comando proprio.
+
 ## Proximos passos
 
 1. **LSTM** em painel com as 50 cidades (precisa instalar o PyTorch) e, como comparacao, um

@@ -30,6 +30,12 @@ Uso:
     python main.py lstm
     python main.py modelos-avancados
     python main.py projecao
+    python main.py sensibilidade
+    python main.py verificar
+    python main.py publicar
+    python main.py painel [--abrir]
+    python main.py relatorio [--abrir]
+    python main.py prever --segmento casa --bairro Centro --area 150 ...
     python main.py all
 """
 
@@ -294,6 +300,53 @@ def cmd_projecao():
     print("[PROJECAO] relatorio em reports/results/projecao_jacarei.md")
 
 
+def cmd_sensibilidade():
+    from src.pricing.sensibilidade import executar
+
+    executar()
+    print("[SENSIBILIDADE] relatorio em reports/results/sensibilidade.md")
+
+
+def _abrir_no_navegador(caminho: str) -> None:
+    """Abre o arquivo gerado no navegador padrao (so se o comando recebeu --abrir)."""
+    if "--abrir" in sys.argv:
+        import webbrowser
+        from pathlib import Path
+
+        webbrowser.open(Path(caminho).resolve().as_uri())
+
+
+def cmd_publicar():
+    from src.visualization.publicar import executar
+
+    executar()
+
+
+def cmd_verificar():
+    from src.verificar import executar
+
+    sys.exit(executar())
+
+
+def cmd_painel():
+    from src.visualization.painel import executar
+
+    _abrir_no_navegador(executar())
+
+
+def cmd_relatorio():
+    from src.reporting.relatorio import SAIDA_HTML, executar
+
+    executar()
+    _abrir_no_navegador(SAIDA_HTML)
+
+
+def cmd_prever():
+    from src.pricing.prever import executar
+
+    executar(sys.argv[2:])
+
+
 COMANDOS = {
     "scrape": cmd_scrape,
     "clean": cmd_clean,
@@ -314,6 +367,12 @@ COMANDOS = {
     "lstm": cmd_lstm,
     "modelos-avancados": cmd_modelos_avancados,
     "projecao": cmd_projecao,
+    "prever": cmd_prever,
+    "sensibilidade": cmd_sensibilidade,
+    "painel": cmd_painel,
+    "relatorio": cmd_relatorio,
+    "verificar": cmd_verificar,
+    "publicar": cmd_publicar,
     "all": cmd_all,
 }
 
