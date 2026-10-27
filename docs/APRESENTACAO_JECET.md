@@ -7,7 +7,7 @@ Dois trabalhos: **(A) coleta e mineração de dados** e **(B) LSTM x ARIMA**. N�
 
 **Sequência de slides (8 a 10):**
 1. Problema: muitos anúncios, coleta manual inviável.
-2. Coleta: scraping de anúncios de Jacareí (Selenium); base de 23.128 anúncios, coletada em março/2026.
+2. Coleta: scraping de anúncios de Jacareí (Selenium, ZAP Imóveis e VivaReal, lendo o JSON-LD que a própria página traz); base de análise de 23.128 anúncios, coletada em março/2026.
 3. Limpeza: duplicatas pelo id do anúncio (1.984 removidas), condomínio/IPTU implausíveis tratados -> 3.992 apartamentos e 10.254 casas (`reports/results/vivareal_limpeza.md`).
 4. Mineração (1): correlação com R$/m2. Casas: condomínio 0,50; comodidades 0,34; suítes 0,29. Apartamentos: suítes 0,32; banheiros 0,26; vagas 0,25.
 5. Mineração (2): 4 grupos de imóveis (K-means). Casas de ~250 m2 e 4 vagas têm R$/m2 mediano ~5.360 contra ~4.300 das de ~90 m2.
@@ -17,8 +17,10 @@ Dois trabalhos: **(A) coleta e mineração de dados** e **(B) LSTM x ARIMA**. N�
 9. Limitações (não esconder): retrato único, viés de sobrevivência, preço de oferta, associação não é causa.
 
 **Perguntas prováveis:**
-- *"O scraper é seu?"* Desenvolvi um coletor em Selenium (`src/scraper.py`), mas a análise usa a base de 23.128 anúncios de março/2026 compartilhada pelo orientador. Diga isso com clareza.
-- *"Isso é legal / respeita o site?"* Dados públicos de anúncios, sem dados pessoais no repositório (telefone e nome do anunciante ficam fora do git). Reconheça que falta checagem formal de `robots.txt`/termos de uso e que isso é trabalho futuro.
+- *"O scraper é seu?"* Desenvolvi um coletor em Selenium (`src/scraper.py`: dois portais em paralelo, leitura do JSON-LD, retomada, deduplicação entre portais, 38 testes), mas a análise usa a base de 23.128 anúncios de março/2026 compartilhada pelo orientador. Diga isso com clareza.
+- *"Isso é legal / respeita o site?"* Dados públicos de anúncios, sem dados pessoais guardados (nome do anunciante, telefones e imagens ficam de fora). O coletor lê o `robots.txt` e respeita as regras. Se o portal pede CAPTCHA, uma pessoa resolve na janela; se **nega o acesso** (Cloudflare "you have been blocked", que aconteceu em 2026-10-26 depois de várias rodadas de teste), o coletor **para e não contorna** (sem proxy, sem trocar de IP, sem esconder o navegador). Falta checagem formal dos termos de uso; isso é trabalho futuro.
+- *"Por que não coletou mais dados agora?"* Os portais bloquearam o acesso após rodadas repetidas de teste. Decisão: não burlar o bloqueio; usar a base do orientador (março/2026) e, no futuro, recoletas espaçadas ou dados abertos (ITBI). O que foi validado: a amostra real dos dois portais (30 anúncios por página no JSON-LD, batendo com os cards) e a detecção de bloqueio.
+- *"Que campos o scraper guarda?"* Preço, área, quartos, banheiros, vagas, comodidades, bairro, rua, data de publicação, condomínio, IPTU, tipo do imóvel, cômodos, aceita pets, fotos, destaque e o JSON-LD bruto do anúncio (sem anunciante e sem imagens).
 - *"Isso é mineração ou só estatística?"* Agrupamento (K-means), análise de termos do texto e importância de variáveis por permutação, dentro de um fluxo coleta -> limpeza -> mineração -> avaliação.
 - *"Vale para o preço de venda?"* Não: são preços pedidos. Não há preço de fechamento.
 - *"Por que o `bairro` e os termos não são causais?"* Termos como "salão de festas" marcam casa em condomínio fechado; o efeito é do padrão do imóvel, não da palavra.

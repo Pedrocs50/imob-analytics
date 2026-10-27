@@ -42,3 +42,12 @@ python main.py clean                                                           #
 ## Bloqueio do Cloudflare ("Sorry, you have been blocked")
 
 Diferente do CAPTCHA (que pede uma verificacao que voce resolve na janela), esta pagina **nega o acesso**. Em 2026-10-26 apareceu nos dois portais depois de varias rodadas seguidas de `--amostra` e de testes automatizados. O coletor reconhece a pagina, **para o portal na hora**, avisa no log e preserva o que ja foi gravado (a coleta retoma de onde parou). O projeto **nao tenta contornar** (sem proxy, sem trocar de IP, sem esconder o navegador): o bloqueio expira com o tempo; rodar de novo com menos pressa (`DELAY_MIN`/`DELAY_MAX` maiores) e evitar rodadas repetidas ajuda. Se persistir, usar a base compartilhada pelo orientador (marco/2026) ou dados abertos (ITBI).
+
+## Diario da coleta (2026-10-26)
+
+1. **Janelas caindo:** causa = segfault do chromedriver remendado pelo `undetected_chromedriver` (`journalctl -k`, 13 em 3 h). Solucao: Selenium puro (padrao; `NAVEGADOR=uc` volta ao antigo), encerramento do Chrome preso ao perfil e diagnostico "chromedriver morreu".
+2. **ZAP terrenos "pagina nao encontrada":** a pagina de erro mostra anuncios recomendados, que seriam gravados como se fossem da listagem. Solucao: deteccao da pagina de erro, caminhos candidatos (`lotes-terrenos`, `terrenos`).
+3. **Foco:** apenas casas e apartamentos (9 faixas de preco); outros tipos so com `TIPOS=`.
+4. **Condominio/IPTU lidos em 2 de 30 cards:** o leitor subia so 8 niveis e usava `innerText`. Solucao: maior bloco com um unico preco + `textContent`. Falta conferir na pagina real (precisa de nova amostra apos o bloqueio expirar).
+5. **Amostra limpa nos dois portais:** 30 anuncios no JSON-LD = 30 cards, sem queda, sem CAPTCHA. ZAP e VivaReal repetem os mesmos anuncios (mesmo grupo): o `clean` deduplica por rua, area, quartos, banheiros e preco.
+6. **Bloqueio do Cloudflare nos dois portais** depois de varias rodadas seguidas (incluindo testes automatizados nossos). O coletor agora para na hora; nada foi contornado. Proximo passo: esperar expirar e rodar uma coleta unica (`python main.py scrape`), depois `python main.py clean`.
