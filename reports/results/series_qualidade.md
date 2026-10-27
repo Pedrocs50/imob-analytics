@@ -11,13 +11,13 @@ Gerado por `python main.py series-painel`. Nao editar manualmente.
 | `bcb_credimob_juros_mercado` | BCB | M | 186 | 2011-03 | 2026-08 | 0 | 0 | ok |
 | `bcb_credimob_juros_regulada` | BCB | M | 186 | 2011-03 | 2026-08 | 0 | 0 | ok |
 | `bcb_credimob_saldo` | BCB | M | 234 | 2007-03 | 2026-08 | 0 | 0 | ok |
-| `bcb_ibcbr` | BCB | M | 259 | 2005-01 | 2026-07 | 0 | 0 | ok |
+| `bcb_ibcbr` | BCB | M | 260 | 2005-01 | 2026-08 | 0 | 0 | ok |
 | `bcb_igpm` | BCB | M | 261 | 2005-01 | 2026-09 | 0 | 0 | ok |
-| `bcb_incc` | BCB | M | 260 | 2005-01 | 2026-08 | 0 | 0 | ok |
-| `bcb_ipca` | BCB | M | 260 | 2005-01 | 2026-08 | 0 | 0 | ok |
-| `bcb_ptax` | BCB | M | 260 | 2005-01 | 2026-08 | 0 | 0 | ok |
-| `bcb_selic_mes` | BCB | M | 260 | 2005-01 | 2026-08 | 0 | 0 | ok |
-| `bcb_selic_meta` | BCB | M | 260 | 2005-01 | 2026-08 | 0 | 0 | ok |
+| `bcb_incc` | BCB | M | 261 | 2005-01 | 2026-09 | 0 | 0 | ok |
+| `bcb_ipca` | BCB | M | 261 | 2005-01 | 2026-09 | 0 | 0 | ok |
+| `bcb_ptax` | BCB | M | 261 | 2005-01 | 2026-09 | 0 | 0 | ok |
+| `bcb_selic_mes` | BCB | M | 261 | 2005-01 | 2026-09 | 0 | 0 | ok |
+| `bcb_selic_meta` | BCB | M | 261 | 2005-01 | 2026-09 | 0 | 0 | ok |
 | `fipezap_nacional_com_aluguel_yield` | FIPEZAP | M | 176 | 2012-01 | 2026-08 | 0 | 0 | ok |
 | `fipezap_nacional_com_locacao_indice` | FIPEZAP | M | 176 | 2012-01 | 2026-08 | 0 | 0 | ok |
 | `fipezap_nacional_com_locacao_preco_m2` | FIPEZAP | M | 176 | 2012-01 | 2026-08 | 0 | 0 | ok |
@@ -55,8 +55,8 @@ Gerado por `python main.py series-painel`. Nao editar manualmente.
 | `fipezap_sjc_res_venda_preco_m2` | FIPEZAP | M | 104 | 2018-01 | 2026-08 | 0 | 0 | ok |
 | `ibge_desocupacao_sp` | IBGE_SIDRA | Q | 58 | 2012-01 | 2026-04 | 0 | 0 | ok |
 | `ibge_renda_sp` | IBGE_SIDRA | Q | 50 | 2012-01 | 2026-04 | 8 | 0 | aviso |
-| `ipea_desocupacao_br_mensal` | IPEA | M | 175 | 2012-01 | 2026-07 | 0 | 0 | ok |
-| `ipea_icc` | IPEA | M | 260 | 2005-01 | 2026-08 | 0 | 0 | ok |
+| `ipea_desocupacao_br_mensal` | IPEA | M | 176 | 2012-01 | 2026-08 | 0 | 0 | ok |
+| `ipea_icc` | IPEA | M | 262 | 2005-01 | 2026-10 | 0 | 0 | ok |
 
 ## Detalhes
 

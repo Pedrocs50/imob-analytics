@@ -341,6 +341,12 @@ def cmd_relatorio():
     _abrir_no_navegador(SAIDA_HTML)
 
 
+def cmd_mineracao():
+    from src.pricing.mineracao import executar
+
+    executar()
+
+
 def cmd_prever():
     from src.pricing.prever import executar
 
@@ -368,6 +374,7 @@ COMANDOS = {
     "modelos-avancados": cmd_modelos_avancados,
     "projecao": cmd_projecao,
     "prever": cmd_prever,
+    "mineracao": cmd_mineracao,
     "sensibilidade": cmd_sensibilidade,
     "painel": cmd_painel,
     "relatorio": cmd_relatorio,

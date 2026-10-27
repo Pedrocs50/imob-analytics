@@ -27,6 +27,7 @@ O validador tambem e testado contra vazamentos plantados de proposito:
 
 | Serie | L | k (trimestres) | Situacao | Fonte |
 |---|---|---|---|---|
+| `fipezap_*` (35 series) | 1 | 1 | confirmada | evidencia indireta: relatorios de referencia t publicados no mes t+1; sem calendario oficial legivel |
 | `bcb_selic_meta` | 0 | 0 | estimada (nao confirmada) | decisao do Copom e conhecida no ato |
 | `bcb_selic_mes` | 0 | 0 | estimada (nao confirmada) | acumulada no mes, conhecida no ultimo dia do mes |
 | `bcb_ipca` | 1 | 1 | confirmada | calendario oficial do IBGE: divulgado 9 a 12 dias apos o fim do mes |
@@ -41,6 +42,5 @@ O validador tambem e testado contra vazamentos plantados de proposito:
 | `ipea_desocupacao_br_mensal` | 2 | 1 | estimada (nao confirmada) | PNAD mensal sai 26-33 dias apos o mes (IBGE); a mensalizacao do IPEA e posterior; 2 e conservador |
 | `ibge_desocupacao_sp` | 2 | 1 | confirmada | calendario oficial do IBGE (PNAD Continua trimestral): 44 a 51 dias apos o fim do trimestre |
 | `ibge_renda_sp` | 2 | 1 | confirmada | calendario oficial do IBGE (PNAD Continua trimestral): 44 a 51 dias apos o fim do trimestre |
-| `fipezap_*` (35 series) | 1 | 1 | confirmada | evidencia indireta: relatorios de referencia t publicados no mes t+1; sem calendario oficial legivel |
 
 Colunas derivadas herdam a maior defasagem das series de entrada.

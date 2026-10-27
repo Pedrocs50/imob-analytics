@@ -98,7 +98,8 @@ def coletar_bcb(sessao: requests.Session, serie: SerieMacro) -> tuple[list[tuple
             brutos.extend(_json(sessao, url, params))
             atual = fim + timedelta(days=1)
     else:
-        brutos = _json(sessao, url, {"formato": "json"})
+        # sem dataInicial o BCB recusa algumas series (ex.: 433/IPCA) com uma pagina HTML
+        brutos = _json(sessao, url, {"formato": "json", "dataInicial": INICIO_PADRAO.strftime("%d/%m/%Y")})
 
     if not isinstance(brutos, list) or not brutos:
         raise ColetaErro(f"serie {serie.codigo} do BCB voltou vazia")
