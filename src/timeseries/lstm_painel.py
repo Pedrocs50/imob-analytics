@@ -42,10 +42,10 @@ torch.set_num_threads(4)
 
 # ----------------------------------------------------------------------------- dados
 class Rede(nn.Module):
-    def __init__(self, oculto: int = 32, n_entradas: int = 1):
+    def __init__(self, oculto: int = 32, n_entradas: int = 1, dropout: float = 0.1):
         super().__init__()
         self.lstm = nn.LSTM(n_entradas, oculto, batch_first=True)
-        self.drop = nn.Dropout(0.1)
+        self.drop = nn.Dropout(dropout)
         self.saida = nn.Linear(oculto, H)
 
     def forward(self, x):
@@ -79,7 +79,7 @@ def semelhanca(precos_log: pd.DataFrame, alvo_log: pd.Series, T: pd.Timestamp) -
     return pd.Series(corr)
 
 
-def treinar_lstm(X, Y, W, D, semente: int) -> Rede:
+def treinar_lstm(X, Y, W, D, semente: int, oculto: int = 32, dropout: float = 0.1) -> Rede:
     torch.manual_seed(semente)
     np.random.seed(semente)
     ordem = np.argsort(D)
@@ -90,7 +90,7 @@ def treinar_lstm(X, Y, W, D, semente: int) -> Rede:
     tr, va = slice(0, len(X) - n_val), slice(len(X) - n_val, len(X))  # validacao = amostras mais recentes
     xt, yt, wt = torch.tensor(X[tr]), torch.tensor(Y[tr]), torch.tensor(W[tr])
     xv, yv, wv = torch.tensor(X[va]), torch.tensor(Y[va]), torch.tensor(W[va])
-    rede = Rede(n_entradas=X.shape[-1])
+    rede = Rede(oculto, X.shape[-1], dropout)
     otim = torch.optim.Adam(rede.parameters(), lr=2e-3, weight_decay=1e-4)
     melhor, estado, paciencia = np.inf, None, 0
     for _ in range(120):

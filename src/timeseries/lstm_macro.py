@@ -46,11 +46,19 @@ REF, TEND = "ARIMA(0,2,3)", "Tendencia (12 meses)"
 RL_ALVO = "Regressao linear (so o alvo)"
 RL_MACRO = "Regressao linear (alvo + macro)"
 RL_SUB = {n: f"Regressao linear (alvo + {n})" for n in SUBCONJUNTOS}
-LSTM_SEM = "LSTM painel (sem macro)"
-LSTM_COM = "LSTM painel + macro"
-LSTM_SUB = {n: f"LSTM painel + {n}" for n in SUBCONJUNTOS}
+# arquitetura -> (unidades da camada LSTM, dropout); "base" e a do experimento original
+ARQUITETURAS = {"base": (32, 0.1), "pequena": (16, 0.3), "grande": (64, 0.2)}
+MACROS = {"sem macro": None, "macro completo": list(MACRO), **SUBCONJUNTOS}
+
+
+def nome_rede(macro: str, arquitetura: str) -> str:
+    return f"LSTM painel ({macro}; {arquitetura})"
+
+
+LSTM_SEM, LSTM_COM = nome_rede("sem macro", "base"), nome_rede("macro completo", "base")
 # nome da rede -> colunas de macro usadas (None = sem macro)
-REDES = {LSTM_SEM: None, LSTM_COM: list(MACRO), **{LSTM_SUB[n]: c for n, c in SUBCONJUNTOS.items()}}
+REDES = {nome_rede(m, a): cols for m, cols in MACROS.items() for a in ARQUITETURAS}
+FRACAO_SELECAO = 0.6  # origens iniciais usadas para ESCOLHER a variante; as demais so confirmam
 REGRESSOES = {RL_ALVO: None, RL_MACRO: list(MACRO), **{RL_SUB[n]: c for n, c in SUBCONJUNTOS.items()}}
 MODELOS = [REF, TEND, *REGRESSOES, *REDES]
 
@@ -104,10 +112,11 @@ def reajustar(g: pd.DataFrame, g_alvo: pd.Series, macro: pd.DataFrame, T: pd.Tim
     gp["alvo"] = galvoT
     lista = cidades + ["alvo"]
     redes = {}
-    for nome, colunas in REDES.items():
+    for macro_nome, colunas in MACROS.items():
         X, Y, W, D = amostras(gp, macro_z, lista, colunas)
-        redes[nome] = [treinar_lstm(X, Y, W, D, s) for s in sementes]
-        redes[nome + "_n"] = len(X)
+        for arq, (oculto, dropout) in ARQUITETURAS.items():
+            redes[nome_rede(macro_nome, arq)] = [treinar_lstm(X, Y, W, D, s, oculto, dropout) for s in sementes]
+        redes[macro_nome + "_n"] = len(X)
     return {"redes": redes, "macro_z": macro_z, "sd_alvo": float(galvoT.std())}
 
 
@@ -150,7 +159,7 @@ def walk_forward(y: pd.Series, n0: int, precos: pd.DataFrame, macro: pd.DataFram
         if (i - (n0 - 1)) % REAJUSTE_A_CADA == 0:
             t0 = time.time()
             conj = reajustar(g, g_alvo, macro, T, cidades, sementes)
-            tamanhos.append((T, conj["redes"][LSTM_SEM + "_n"], conj["redes"][LSTM_COM + "_n"]))  # amostras (sem / com macro)
+            tamanhos.append((T, conj["redes"]["sem macro_n"], conj["redes"]["macro completo_n"]))  # amostras (sem / com macro)
             print(f"[LSTM-MACRO] {nome_alvo}: reajuste em {T:%Y-%m} ({time.time() - t0:.0f}s)", flush=True)
         passado = y.iloc[: i + 1]
         arima, _, _ = _arima_log(passado)
@@ -182,16 +191,39 @@ def metricas(wf: pd.DataFrame) -> pd.DataFrame:
     return t
 
 
-def comparacoes(wf: pd.DataFrame) -> pd.DataFrame:
-    pares = [(m, REF) for m in (*REDES, *REGRESSOES) if m != RL_ALVO] + [(m, LSTM_SEM) for m in REDES if m != LSTM_SEM]
+def selecao_confirmacao(wf: pd.DataFrame) -> pd.DataFrame:
+    """Escolha da variante SEM olhar o periodo final: as primeiras origens (FRACAO_SELECAO) escolhem, as demais confirmam.
+    Nota por modelo = media, entre os horizontes, do RMSE relativo ao ARIMA (menor e melhor)."""
+    origens = np.sort(wf["origem"].unique())
+    corte = origens[int(len(origens) * FRACAO_SELECAO)]
+    linhas = []
+    for periodo, parte in (("selecao", wf[wf["origem"] < corte]), ("confirmacao", wf[wf["origem"] >= corte])):
+        met = metricas(parte)
+        for m, g in met.groupby("modelo"):
+            linhas.append({"modelo": m, "periodo": periodo, "origens": parte["origem"].nunique(),
+                           "RMSE relativo ao ARIMA (media dos horizontes)": g["RMSE relativo ao ARIMA"].mean(),
+                           "MAPE medio (%)": g["MAPE (%)"].mean()})
+    t = pd.DataFrame(linhas).pivot(index="modelo", columns="periodo")
+    t.columns = [f"{a} - {b}" for a, b in t.columns]
+    return t.reset_index().sort_values("RMSE relativo ao ARIMA (media dos horizontes) - selecao")
+
+
+def melhor_rede(sc: pd.DataFrame) -> str:
+    """Melhor LSTM pelo periodo de SELECAO."""
+    return next(m for m in sc["modelo"] if m in REDES)
+
+
+def comparacoes(wf: pd.DataFrame, melhor: str) -> pd.DataFrame:
+    pares = [(m, REF) for m in (LSTM_SEM, LSTM_COM, melhor, *REGRESSOES) if m != RL_ALVO]
+    pares += [(m, LSTM_SEM) for m in (LSTM_COM, melhor) if m != LSTM_SEM] + [(melhor, RL_ALVO)]
     pares += [(m, RL_ALVO) for m in REGRESSOES if m != RL_ALVO]
-    return pd.concat([dm(wf, a, b) for a, b in pares], ignore_index=True)
+    return pd.concat([dm(wf, a, b) for a, b in dict.fromkeys(pares)], ignore_index=True)
 
 
 def figura(res: dict) -> str:
     fig, eixos = plt.subplots(1, len(res), figsize=(7.2 * len(res), 5))
     for eixo, (nome, r) in zip(np.atleast_1d(eixos), res.items()):
-        piv = r["met"].pivot(index="h (meses)", columns="modelo", values="MAPE (%)")[MODELOS]
+        piv = r["met"].pivot(index="h (meses)", columns="modelo", values="MAPE (%)")[[REF, TEND, RL_ALVO, RL_MACRO, LSTM_SEM, LSTM_COM, r["melhor"]]]
         piv.plot.bar(ax=eixo, rot=0, width=0.85)
         eixo.set_title(f"{nome}: MAPE por horizonte", fontsize=10)
         eixo.set_xlabel("horizonte (meses)")
@@ -219,10 +251,13 @@ def executar(rapido: bool = False) -> dict:
         wf, tamanhos = walk_forward(y, n0, precos, macro, nome, sementes, ORIGENS_TESTE if rapido else None)
         slug = nome.split()[0] + ("_teste" if rapido else "")
         wf.to_csv(os.path.join(TAB_DIR, f"lstm_macro_{slug}_previsoes.csv"), index=False)
-        met, dms = metricas(wf), comparacoes(wf)
+        sc = selecao_confirmacao(wf)
+        melhor = melhor_rede(sc)
+        met, dms = metricas(wf), comparacoes(wf, melhor)
+        sc.to_csv(os.path.join(TAB_DIR, f"lstm_macro_{slug}_selecao.csv"), index=False)
         met.to_csv(os.path.join(TAB_DIR, f"lstm_macro_{slug}_metricas.csv"), index=False)
         dms.to_csv(os.path.join(TAB_DIR, f"lstm_macro_{slug}_dm.csv"), index=False)
-        res[nome] = {"met": met, "dm": dms, "tamanhos": tamanhos, "n_origens": wf["origem"].nunique()}
+        res[nome] = {"met": met, "dm": dms, "sc": sc, "melhor": melhor, "tamanhos": tamanhos, "n_origens": wf["origem"].nunique()}
     fig = figura(res) if not rapido else None
     escrever_relatorio(res, fig, time.time() - inicio, len(sementes), rapido)
     print(f"[LSTM-MACRO] concluido em {(time.time() - inicio) / 60:.1f} min")
@@ -245,7 +280,11 @@ def escrever_relatorio(res: dict, fig: str | None, segundos: float, n_sementes: 
          "prevista aqui em `docs/PROJECAO_JACAREI.md`. O VivaReal e uma fotografia de um unico mes; nao ha historico de anuncios para alimentar o LSTM.", "",
          f"Tempo total: {segundos / 60:.1f} min.", ""]
     for nome, r in res.items():
-        L += [f"## {nome} ({r['n_origens']} origens)", "", "### Erro por horizonte (MAE e RMSE em R$/m2; MAPE em %)", "", md(r["met"].round(3), 3), "",
+        L += [f"## {nome} ({r['n_origens']} origens)", "",
+              f"### Escolha da variante: selecao x confirmacao (as primeiras {FRACAO_SELECAO:.0%} das origens escolhem; as demais confirmam)", "",
+              f"Melhor LSTM pelo periodo de **selecao**: `{r['melhor']}`. Se a nota dele piora muito na confirmacao, a vantagem era sorte.", "",
+              md(r["sc"].round(3), 3), "",
+              "### Erro por horizonte (MAE e RMSE em R$/m2; MAPE em %)", "", md(r["met"].round(3), 3), "",
               "### Diebold-Mariano (estatistica negativa: o primeiro modelo e melhor que o segundo)", "", md(r["dm"].round(3), 3), "",
               "### Amostras de treino por reajuste (sem macro / com macro)", ""]
         L += [f"- {T:%Y-%m}: {a} / {b}" for T, a, b in r["tamanhos"]]

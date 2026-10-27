@@ -7,6 +7,7 @@ import json
 import re
 
 _ID_NA_URL = re.compile(r"id-(\d+)")
+_VAGAS = re.compile(r"(\d+)\s+vagas?", re.IGNORECASE)
 
 
 def _percorrer(no):
@@ -52,6 +53,9 @@ def _anuncio(no: dict) -> dict | None:
     quartos = _numero(no.get("numberOfBedrooms"))
     banheiros = _numero(no.get("numberOfBathroomsTotal"))
     vagas = _numero(no.get("numberOfParkingSpaces"))
+    if vagas is None:  # o VivaReal traz as vagas no texto de `keywords` ("... 3 banheiros, 2 vagas em ...")
+        achado = _VAGAS.search(f"{no.get('keywords') or ''} {no.get('name') or ''}")
+        vagas = float(achado.group(1)) if achado else None
     comodidades = [str(c.get("value") or c.get("name")) for c in no.get("amenityFeature") or [] if isinstance(c, dict)]
     rua, cidade = endereco.get("streetAddress"), endereco.get("addressLocality")
     titulo = str(no.get("name") or "")
@@ -62,6 +66,7 @@ def _anuncio(no: dict) -> dict | None:
     return {
         "external_id": _id_externo(no, url),
         "url": url,
+        "rua": rua or None,
         # campos de texto no mesmo formato do coletor antigo: o DataCleaner continua funcionando
         "endereco": ", ".join(p for p in (titulo, rua, cidade) if p) or "N/A",
         "preco": "R$ " + f"{int(round(preco)):,}".replace(",", "."),

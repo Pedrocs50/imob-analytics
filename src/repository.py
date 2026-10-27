@@ -19,17 +19,17 @@ class DataRepository:
     def salvar_raw(self, dados: list[dict]) -> None:
         if not dados:
             return
-        # coletor por cards nao traz id/url/comodidades: ficam nulos
-        linhas = [{"external_id": None, "url": None, "comodidades": None, **d} for d in dados]
+        # coletor por cards nao traz fonte/id/url/rua/comodidades: ficam nulos
+        linhas = [{"fonte": None, "external_id": None, "url": None, "rua": None, "comodidades": None, **d} for d in dados]
         with self._db.get_connection() as conn:
             conn.executemany(
                 """
                 INSERT OR IGNORE INTO imoveis_raw
                     (segmento, preco_min_filtro, pagina, endereco, preco, area, quartos, banheiros, vagas,
-                     external_id, url, comodidades)
+                     fonte, external_id, url, rua, comodidades)
                 VALUES
                     (:segmento, :preco_min_filtro, :pagina, :endereco, :preco, :area, :quartos, :banheiros, :vagas,
-                     :external_id, :url, :comodidades)
+                     :fonte, :external_id, :url, :rua, :comodidades)
                 """,
                 linhas,
             )

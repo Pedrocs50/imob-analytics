@@ -119,7 +119,7 @@ def mostrar_menu():
 
 
 def cmd_scrape():
-    orchestrator = ScraperOrchestrator(db_path=DB_PATH)
+    orchestrator = ScraperOrchestrator(db_path=DB_PATH, amostra="--amostra" in sys.argv)
     orchestrator.executar()
 
 
