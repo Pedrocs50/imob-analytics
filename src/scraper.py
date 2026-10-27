@@ -1,4 +1,5 @@
 import json
+import requests
 import time
 import os
 import random
@@ -11,7 +12,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from src.database import Database
-from src.jsonld import extrair_anuncios
+from src.jsonld import blocos_do_html, extrair_anuncios
 from src.repository import DataRepository
 
 
@@ -33,6 +34,13 @@ CAPTCHA_POLL = 3  # segundos
 
 # perfil do navegador por portal: cookies da sessao (inclusive depois de resolver um CAPTCHA a mao) persistem entre execucoes
 PERFIL_DIR = os.environ.get("PERFIL_NAVEGADOR_DIR", os.path.join("data", "chrome_profile"))
+# modo HTTP: baixa o HTML da listagem e le o JSON-LD, sem navegador. Ritmo proprio e identificacao honesta.
+HTTP_DELAY_MIN = float(os.environ.get("HTTP_DELAY_MIN", 2))
+HTTP_DELAY_MAX = float(os.environ.get("HTTP_DELAY_MAX", 4))
+HTTP_TIMEOUT = 30
+USER_AGENT = os.environ.get(
+    "SCRAPER_USER_AGENT", "imob-analytics/1.0 (pesquisa de iniciacao cientifica, IFSP Jacarei)"
+)
 AMOSTRAS_DIR = os.path.join("data", "raw", "amostras_scraper")
 CARD_PRECO_CSS = '[data-cy="rp-cardProperty-price-txt"]'
 
@@ -338,14 +346,117 @@ class ScraperPortal:
         )
 
 
+class Bloqueado(Exception):
+    """O portal recusou a requisicao (403/429/desafio). O coletor para: nao tenta contornar."""
+
+
+def resposta_bloqueada(status: int, html: str) -> bool:
+    texto = html[:6000].lower()
+    return status in (403, 429, 503) or "attention required" in texto or "cf-error-details" in texto or "captcha" in texto
+
+
+class ScraperHttp:
+    """Mesmo fluxo do ScraperPortal (fatias de preco, paginas, retomada, robots.txt), mas por requisicao HTTP
+    direta ao HTML da listagem. Se o portal bloquear, para e avisa; o modo navegador (`scrape`) continua disponivel."""
+
+    def __init__(self, worker_id: int, fonte: str, segmentos: list[dict], fila_progresso, db_path: str):
+        self.worker_id, self.fonte, self.portal = worker_id, fonte, PORTAIS[fonte]
+        self.segmentos, self.fila_progresso = segmentos, fila_progresso
+        self._repo = DataRepository(Database(db_path))
+        self._sessao = requests.Session()
+        self._sessao.headers.update({"User-Agent": USER_AGENT, "Accept-Language": "pt-BR,pt;q=0.9"})
+        self._robots = None
+
+    def executar(self) -> None:
+        try:
+            self._ler_robots()
+            for segmento in self.segmentos:
+                self._scrape_segmento(segmento)
+        except Bloqueado as erro:
+            self._log(f"BLOQUEADO: {erro}. Coleta interrompida (nada foi contornado). Use o modo navegador: python main.py scrape")
+        except KeyboardInterrupt:
+            self._log("Interrompido.")
+
+    def executar_amostra(self) -> None:
+        os.makedirs(AMOSTRAS_DIR, exist_ok=True)
+        resumo = {}
+        try:
+            self._ler_robots()
+            for segmento in [s for s in self.segmentos if s["preco_min"] == 0]:
+                url = montar_url(self.portal, segmento, 1)
+                if not self._permitido(url):
+                    resumo[segmento["tipo"]] = {"url": url, "erro": "bloqueado pelo robots.txt"}
+                    continue
+                html = self._baixar(url)
+                blocos = blocos_do_html(html)
+                arquivo = os.path.join(AMOSTRAS_DIR, f"{self.fonte}_{segmento['tipo']}_p1_http.json")
+                with open(arquivo, "w", encoding="utf-8") as f:
+                    json.dump(blocos, f, ensure_ascii=False)
+                resumo[segmento["tipo"]] = {"url": url, "arquivo": arquivo, "blocos_json_ld": len(blocos),
+                                            "anuncios_no_json_ld": len(extrair_anuncios(blocos))}
+                self._log(f"amostra {segmento['tipo']}: {resumo[segmento['tipo']]}")
+                time.sleep(random.uniform(HTTP_DELAY_MIN, HTTP_DELAY_MAX))
+        except Bloqueado as erro:
+            resumo["erro"] = f"BLOQUEADO: {erro}"
+            self._log(resumo["erro"])
+        with open(os.path.join(AMOSTRAS_DIR, f"{self.fonte}_resumo_http.json"), "w", encoding="utf-8") as f:
+            json.dump(resumo, f, ensure_ascii=False, indent=2)
+
+    def _baixar(self, url: str) -> str:
+        resposta = self._sessao.get(url, timeout=HTTP_TIMEOUT)
+        if resposta_bloqueada(resposta.status_code, resposta.text):
+            raise Bloqueado(f"HTTP {resposta.status_code} em {url}")
+        resposta.raise_for_status()
+        return resposta.text
+
+    def _scrape_segmento(self, segmento: dict) -> None:
+        chave = f"{self.fonte}:{segmento['tipo']}"
+        self._log(f"Iniciando segmento: {chave} R${segmento['preco_min']:,}-{segmento['preco_max']:,}")
+        for pagina in range(1, MAX_PAGINAS + 1):
+            if self._repo.pagina_ja_coletada(chave, segmento["preco_min"], pagina):
+                continue
+            url = montar_url(self.portal, segmento, pagina)
+            if not self._permitido(url):
+                self._log(f"robots.txt nao permite {url}; segmento ignorado.")
+                return
+            anuncios = extrair_anuncios(blocos_do_html(self._baixar(url)))
+            if not anuncios:
+                self._log(f"Fim do segmento na pagina {pagina}.")
+                return
+            for a in anuncios:
+                a.update({"fonte": self.fonte, "segmento": chave, "preco_min_filtro": segmento["preco_min"], "pagina": pagina})
+            self._repo.salvar_raw(anuncios)
+            self._repo.marcar_pagina_coletada(chave, segmento["preco_min"], pagina)
+            self.fila_progresso.put({"worker_id": self.worker_id, "segmento": f"{chave} R${segmento['preco_min']:,}+",
+                                     "pagina": pagina, "novos": len(anuncios), "total_db": self._repo.total_raw()})
+            time.sleep(random.uniform(HTTP_DELAY_MIN, HTTP_DELAY_MAX))
+
+    def _ler_robots(self) -> None:
+        try:
+            self._robots = robots_do_texto(self.portal["base"], self._baixar(self.portal["base"] + "/robots.txt"))
+            self._log("robots.txt lido.")
+        except Bloqueado:
+            raise
+        except Exception as erro:
+            self._robots = None
+            self._log(f"AVISO: nao foi possivel ler o robots.txt ({erro}); conferir as regras do portal manualmente.")
+
+    def _permitido(self, url: str) -> bool:
+        return self._robots is None or self._robots.can_fetch("*", url)
+
+    def _log(self, msg: str) -> None:
+        print(f"[WORKER {self.worker_id} {self.fonte} HTTP] {msg}")
+
+
 # =============================================================================
 # ORCHESTRATOR
 # =============================================================================
 
 class ScraperOrchestrator:
-    def __init__(self, db_path: str, amostra: bool = False):
+    def __init__(self, db_path: str, amostra: bool = False, http: bool = False):
         self._db_path = db_path
         self._amostra = amostra
+        self._http = http
 
     def executar(self) -> None:
         Database(self._db_path).setup()
@@ -354,7 +465,7 @@ class ScraperOrchestrator:
         processos = [
             multiprocessing.Process(
                 target=_run_worker,
-                args=(i, fonte, SEGMENTOS, fila, self._db_path, self._amostra),
+                args=(i, fonte, SEGMENTOS, fila, self._db_path, self._amostra, self._http),
                 daemon=True,
             )
             for i, fonte in enumerate(PORTAIS, start=1)
@@ -408,6 +519,6 @@ class ScraperOrchestrator:
         print("=" * 65)
 
 
-def _run_worker(worker_id: int, fonte: str, segmentos: list, fila, db_path: str, amostra: bool = False) -> None:
-    scraper = ScraperPortal(worker_id, fonte, segmentos, fila, db_path)
+def _run_worker(worker_id: int, fonte: str, segmentos: list, fila, db_path: str, amostra: bool = False, http: bool = False) -> None:
+    scraper = (ScraperHttp if http else ScraperPortal)(worker_id, fonte, segmentos, fila, db_path)
     scraper.executar_amostra() if amostra else scraper.executar()

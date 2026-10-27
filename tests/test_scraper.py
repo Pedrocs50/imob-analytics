@@ -89,3 +89,46 @@ class TesteDedupeEntreFontes(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TesteModoHttp(unittest.TestCase):
+    HTML = "<html><head><script type='application/ld+json'>%s</script></head><body>x</body></html>" % json.dumps(ANUNCIO)
+
+    def test_extrai_json_ld_do_html(self):
+        from src.jsonld import blocos_do_html
+        [a] = extrair_anuncios(blocos_do_html(self.HTML))
+        self.assertEqual(a["external_id"], "2919071120")
+
+    def test_detecta_bloqueio(self):
+        from src.scraper import resposta_bloqueada
+        self.assertTrue(resposta_bloqueada(403, "x"))
+        self.assertTrue(resposta_bloqueada(200, "<title>Attention Required! | Cloudflare</title>"))
+        self.assertFalse(resposta_bloqueada(200, self.HTML))
+
+    def test_http_para_quando_bloqueado(self):
+        import queue, tempfile, os
+        from unittest import mock
+        from src.scraper import Bloqueado, ScraperHttp
+        from src.database import Database
+        db = os.path.join(tempfile.mkdtemp(), "t.db")
+        Database(db).setup()
+        s = ScraperHttp(1, "zap", SEGMENTOS[:1], queue.Queue(), db)
+        resposta = mock.Mock(status_code=403, text="blocked")
+        with mock.patch.object(s._sessao, "get", return_value=resposta):
+            with self.assertRaises(Bloqueado):
+                s._baixar("https://exemplo/x")
+
+    def test_http_grava_e_pagina_ate_acabar(self):
+        import queue, tempfile, os
+        from unittest import mock
+        from src.scraper import ScraperHttp
+        from src.database import Database
+        db = os.path.join(tempfile.mkdtemp(), "t.db")
+        Database(db).setup()
+        s = ScraperHttp(1, "zap", SEGMENTOS[:1], queue.Queue(), db)
+        s._robots = None
+        paginas = iter([self.HTML, "<html></html>"])
+        with mock.patch.object(s, "_baixar", side_effect=lambda u: next(paginas)), mock.patch("src.scraper.time.sleep"):
+            s._scrape_segmento(SEGMENTOS[0])
+        self.assertEqual(s._repo.total_raw(), 1)
+        self.assertTrue(s._repo.pagina_ja_coletada("zap:casas", 0, 1))

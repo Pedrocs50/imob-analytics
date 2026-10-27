@@ -5,6 +5,7 @@ de rolar a pagina. Funcao pura (recebe os textos dos blocos), testavel sem naveg
 """
 import json
 import re
+from html.parser import HTMLParser
 
 _ID_NA_URL = re.compile(r"id-(\d+)")
 _VAGAS = re.compile(r"(\d+)\s+vagas?", re.IGNORECASE)
@@ -93,3 +94,30 @@ def extrair_anuncios(blocos: list[str]) -> list[dict]:
             if anuncio:
                 vistos.setdefault(anuncio["external_id"] or anuncio["url"], anuncio)
     return list(vistos.values())
+
+
+class _BlocosLdJson(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.blocos: list[str] = []
+        self._dentro = False
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "script" and dict(attrs).get("type") == "application/ld+json":
+            self._dentro = True
+            self.blocos.append("")
+
+    def handle_endtag(self, tag):
+        if tag == "script":
+            self._dentro = False
+
+    def handle_data(self, dados):
+        if self._dentro:
+            self.blocos[-1] += dados
+
+
+def blocos_do_html(html: str) -> list[str]:
+    """Textos dos `<script type="application/ld+json">` de uma pagina HTML (a resposta que o Network mostra)."""
+    leitor = _BlocosLdJson()
+    leitor.feed(html)
+    return leitor.blocos
