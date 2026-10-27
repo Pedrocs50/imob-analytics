@@ -1,0 +1,11 @@
+regra (escolhida na metade A),lift na metade A,anuncios na metade B,lift na metade B (nao vista)
+area gourmet + varanda + 2+ vagas,1.865582878690629,179,1.5957732449872244
+area gourmet + varanda + 3+ quartos,1.7999385482938117,183,1.576820434616851
+area gourmet + seguranca + area acima da mediana,1.79293893129771,155,1.5607901975493874
+area gourmet + 2+ vagas,1.762620072043226,279,1.556611375065989
+varanda + quadra + academia,1.719691744482173,135,1.446569049669825
+varanda + portaria + armarios planejados,1.6938100961538465,111,1.5230113834764998
+varanda + 2+ vagas,1.6830677044724487,230,1.4193461408830468
+area gourmet + quadra + area acima da mediana,1.6748302207130732,169,1.6212100362368698
+area gourmet + armarios planejados + area acima da mediana,1.672818083051666,211,1.5195268011315626
+seguranca + 2+ vagas + 3+ quartos,1.6705192034139404,175,1.3324473975636766

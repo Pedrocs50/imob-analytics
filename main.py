@@ -353,6 +353,12 @@ def cmd_mineracao():
     executar()
 
 
+def cmd_mineracao_avancada():
+    from src.pricing.mineracao_avancada import executar
+
+    executar()
+
+
 def cmd_prever():
     from src.pricing.prever import executar
 
@@ -382,6 +388,7 @@ COMANDOS = {
     "projecao": cmd_projecao,
     "prever": cmd_prever,
     "mineracao": cmd_mineracao,
+    "mineracao-avancada": cmd_mineracao_avancada,
     "sensibilidade": cmd_sensibilidade,
     "painel": cmd_painel,
     "relatorio": cmd_relatorio,
