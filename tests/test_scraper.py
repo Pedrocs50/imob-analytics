@@ -238,3 +238,33 @@ class TesteDiagnostico(unittest.TestCase):
             self.assertIsNotNone(ex._aguardar_carregamento(mock.Mock()))
             w.return_value.until.side_effect = Exception("timeout")
             self.assertIsNone(ex._aguardar_carregamento(mock.Mock()))
+
+
+class TesteEncerrarChromeDoPerfil(unittest.TestCase):
+    def test_encerra_so_o_processo_com_aquele_perfil(self):
+        import os, subprocess, sys, tempfile, time
+        from src.scraper import encerrar_chrome_do_perfil
+        perfil = tempfile.mkdtemp(prefix="perfil_teste_")
+        codigo = "import time; time.sleep(60)"
+        alvo = subprocess.Popen([sys.executable, "-c", codigo, f"--user-data-dir={perfil}"])
+        outro = subprocess.Popen([sys.executable, "-c", codigo, "--user-data-dir=/tmp/outro_perfil"])
+        os.symlink("x", os.path.join(perfil, "SingletonLock"))
+        try:
+            time.sleep(0.5)
+            self.assertEqual(encerrar_chrome_do_perfil(perfil), 1)
+            alvo.wait(timeout=5)
+            self.assertIsNone(outro.poll())  # o processo de outro perfil continua
+            self.assertFalse(os.path.lexists(os.path.join(perfil, "SingletonLock")))
+        finally:
+            alvo.kill(); outro.kill()
+
+    def test_diagnostico_acusa_chromedriver_morto(self):
+        import os, queue, tempfile
+        from unittest import mock
+        from src.scraper import ScraperPortal
+        from src.database import Database
+        db = os.path.join(tempfile.mkdtemp(), "t.db")
+        Database(db).setup()
+        s = ScraperPortal(1, "zap", SEGMENTOS[:1], queue.Queue(), db)
+        s._driver = mock.Mock(browser_pid=os.getpid(), service=mock.Mock(process=mock.Mock(pid=2 ** 22 + 777)))
+        self.assertIn("MORREU", s._diagnostico_navegador())

@@ -1,5 +1,6 @@
 import json
 import re
+import signal
 import requests
 import time
 import os
@@ -8,7 +9,9 @@ import multiprocessing
 import urllib.robotparser
 
 import undetected_chromedriver as uc
+from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from urllib3.exceptions import HTTPError
 from selenium.webdriver.support.ui import WebDriverWait
@@ -44,6 +47,10 @@ HTTP_TIMEOUT = 30
 USER_AGENT = os.environ.get(
     "SCRAPER_USER_AGENT", "imob-analytics/1.0 (pesquisa de iniciacao cientifica, IFSP Jacarei)"
 )
+# Navegador: Selenium puro com o chromedriver oficial (padrao). O undetected_chromedriver (NAVEGADOR=uc) remenda o binario do
+# chromedriver e, no Chrome 156 deste projeto, ele deu segfault repetidamente (journalctl -k): o driver morria e o Chrome ficava vivo.
+NAVEGADOR = os.environ.get("NAVEGADOR", "selenium")
+SEM_JANELA = os.environ.get("NAVEGADOR_SEM_JANELA") == "1"  # para testes; a coleta normal usa janela visivel
 # quanto esperar a listagem aparecer (o ZAP monta a pagina no navegador e pode demorar mais que o VivaReal)
 ESPERA_CARREGAMENTO = int(os.environ.get("ESPERA_CARREGAMENTO", 40))
 AMOSTRAS_DIR = os.path.join("data", "raw", "amostras_scraper")
@@ -207,6 +214,41 @@ class ExtractorPortal:
 # SCRAPER
 # =============================================================================
 
+def encerrar_chrome_do_perfil(perfil: str, espera: float = 3.0) -> int:
+    """Encerra os Chrome que ainda seguram `perfil` (sobras de uma queda ou de Ctrl+C) e limpa as travas do perfil.
+    Sem isso, o Chrome novo abre no processo antigo, e o driver perde o navegador. So olha processos com este perfil."""
+    if not os.path.isdir("/proc"):
+        return 0
+    alvo, encerrados = f"--user-data-dir={perfil}", []
+    for pid in filter(str.isdigit, os.listdir("/proc")):
+        try:
+            with open(f"/proc/{pid}/cmdline", "rb") as f:
+                argumentos = f.read().split(b"\0")
+        except OSError:
+            continue
+        if int(pid) != os.getpid() and alvo.encode() in argumentos:
+            try:
+                os.kill(int(pid), signal.SIGTERM)
+                encerrados.append(int(pid))
+            except OSError:
+                pass
+    limite = time.time() + espera
+    while encerrados and time.time() < limite and any(os.path.exists(f"/proc/{p}") for p in encerrados):
+        time.sleep(0.2)
+    for p in encerrados:
+        if os.path.exists(f"/proc/{p}"):
+            try:
+                os.kill(p, signal.SIGKILL)
+            except OSError:
+                pass
+    for trava in ("SingletonLock", "SingletonCookie", "SingletonSocket"):
+        try:
+            os.unlink(os.path.join(perfil, trava))
+        except OSError:
+            pass
+    return len(encerrados)
+
+
 def montar_url(portal: dict, segmento: dict, pagina: int) -> str:
     return portal["url"].format(
         base=portal["base"], caminho=portal["caminhos"][segmento["tipo"]], pagina_param=portal["pagina_param"],
@@ -301,23 +343,33 @@ class ScraperPortal:
 
     def _diagnostico_navegador(self) -> str:
         """Separa 'a janela foi fechada / o Chrome morreu' de 'o Chrome esta vivo mas nao responde'."""
-        pid = getattr(self._driver, "browser_pid", None)
+        def vivo(pid):
+            try:
+                os.kill(pid, 0)
+                return True
+            except ProcessLookupError:
+                return False
+            except PermissionError:
+                return True
+
+        pid = getattr(self._driver, "browser_pid", None)  # so o undetected_chromedriver expoe o pid do Chrome
+        pid_driver = getattr(getattr(getattr(self._driver, "service", None), "process", None), "pid", None)
+        if isinstance(pid_driver, int) and not vivo(pid_driver):
+            return (f"o chromedriver (pid {pid_driver}) MORREU: crash do driver (veja `journalctl -k | grep segfault`); "
+                    "o Chrome pode ter ficado vivo")
         if not pid:
             return "pid do Chrome desconhecido"
-        try:
-            os.kill(pid, 0)
+        if vivo(pid):
             return f"o processo do Chrome (pid {pid}) ainda existe: travou ou esta lento, nao foi fechado"
-        except ProcessLookupError:
-            return f"o processo do Chrome (pid {pid}) NAO existe mais: a janela foi fechada ou o Chrome morreu"
-        except PermissionError:
-            return f"o processo do Chrome (pid {pid}) existe"
+        return f"o processo do Chrome (pid {pid}) NAO existe mais: a janela foi fechada ou o Chrome morreu"
 
     def _reiniciar_driver(self) -> None:
         try:
             self._driver.quit()
         except Exception:
             pass
-        time.sleep(5)
+        encerrar_chrome_do_perfil(self._perfil)
+        time.sleep(3)
         self._iniciar_driver()
 
     def _coletar_pagina(self, segmento: dict, pagina: int, url: str):
@@ -355,17 +407,32 @@ class ScraperPortal:
             total_db = self._repo.total_raw()
             self._reportar_progresso(segmento, pagina, len(dados), total_db)
 
-    def _iniciar_driver(self) -> None:
-        options = uc.ChromeOptions()
+    @property
+    def _perfil(self) -> str:
+        return os.path.abspath(os.path.join(PERFIL_DIR, self.fonte))
+
+    def _criar_navegador(self):
+        if NAVEGADOR == "uc":
+            options = uc.ChromeOptions()
+            if CHROME_BIN_PATH:
+                options.binary_location = CHROME_BIN_PATH
+            options.add_argument("--start-maximized")
+            return uc.Chrome(options=options, driver_executable_path=CHROMEDRIVER_PATH, version_main=CHROME_VERSION,
+                             user_data_dir=self._perfil)
+        options = webdriver.ChromeOptions()
         if CHROME_BIN_PATH:
             options.binary_location = CHROME_BIN_PATH
         options.add_argument("--start-maximized")
-        criar = lambda: uc.Chrome(  # noqa: E731
-            options=options,
-            driver_executable_path=CHROMEDRIVER_PATH,
-            version_main=CHROME_VERSION,
-            user_data_dir=os.path.abspath(os.path.join(PERFIL_DIR, self.fonte)),
-        )
+        options.add_argument(f"--user-data-dir={self._perfil}")
+        if SEM_JANELA:
+            options.add_argument("--headless=new")
+        return webdriver.Chrome(options=options, service=Service(executable_path=CHROMEDRIVER_PATH) if CHROMEDRIVER_PATH else Service())
+
+    def _iniciar_driver(self) -> None:
+        os.makedirs(self._perfil, exist_ok=True)
+        if encerrar_chrome_do_perfil(self._perfil):
+            self._log("havia um Chrome antigo segurando o perfil; encerrado.")
+        criar = self._criar_navegador
         if self._trava_driver is None:
             self._driver = criar()
         else:
