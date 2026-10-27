@@ -268,3 +268,30 @@ class TesteEncerrarChromeDoPerfil(unittest.TestCase):
         s = ScraperPortal(1, "zap", SEGMENTOS[:1], queue.Queue(), db)
         s._driver = mock.Mock(browser_pid=os.getpid(), service=mock.Mock(process=mock.Mock(pid=2 ** 22 + 777)))
         self.assertIn("MORREU", s._diagnostico_navegador())
+
+
+class TestePaginaNaoEncontrada(unittest.TestCase):
+    TEXTO_ZAP = "Ops! | Não conseguimos encontrar a página solicitada. Veja imóveis recomendados"
+
+    def test_reconhece_pagina_de_erro_e_nao_confunde_com_preco(self):
+        from src.scraper import pagina_de_erro
+        self.assertTrue(pagina_de_erro(self.TEXTO_ZAP))
+        self.assertTrue(pagina_de_erro("Page not found"))
+        self.assertFalse(pagina_de_erro("Casas à venda em Jacareí | R$ 404.000 | 3 quartos"))
+
+    def test_pagina_de_erro_nao_conta_como_resultado_mesmo_com_anuncios_recomendados(self):
+        class DriverErro(FakeDriver):
+            def execute_script(self, js):
+                return self.TEXTO if "innerText" in js else super().execute_script(js)
+        DriverErro.TEXTO = self.TEXTO_ZAP
+        ex = ExtractorPortal("zap")
+        # JSON-LD com anuncios recomendados na pagina de erro: nao pode virar resultado
+        self.assertFalse(ex.pagina_tem_resultados(DriverErro([json.dumps(ANUNCIO)])))
+        self.assertTrue(ex.pagina_tem_resultados(FakeDriver([json.dumps(ANUNCIO)])))
+
+    def test_caminhos_candidatos_do_zap_terrenos(self):
+        from src.scraper import caminhos_candidatos
+        seg = {"tipo": "terrenos", "preco_min": 0, "preco_max": 200_000}
+        self.assertEqual(caminhos_candidatos(PORTAIS["zap"], "terrenos"), ["lotes-terrenos", "terrenos"])
+        self.assertIn("/venda/terrenos/sp+jacarei/", montar_url(PORTAIS["zap"], seg, 1, "terrenos"))
+        self.assertIn("/venda/lotes-terrenos/sp+jacarei/", montar_url(PORTAIS["zap"], seg, 1))

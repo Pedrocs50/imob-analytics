@@ -80,7 +80,9 @@ PORTAIS = {
     "zap": {
         "base": "https://www.zapimoveis.com.br",
         "url": "{base}/venda/{caminho}/sp+jacarei/?{pagina_param}={pagina}&precoMinimo={preco_min}&precoMaximo={preco_max}",
-        "caminhos": {"casas": "casas", "apartamentos": "apartamentos", "terrenos": "terrenos", "imoveis": "imoveis"},
+        # lista = caminhos candidatos: vale o primeiro que nao cair na pagina "nao encontrada" (conferido na amostra)
+        "caminhos": {"casas": "casas", "apartamentos": "apartamentos", "terrenos": ["lotes-terrenos", "terrenos"],
+                     "imoveis": "imoveis"},
         "pagina_param": "page",
     },
     "vivareal": {
@@ -96,6 +98,14 @@ PORTAIS = {
 # =============================================================================
 # EXTRACTOR
 # =============================================================================
+
+_PAGINA_NAO_ENCONTRADA = re.compile(
+    r"encontrar\s+a\s+p[áa]gina\s+solicitada|p[áa]gina\s+n[ãa]o\s+(foi\s+)?encontrada|page\s+not\s+found", re.IGNORECASE)
+
+
+def pagina_de_erro(texto: str) -> bool:
+    return bool(_PAGINA_NAO_ENCONTRADA.search(texto))
+
 
 class ExtractorPortal:
     """Le os anuncios de uma pagina de listagem. Prefere o JSON-LD embutido (id, URL, endereco, comodidades);
@@ -126,6 +136,14 @@ class ExtractorPortal:
 
     def __init__(self, fonte: str):
         self._fonte = fonte
+
+    def exemplos_de_cards(self, driver, n: int = 3) -> list[str]:
+        """Texto cru dos primeiros cards (preco, endereco, caracteristicas): para conferir o que o card mostra de condominio/IPTU."""
+        try:
+            cards = driver.execute_script(self._CARDS_TEXTO_JS) or []
+        except Exception:
+            return []
+        return [" | ".join(str(c.get("texto", "")).split())[:400] for c in cards[:n] if isinstance(c, dict)]
 
     def valores_dos_cards(self, driver) -> dict[str, dict]:
         """{id do anuncio: {condominio, iptu}}: esses dois so aparecem nos cards, nao no JSON-LD."""
@@ -163,8 +181,23 @@ class ExtractorPortal:
                       "preco_min_filtro": segmento["preco_min"], "pagina": pagina})
         return anuncios
 
+    _TEXTO_PAGINA_JS = "return (document.title + ' | ' + (document.body ? document.body.innerText : '')).slice(0, 3000);"
+
+    def texto_da_pagina(self, driver) -> str:
+        try:
+            return str(driver.execute_script(self._TEXTO_PAGINA_JS) or "")
+        except Exception:
+            return ""
+
+    def pagina_nao_encontrada(self, driver) -> bool:
+        """Pagina de erro do portal ("nao conseguimos encontrar a pagina solicitada"). Ela mostra anuncios
+        recomendados, que NAO sao desta listagem e nao podem ser gravados como se fossem."""
+        return pagina_de_erro(self.texto_da_pagina(driver))
+
     def pagina_tem_resultados(self, driver) -> bool:
         try:
+            if self.pagina_nao_encontrada(driver):
+                return False
             if extrair_anuncios(self.blocos_json_ld(driver)):
                 return True
             return len(driver.find_elements(By.CSS_SELECTOR, self._CARDS_CSS)) > 0
@@ -249,9 +282,15 @@ def encerrar_chrome_do_perfil(perfil: str, espera: float = 3.0) -> int:
     return len(encerrados)
 
 
-def montar_url(portal: dict, segmento: dict, pagina: int) -> str:
+def caminhos_candidatos(portal: dict, tipo: str) -> list[str]:
+    caminho = portal["caminhos"][tipo]
+    return list(caminho) if isinstance(caminho, (list, tuple)) else [caminho]
+
+
+def montar_url(portal: dict, segmento: dict, pagina: int, caminho: str | None = None) -> str:
     return portal["url"].format(
-        base=portal["base"], caminho=portal["caminhos"][segmento["tipo"]], pagina_param=portal["pagina_param"],
+        base=portal["base"], caminho=caminho if caminho is not None else caminhos_candidatos(portal, segmento["tipo"])[0],
+        pagina_param=portal["pagina_param"],
         pagina=pagina, preco_min=segmento["preco_min"], preco_max=segmento["preco_max"],
     )
 
@@ -275,6 +314,33 @@ class ScraperPortal:
         self._extractor = ExtractorPortal(fonte)
         self._driver = None
         self._robots = None
+        self._caminhos: dict[str, str] = {}  # tipo -> caminho que funcionou
+
+    def _url(self, segmento: dict, pagina: int) -> str:
+        return montar_url(self.portal, segmento, pagina, self._caminhos.get(segmento["tipo"]))
+
+    def _escolher_caminho(self, segmento: dict) -> bool:
+        """Define o caminho da URL do tipo: o primeiro candidato cuja pagina 1 nao e de erro. False se nenhum serve."""
+        tipo = segmento["tipo"]
+        if tipo in self._caminhos:
+            return True
+        candidatos = caminhos_candidatos(self.portal, tipo)
+        for caminho in candidatos:
+            url = montar_url(self.portal, segmento, 1, caminho)
+            if not self._permitido(url):
+                continue
+            self._driver.get(url)
+            time.sleep(random.uniform(DELAY_MIN, DELAY_MAX))
+            if not self._extractor.pagina_tem_resultados(self._driver) and self._detectar_captcha():
+                self._aguardar_liberacao_captcha()
+            self._extractor._aguardar_carregamento(self._driver)
+            if not self._extractor.pagina_nao_encontrada(self._driver):
+                self._caminhos[tipo] = caminho
+                if len(candidatos) > 1:
+                    self._log(f"{tipo}: caminho '{caminho}' funciona ({url})")
+                return True
+            self._log(f"{tipo}: o portal respondeu 'pagina nao encontrada' para {url}")
+        return False
 
     def executar(self) -> None:
         self._iniciar_driver()
@@ -303,6 +369,12 @@ class ScraperPortal:
                     resumo[segmento["tipo"]] = {"url": url, "erro": "bloqueado pelo robots.txt"}
                     continue
                 try:
+                    if not self._tentar(lambda: self._escolher_caminho(segmento)):
+                        resumo[segmento["tipo"]] = {"url": url, "erro": "pagina nao encontrada em todos os caminhos testados: "
+                                                    + ", ".join(caminhos_candidatos(self.portal, segmento["tipo"]))}
+                        self._log(f"amostra {segmento['tipo']}: {resumo[segmento['tipo']]}")
+                        continue
+                    url = self._url(segmento, 1)
                     resumo[segmento["tipo"]] = self._tentar(lambda: self._amostrar(segmento, url))
                 except Exception as erro:
                     resumo[segmento["tipo"]] = {"url": url, "erro": f"{type(erro).__name__}: {erro}"[:300]}
@@ -323,7 +395,9 @@ class ScraperPortal:
         arquivo = os.path.join(AMOSTRAS_DIR, f"{self.fonte}_{segmento['tipo']}_p1.json")
         with open(arquivo, "w", encoding="utf-8") as f:
             json.dump(blocos, f, ensure_ascii=False)
-        return {"url": self._driver.current_url, "arquivo": arquivo, "segundos_ate_carregar": espera,
+        return {"url": self._driver.current_url, "pagina_nao_encontrada": self._extractor.pagina_nao_encontrada(self._driver),
+                "titulo": self._driver.title, "arquivo": arquivo,
+                "exemplos_de_cards": self._extractor.exemplos_de_cards(self._driver), "segundos_ate_carregar": espera,
                 "timeout_de_carregamento": espera is None, "captcha_visivel": self._detectar_captcha(),
                 **self._extractor.contagens(self._driver),
                 "cards_com_condominio_ou_iptu": sum(1 for v in self._extractor.valores_dos_cards(self._driver).values()
@@ -388,12 +462,16 @@ class ScraperPortal:
         nome = f"{self.fonte}:{segmento['tipo']} R${segmento['preco_min']:,}-{segmento['preco_max']:,}"
         chave = f"{self.fonte}:{segmento['tipo']}"
         self._log(f"Iniciando segmento: {nome}")
+        if not self._tentar(lambda: self._escolher_caminho(segmento)):
+            self._log(f"ATENCAO: {nome} ignorado: o portal nao achou a pagina em nenhum caminho "
+                      f"({', '.join(caminhos_candidatos(self.portal, segmento['tipo']))}). Confira a URL no navegador.")
+            return
 
         for pagina in range(1, MAX_PAGINAS + 1):
             if self._repo.pagina_ja_coletada(chave, segmento["preco_min"], pagina):
                 continue
 
-            url = montar_url(self.portal, segmento, pagina)
+            url = self._url(segmento, pagina)
             if not self._permitido(url):
                 self._log(f"robots.txt nao permite {url}; segmento ignorado.")
                 return
