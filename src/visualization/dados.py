@@ -10,6 +10,7 @@ import pandas as pd
 EDA = os.path.join("reports", "results", "eda")
 ARIMA = os.path.join("reports", "results", "arima")
 LSTM = os.path.join("reports", "results", "lstm")
+LSTM_MACRO = os.path.join("reports", "results", "lstm_macro")
 VIVAREAL = os.path.join("data", "processed", "vivareal")
 SERIES = os.path.join("data", "processed", "series")
 SETORES_GPKG = os.path.join("data", "raw", "ibge", "jacarei_setores_2022.gpkg")

@@ -209,3 +209,32 @@ class TesteReinicio(unittest.TestCase):
             return r
         self.assertEqual(s._tentar(etapa), "ok")
         s._reiniciar_driver.assert_called_once()
+
+
+class TesteDiagnostico(unittest.TestCase):
+    def _scraper(self, pid):
+        import queue, tempfile, os
+        from unittest import mock
+        from src.scraper import ScraperPortal
+        from src.database import Database
+        db = os.path.join(tempfile.mkdtemp(), "t.db")
+        Database(db).setup()
+        s = ScraperPortal(1, "zap", SEGMENTOS[:1], queue.Queue(), db)
+        s._driver = mock.Mock(browser_pid=pid)
+        return s
+
+    def test_chrome_vivo(self):
+        import os
+        self.assertIn("ainda existe", self._scraper(os.getpid())._diagnostico_navegador())
+
+    def test_chrome_morto(self):
+        self.assertIn("NAO existe", self._scraper(2 ** 22 + 12345)._diagnostico_navegador())
+
+    def test_espera_devolve_segundos_ou_none(self):
+        from unittest import mock
+        ex = ExtractorPortal("zap")
+        with mock.patch("src.scraper.WebDriverWait") as w:
+            w.return_value.until.return_value = True
+            self.assertIsNotNone(ex._aguardar_carregamento(mock.Mock()))
+            w.return_value.until.side_effect = Exception("timeout")
+            self.assertIsNone(ex._aguardar_carregamento(mock.Mock()))

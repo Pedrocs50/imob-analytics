@@ -1,7 +1,7 @@
 # Metas da iniciacao cientifica e estado atual
 
 Documento de rastreamento. Atualizar o status a cada etapa concluida.
-Ultima verificacao do repositorio: 2026-10-05.
+Ultima verificacao do repositorio: 2026-10-26.
 
 ## Regras do projeto
 
@@ -22,8 +22,8 @@ Ultima verificacao do repositorio: 2026-10-05.
 | 2 | Tratamento, padronizacao e organizacao | Atingida para VivaReal e series temporais | `python main.py vivareal-prep` (3 datasets limpos) e `series-coletar` / `series-fipezap` / `series-painel` (banco `series_temporais.db`, validacao e paineis mensal/trimestral). O fluxo legado (`cleaner.py`) segue separado. |
 | 3 | Estatistica descritiva e exploratoria | Atingida | `python main.py eda-series` e `eda-vivareal`: estacionariedade, autocorrelacao, sazonalidade, correlacao cruzada, Granger e estabilidade por subperiodo (series); distribuicao, ausentes, correlacoes, VIF, bairros, condominio e coordenadas (VivaReal). Leitura em `docs/ANALISE_EXPLORATORIA.md`; relatorios em `reports/results/eda_*.md`; figuras em `reports/figures/eda_*.png`. |
 | 4 | Regressao linear multipla e ARIMA | Atingida para precos (demanda nao coberta) | **Regressao linear multipla** por segmento (`reg-linear`; R2 de 0,45-0,49 em apartamento e 0,58-0,63 nos demais; `docs/MODELOS_PRECIFICACAO.md`) e **ARIMA** do FipeZAP (`arima`; walk-forward com benchmarks; `docs/MODELOS_TEMPORAIS.md`). O meta cita "preco e demanda": nao ha serie de demanda no projeto. |
-| 5 | LSTM multivariado | Atingida (univariado/painel; sem preditores macro) | `python main.py lstm`: LSTM e gradient boosting global em painel de 50 cidades, com variantes por semelhanca (`docs/MODELOS_LSTM.md`). O LSTM usa so o crescimento passado das series; nao foi testado com preditores macro. |
-| 6 | Comparacao ARIMA x LSTM (RMSE, MAE, R2) | Atingida com ressalvas | Mesmo walk-forward e Diebold-Mariano: ARIMA melhor no indice nacional; redes menores em SJC aos 6 e 12 meses, sem significancia. Nenhum modelo e uniformemente melhor (`docs/MODELOS_LSTM.md`). |
+| 5 | LSTM multivariado | Atingida (painel; macro testado, resultado negativo) | `python main.py lstm`: LSTM e gradient boosting global em painel de 50 cidades (`docs/MODELOS_LSTM.md`). `python main.py lstm-macro`: o mesmo LSTM com 8 indicadores macro (BCB/IPEA), 12 variantes, selecao x confirmacao: **o macro nao melhorou** (`docs/MODELOS_LSTM_MACRO.md`). |
+| 6 | Comparacao ARIMA x LSTM (RMSE, MAE, R2) | Atingida com ressalvas | Mesmo walk-forward e Diebold-Mariano: ARIMA melhor no indice nacional; redes menores em SJC aos 6 e 12 meses, sem significancia. Nenhum modelo e uniformemente melhor (`docs/MODELOS_LSTM.md`). `lstm-macro` reporta MAE, RMSE e MAPE, tambem contra regressao linear (R2 nao e usado: o alvo e o nivel do indice). |
 | 7 | Sensibilidade e relevancia das variaveis | Atingida | `python main.py sensibilidade`: relevancia por grupo de variaveis (permutacao), cenarios "e se?" e efeito do bairro no modelo final (`docs/SENSIBILIDADE.md`). Tambem ha a importancia do `ajuste-gb` e os coeficientes da regressao linear. Falta analise de interacoes. |
 | 8 | Visualizacoes interativas | Atingida | `python main.py painel`: painel HTML unico (offline) com mapas por setor, evolucao dos modelos, sensibilidade, series e projecao, com seletores, tooltips e tema claro/escuro (`docs/PAINEL_INTERATIVO.md`). Tambem existe `mapa_setores_interativo.html`. |
 | 9 | Relatorios analiticos automaticos | Atingida | `python main.py relatorio`: relatorio em Markdown e HTML com resultados, projecao, limitacoes e comparacao com a literatura; numeros lidos dos arquivos e afirmacoes conferidas automaticamente (`docs/RELATORIO_AUTOMATICO.md`, `docs/COMPARACAO_LITERATURA.md`). |

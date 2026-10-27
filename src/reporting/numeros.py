@@ -75,10 +75,21 @@ def _series() -> dict:
     return out
 
 
+def _series_macro() -> dict:
+    """Selecao x confirmacao do experimento LSTM com macro (`python main.py lstm-macro`); None se ainda nao rodou."""
+    out = {}
+    for chave in ("nacional", "SJC"):
+        sc = dados.csv(os.path.join(dados.LSTM_MACRO, f"lstm_macro_{chave}_selecao.csv"))
+        if sc is not None:
+            sc.columns = ["modelo", "origens_conf", "origens_sel", "rmse_conf", "rmse_sel", "mape_conf", "mape_sel"]
+        out[chave] = sc
+    return out
+
+
 def coletar() -> dict:
     av = dados.eda("modelos_avancados_metricas.csv")
     n = {"limpeza": _contagens_limpeza(), "evolucao": _evolucao(), "avancados": av, "intervalos": dados.eda("modelos_avancados_intervalos.csv"),
-         "preco_total": _r2_preco_total(), "series": _series(), "sens_grupos": dados.eda("sens_grupos.csv"), "sens_cenarios": dados.eda("sens_cenarios.csv"),
+         "preco_total": _r2_preco_total(), "series": _series(), "series_macro": _series_macro(), "sens_grupos": dados.eda("sens_grupos.csv"), "sens_cenarios": dados.eda("sens_cenarios.csv"),
          "tendencias": dados.eda("projecao_cenarios_tendencia.csv"), "ajuste_gb": dados.eda("ajuste_gb_metricas.csv"),
          "anuncios": {s: dados.anuncios(s) for s in SEGMENTOS3}, "projecao": dados.projecao_anuncios(), "por_setor": dados.eda("projecao_por_setor.csv")}
     if av is not None:

@@ -16,7 +16,9 @@ Painel interativo (mapas, modelos, series e projecao) e relatorio completo, sem 
 | Valor estimado hoje (mediana, R$/m²) | ~6.460 | ~4.600 |
 | Tendencia do R$/m² em 12 meses (cenario central) | +8% | +8% |
 
-Nas series, o **ARIMA(0,2,3) e o melhor modelo no indice nacional**; em Sao Jose dos Campos as redes erram menos aos 6 e 12 meses, mas sem significancia estatistica.
+Nas series, o **ARIMA(0,2,3) e o melhor modelo no indice nacional**; em Sao Jose dos Campos as redes erram menos aos 6 e 12 meses, mas sem significancia estatistica. **Indicadores macro (BCB/IPEA) nao melhoraram o LSTM**: a variante escolhida na selecao piorou na confirmacao ([`docs/MODELOS_LSTM_MACRO.md`](docs/MODELOS_LSTM_MACRO.md)).
+
+**Coleta e mineracao:** coletor de anuncios para ZAP e VivaReal com leitura de JSON-LD ([`docs/COLETA_ANUNCIOS.md`](docs/COLETA_ANUNCIOS.md)) e mineracao dos anuncios (`python main.py mineracao`, [`docs/MINERACAO_DADOS.md`](docs/MINERACAO_DADOS.md)).
 
 ## Estado das metas
 
@@ -28,8 +30,8 @@ Todas as 9 metas estao atingidas (algumas com ressalvas). Detalhes em [`docs/MET
 | 2 | Tratamento e organizacao | Atingida | `vivareal-prep`, `series-painel` |
 | 3 | Estatistica descritiva e exploratoria | Atingida | `eda-series`, `eda-vivareal` |
 | 4 | Regressao linear multipla e ARIMA | Atingida para precos (sem serie de demanda) | `reg-linear`, `arima` |
-| 5 | LSTM | Atingida (sem preditores macro) | `lstm` |
-| 6 | Comparacao ARIMA x LSTM | Atingida com ressalvas | `lstm` |
+| 5 | LSTM | Atingida (macro testado: nao melhorou) | `lstm`, `lstm-macro` |
+| 6 | Comparacao ARIMA x LSTM | Atingida com ressalvas | `lstm`, `lstm-macro` |
 | 7 | Sensibilidade e relevancia das variaveis | Atingida | `sensibilidade` |
 | 8 | Visualizacoes interativas | Atingida | `painel` |
 | 9 | Relatorios analiticos automaticos | Atingida | `relatorio` |

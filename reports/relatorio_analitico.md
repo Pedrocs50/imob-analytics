@@ -1,6 +1,6 @@
 # Análise e previsão do mercado imobiliário de Jacareí-SP
 
-<p class="meta">Relatório analítico da iniciação científica · gerado automaticamente em 06/10/2026 06:38 por <code>python main.py relatorio</code> a partir dos resultados salvos. Números lidos dos arquivos; textos interpretativos conferidos contra os números (Apêndice C).</p>
+<p class="meta">Relatório analítico da iniciação científica · gerado automaticamente em 26/10/2026 22:08 por <code>python main.py relatorio</code> a partir dos resultados salvos. Números lidos dos arquivos; textos interpretativos conferidos contra os números (Apêndice C).</p>
 
 
 ## 1. Resumo executivo
@@ -72,6 +72,8 @@ domicílios vagos), atribuídos às coordenadas por junção espacial.
 - **Variáveis externas.** Painéis "as-of" (cada linha traz só o que já estava publicado, com defasagens confirmadas) e teste automático de vazamento temporal.
 - **LSTM e painel.** Rede de 1 camada em **painel de 50 cidades**, modelando o crescimento padronizado; variantes com todas as cidades, as 10 mais parecidas e ponderação por semelhança;
   gradient boosting global como comparador.
+- **LSTM com indicadores macro.** Teste controlado: a mesma rede, com e sem 8 indicadores do BCB e do IPEA (e dois subconjuntos definidos antes, vindos do ARIMAX), em 3 tamanhos de rede,
+  5 sementes. A variante é **escolhida nas primeiras 60% das origens** e **confirmada nas 40% finais**, para a escolha não olhar o período em que é avaliada.
 
 ### 3.3 Projeção de preço
 
@@ -199,6 +201,45 @@ Mesmo *walk-forward* para todos os modelos (as redes são reajustadas a cada 12 
 *Figura: Previsão do ARIMA para o índice FipeZAP*
 
 
+### 5.1 LSTM com indicadores macroeconômicos
+
+Pergunta: incluir juros, crédito, inflação, câmbio, confiança e atividade (BCB e IPEA) melhora o LSTM? Mesmo painel de 50 cidades, mesmas sementes e mesmo *walk-forward*; só muda a entrada.
+Os indicadores vêm do painel *as-of* (sem vazamento) e a escala é calculada só com o treino de cada reajuste.
+
+**Índice nacional** (RMSE relativo ao ARIMA e MAPE, médias dos horizontes de 1, 3, 6 e 12 meses; menor é melhor):
+
+| Modelo | RMSE rel. (seleção) | RMSE rel. (confirmação) | MAPE % (seleção) | MAPE % (confirmação) |
+|---|---|---|---|---|
+| ARIMA(0,2,3) | 1,00 | 1,00 | 0,52 | 0,47 |
+| LSTM painel (credito + juros + confianca + IBC-Br; grande) | 1,16 | 2,18 | 0,59 | 1,25 |
+| Regressao linear (só o alvo) | 1,21 | 1,08 | 0,66 | 0,45 |
+| Regressao linear (alvo + macro) | 1,45 | 1,42 | 0,79 | 0,73 |
+| LSTM painel (macro completo; base) | 1,52 | 2,75 | 0,79 | 1,63 |
+| LSTM painel (sem macro; base) | 1,74 | 1,01 | 0,91 | 0,50 |
+| LSTM painel (sem macro; pequena) | 1,89 | 1,18 | 1,03 | 0,63 |
+
+**São José dos Campos** (RMSE relativo ao ARIMA e MAPE, médias dos horizontes de 1, 3, 6 e 12 meses; menor é melhor):
+
+| Modelo | RMSE rel. (seleção) | RMSE rel. (confirmação) | MAPE % (seleção) | MAPE % (confirmação) |
+|---|---|---|---|---|
+| LSTM painel (credito + juros + confianca + IBC-Br; base) | 0,83 | 1,34 | 1,82 | 1,47 |
+| LSTM painel (sem macro; pequena) | 0,84 | 0,97 | 1,91 | 0,94 |
+| LSTM painel (sem macro; base) | 0,84 | 1,05 | 2,06 | 1,03 |
+| Regressao linear (alvo + macro) | 0,98 | 0,99 | 2,43 | 0,73 |
+| ARIMA(0,2,3) | 1,00 | 1,00 | 2,97 | 0,91 |
+| Regressao linear (só o alvo) | 1,01 | 0,50 | 2,51 | 0,28 |
+| LSTM painel (macro completo; base) | 1,08 | 2,23 | 2,58 | 2,63 |
+
+- Na confirmação, nenhuma variante com macro superou a melhor sem macro (RMSE relativo ao ARIMA: 1,14 contra 0,97 em SJC; 1,69 contra 1,01 no nacional).
+- A rede escolhida no período de seleção piorou na confirmação nos dois alvos (SJC: 0,83 para 1,34; nacional: 1,16 para 2,18): a vantagem vista na seleção não se manteve, e escolher a variante olhando o próprio período de avaliação teria enganado.
+- **Resultado negativo, que faz parte do estudo:** uma explicação plausível, que este experimento não testou, é que há poucas observações mensais (104 meses em SJC) e os indicadores mudam devagar, de modo que a rede com macro tem mais parâmetros do que o sinal sustenta.
+  A rede **pequena sem macro** foi a mais estável. Nenhuma variante supera o ARIMA de forma consistente no índice nacional.
+- Detalhes: `reports/results/lstm_macro.md` e `docs/MODELOS_LSTM_MACRO.md`.
+
+![Erro (MAPE) por horizonte: ARIMA, regressões e LSTM com e sem macro](figures/lstm_macro_comparacao.png)
+*Figura: Erro (MAPE) por horizonte: ARIMA, regressões e LSTM com e sem macro*
+
+
 ## 6. Projeção de preço de Jacareí
 
 Medianas de R$/m² (valor estimado de cada anúncio por previsão fora da amostra; “hoje” = último índice publicado):
@@ -295,6 +336,7 @@ bairros de renda extrema são mais difíceis de avaliar. Aqui os intervalos conf
 | Preços **pedidos**, não de venda | O valor estimado é um preço pedido esperado; a venda tende a ser menor (desconto de negociação) | Documentado; sem ajuste. Falta uma base de preços de transação |
 | Fotografia de **um dia** (março/2026) | Não há série temporal própria de Jacareí; a previsão no tempo depende de um proxy | Premissa explícita (SJC); coletar snapshots periódicos |
 | FipeZAP **não tem Jacareí** | A projeção supõe que Jacareí acompanha SJC | Cenários alternativos (nacional, tendência); validar a aceitação do proxy |
+| Indicadores macro não melhoraram o LSTM | A previsão do índice usa só o crescimento passado das cidades | Teste documentado (seção 5.1); repetir com séries mais longas ou frequência maior |
 | Poucos dados de SJC (104 meses; 44 origens de teste) | Resultados de SJC são indicativos, sem significância | Atualizar conforme novos meses forem publicados |
 | Apartamentos com R² ~0,73 | Faltam qualidade, conservação, andar e idade do prédio | Buscar essas variáveis |
 | Coordenadas reais em ~48% dos anúncios | O resto é imputado pelo bairro/rua | Imputação sem usar o preço; ganho limitado |
@@ -311,7 +353,7 @@ bairros de renda extrema são mais difíceis de avaliar. Aqui os intervalos conf
 1. É possível estimar o R$/m² anunciado em Jacareí com **R² de 0,73 (apartamento) e 0,80 (casa)** no teste mais exigente (anúncios mais recentes), com intervalos de previsão bem calibrados.
    O erro de um imóvel isolado continua alto (MAPE de 11,1% a 15,0%); o modelo serve melhor para estimar nível e comparar anúncios.
 2. **Informação nova rendeu tanto quanto, ou mais que, o ajuste de parâmetros**: terreno e texto (casas) e a taxa de condomínio e o contexto do anúncio deram ganhos comparáveis ou maiores que a busca de hiperparâmetros; o Censo, redundante com a localização, rendeu pouco.
-3. No índice FipeZAP o **ARIMA é difícil de bater**: vence no nacional; em SJC as redes parecem melhores em prazos longos, mas sem evidência estatística. Resultados negativos (aluguel, ARIMAX, vizinhas) estão documentados.
+3. No índice FipeZAP o **ARIMA é difícil de bater**: vence no nacional; em SJC as redes parecem melhores em prazos longos, mas sem evidência estatística. Resultados negativos (aluguel, ARIMAX, vizinhas e **indicadores macro no LSTM**) estão documentados.
 4. A projeção de preço de Jacareí é **coerente nos três cenários** (alta no horizonte de 12 meses), mas depende de duas premissas: Jacareí acompanha SJC e todos os imóveis variam igual.
 
 **Próximos passos.**
@@ -334,6 +376,9 @@ Ordem dos comandos (tempos medidos nesta máquina, só CPU):
 | `python main.py reg-linear`, `reg-geo`, `ajuste-gb` | ~7 min (`ajuste-gb`) | regressão linear, geografia/Censo, ajuste |
 | `python main.py arima`, `arima-plus` | ~45 s e ~2 min | ARIMA, ARIMAX, vizinhas |
 | `python main.py lstm` | ~7 min | LSTM e gradient boosting em painel |
+| `python main.py lstm-macro` | ~20 min | LSTM com e sem macro, regressão e ARIMA (seleção x confirmação) |
+| `python main.py mineracao` | segundos | correlações, grupos de imóveis e termos do anúncio |
+| `python main.py scrape --amostra` / `--http` | minutos | amostra de coleta dos portais (JSON-LD) |
 | `python main.py modelos-avancados` | ~70 min | modelos finais, conjunto e intervalos |
 | `python main.py sensibilidade`, `projecao` | ~2,5 e ~4 min | sensibilidade e projeção |
 | `python main.py prever --segmento ...` | ~40 s | avaliação de um imóvel |

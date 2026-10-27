@@ -167,6 +167,8 @@ def metodos(n: dict, r: Relato) -> str:
 - **Variáveis externas.** Painéis "as-of" (cada linha traz só o que já estava publicado, com defasagens confirmadas) e teste automático de vazamento temporal.
 - **LSTM e painel.** Rede de 1 camada em **painel de 50 cidades**, modelando o crescimento padronizado; variantes com todas as cidades, as 10 mais parecidas e ponderação por semelhança;
   gradient boosting global como comparador.
+- **LSTM com indicadores macro.** Teste controlado: a mesma rede, com e sem 8 indicadores do BCB e do IPEA (e dois subconjuntos definidos antes, vindos do ARIMAX), em 3 tamanhos de rede,
+  5 sementes. A variante é **escolhida nas primeiras 60% das origens** e **confirmada nas 40% finais**, para a escolha não olhar o período em que é avaliada.
 
 ### 3.3 Projeção de preço
 
@@ -287,7 +289,50 @@ Mesmo *walk-forward* para todos os modelos (as redes são reajustadas a cada 12 
   de forma significativa no índice nacional; alguns o pioraram.
 - O intervalo de 95% do ARIMA é conservador no nacional (cobertura de 99% a 100%) e cobre menos que o nominal em SJC: não é confiável para calibrar a incerteza.
 
-{figura('lstm_comparacao.png', 'ARIMA, LSTM e gradient boosting: erro por horizonte')}{figura('arima_previsao.png', 'Previsão do ARIMA para o índice FipeZAP')}"""
+{figura('lstm_comparacao.png', 'ARIMA, LSTM e gradient boosting: erro por horizonte')}{figura('arima_previsao.png', 'Previsão do ARIMA para o índice FipeZAP')}
+
+{lstm_macro(n, r)}"""
+
+
+def lstm_macro(n: dict, r: Relato) -> str:
+    """Subsecao: o LSTM melhora com indicadores macroeconomicos? (resultado negativo, com selecao x confirmacao)."""
+    sm = n.get("series_macro") or {}
+    if any(sm.get(k) is None for k in ("nacional", "SJC")):
+        return "### 5.1 LSTM com indicadores macroeconômicos\n\n" + r.ausente("LSTM com macro", "python main.py lstm-macro")
+    blocos, fatos = [], {}
+    for chave, rot in (("nacional", "Índice nacional"), ("SJC", "São José dos Campos")):
+        sc = sm[chave].copy()
+        redes = sc[sc["modelo"].str.startswith("LSTM painel")]
+        sem = redes[redes["modelo"].str.contains("sem macro")]
+        com = redes[~redes["modelo"].str.contains("sem macro")]
+        escolhida = redes.sort_values("rmse_sel").iloc[0]  # melhor LSTM no periodo de selecao
+        fatos[chave] = {"escolhida": escolhida, "melhor_sem": sem["rmse_conf"].min(), "melhor_com": com["rmse_conf"].min()}
+        linhas = sc[sc["modelo"].isin({"ARIMA(0,2,3)", "Regressao linear (so o alvo)", "Regressao linear (alvo + macro)", "LSTM painel (sem macro; pequena)",
+                                        "LSTM painel (sem macro; base)", "LSTM painel (macro completo; base)", escolhida["modelo"]})]
+        linhas = linhas.assign(modelo=linhas["modelo"].map(acentuar))[["modelo", "rmse_sel", "rmse_conf", "mape_sel", "mape_conf"]]
+        linhas.columns = ["Modelo", "RMSE rel. (seleção)", "RMSE rel. (confirmação)", "MAPE % (seleção)", "MAPE % (confirmação)"]
+        blocos.append(f"**{rot}** (RMSE relativo ao ARIMA e MAPE, médias dos horizontes de 1, 3, 6 e 12 meses; menor é melhor):\n\n{tabela(linhas, {c: 2 for c in linhas.columns if c != 'Modelo'})}")
+    nac, sjc = fatos["nacional"], fatos["SJC"]
+    macro_pior = r.afirmar(all(f["melhor_com"] > f["melhor_sem"] for f in fatos.values()),
+                           f"Na confirmação, nenhuma variante com macro superou a melhor sem macro (RMSE relativo ao ARIMA: {br(sjc['melhor_com'], 2)} contra {br(sjc['melhor_sem'], 2)} em SJC; "
+                           f"{br(nac['melhor_com'], 2)} contra {br(nac['melhor_sem'], 2)} no nacional).", "macro no LSTM")
+    escolha = r.afirmar(all(f["escolhida"]["rmse_conf"] > f["escolhida"]["rmse_sel"] for f in fatos.values()),
+                        f"A rede escolhida no período de seleção piorou na confirmação nos dois alvos (SJC: {br(sjc['escolhida']['rmse_sel'], 2)} para {br(sjc['escolhida']['rmse_conf'], 2)}; "
+                        f"nacional: {br(nac['escolhida']['rmse_sel'], 2)} para {br(nac['escolhida']['rmse_conf'], 2)}): a vantagem vista na seleção não se manteve, e escolher a variante olhando o próprio período de avaliação teria enganado.", "escolha")
+    return f"""### 5.1 LSTM com indicadores macroeconômicos
+
+Pergunta: incluir juros, crédito, inflação, câmbio, confiança e atividade (BCB e IPEA) melhora o LSTM? Mesmo painel de 50 cidades, mesmas sementes e mesmo *walk-forward*; só muda a entrada.
+Os indicadores vêm do painel *as-of* (sem vazamento) e a escala é calculada só com o treino de cada reajuste.
+
+{(chr(10) * 2).join(blocos)}
+
+- {macro_pior}
+- {escolha}
+- **Resultado negativo, que faz parte do estudo:** uma explicação plausível, que este experimento não testou, é que há poucas observações mensais (104 meses em SJC) e os indicadores mudam devagar, de modo que a rede com macro tem mais parâmetros do que o sinal sustenta.
+  A rede **pequena sem macro** foi a mais estável. Nenhuma variante supera o ARIMA de forma consistente no índice nacional.
+- Detalhes: `reports/results/lstm_macro.md` e `docs/MODELOS_LSTM_MACRO.md`.
+
+{figura('lstm_macro_comparacao.png', 'Erro (MAPE) por horizonte: ARIMA, regressões e LSTM com e sem macro')}"""
 
 
 # ----------------------------------------------------------------------------- 6. projecao
@@ -402,6 +447,7 @@ def limitacoes(n: dict, r: Relato) -> str:
 | Preços **pedidos**, não de venda | O valor estimado é um preço pedido esperado; a venda tende a ser menor (desconto de negociação) | Documentado; sem ajuste. Falta uma base de preços de transação |
 | Fotografia de **um dia** (março/2026) | Não há série temporal própria de Jacareí; a previsão no tempo depende de um proxy | Premissa explícita (SJC); coletar snapshots periódicos |
 | FipeZAP **não tem Jacareí** | A projeção supõe que Jacareí acompanha SJC | Cenários alternativos (nacional, tendência); validar a aceitação do proxy |
+| Indicadores macro não melhoraram o LSTM | A previsão do índice usa só o crescimento passado das cidades | Teste documentado (seção 5.1); repetir com séries mais longas ou frequência maior |
 | Poucos dados de SJC (104 meses; 44 origens de teste) | Resultados de SJC são indicativos, sem significância | Atualizar conforme novos meses forem publicados |
 | Apartamentos com R² ~0,73 | Faltam qualidade, conservação, andar e idade do prédio | Buscar essas variáveis |
 | Coordenadas reais em ~48% dos anúncios | O resto é imputado pelo bairro/rua | Imputação sem usar o preço; ganho limitado |
@@ -424,7 +470,7 @@ def conclusoes(n: dict, r: Relato) -> str:
 1. É possível estimar o R$/m² anunciado em Jacareí com **R² de {br(c['apartamento']['R2'], 2)} (apartamento) e {br(c['casa']['R2'], 2)} (casa)** no teste mais exigente (anúncios mais recentes), com intervalos de previsão bem calibrados.
    O erro de um imóvel isolado continua alto (MAPE de {pct(c['apartamento']['MAPE (%)'])} a {pct(c['casa']['MAPE (%)'])}); o modelo serve melhor para estimar nível e comparar anúncios.
 2. **Informação nova rendeu tanto quanto, ou mais que, o ajuste de parâmetros**: terreno e texto (casas) e a taxa de condomínio e o contexto do anúncio deram ganhos comparáveis ou maiores que a busca de hiperparâmetros; o Censo, redundante com a localização, rendeu pouco.
-3. No índice FipeZAP o **ARIMA é difícil de bater**: vence no nacional; em SJC as redes parecem melhores em prazos longos, mas sem evidência estatística. Resultados negativos (aluguel, ARIMAX, vizinhas) estão documentados.
+3. No índice FipeZAP o **ARIMA é difícil de bater**: vence no nacional; em SJC as redes parecem melhores em prazos longos, mas sem evidência estatística. Resultados negativos (aluguel, ARIMAX, vizinhas e **indicadores macro no LSTM**) estão documentados.
 4. A projeção de preço de Jacareí é **coerente nos três cenários** (alta no horizonte de 12 meses), mas depende de duas premissas: Jacareí acompanha SJC e todos os imóveis variam igual.
 
 **Próximos passos.**
@@ -453,6 +499,9 @@ Ordem dos comandos (tempos medidos nesta máquina, só CPU):
 | `python main.py reg-linear`, `reg-geo`, `ajuste-gb` | ~7 min (`ajuste-gb`) | regressão linear, geografia/Censo, ajuste |
 | `python main.py arima`, `arima-plus` | ~45 s e ~2 min | ARIMA, ARIMAX, vizinhas |
 | `python main.py lstm` | ~7 min | LSTM e gradient boosting em painel |
+| `python main.py lstm-macro` | ~20 min | LSTM com e sem macro, regressão e ARIMA (seleção x confirmação) |
+| `python main.py mineracao` | segundos | correlações, grupos de imóveis e termos do anúncio |
+| `python main.py scrape --amostra` / `--http` | minutos | amostra de coleta dos portais (JSON-LD) |
 | `python main.py modelos-avancados` | ~70 min | modelos finais, conjunto e intervalos |
 | `python main.py sensibilidade`, `projecao` | ~2,5 e ~4 min | sensibilidade e projeção |
 | `python main.py prever --segmento ...` | ~40 s | avaliação de um imóvel |

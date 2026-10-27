@@ -44,6 +44,8 @@ HTTP_TIMEOUT = 30
 USER_AGENT = os.environ.get(
     "SCRAPER_USER_AGENT", "imob-analytics/1.0 (pesquisa de iniciacao cientifica, IFSP Jacarei)"
 )
+# quanto esperar a listagem aparecer (o ZAP monta a pagina no navegador e pode demorar mais que o VivaReal)
+ESPERA_CARREGAMENTO = int(os.environ.get("ESPERA_CARREGAMENTO", 40))
 AMOSTRAS_DIR = os.path.join("data", "raw", "amostras_scraper")
 CARD_PRECO_CSS = '[data-cy="rp-cardProperty-price-txt"]'
 
@@ -168,13 +170,16 @@ class ExtractorPortal:
         return {"blocos_json_ld": len(blocos), "anuncios_no_json_ld": len(extrair_anuncios(blocos)),
                 "cards_na_tela": len(driver.find_elements(By.CSS_SELECTOR, CARD_PRECO_CSS))}
 
-    def _aguardar_carregamento(self, driver) -> None:
+    def _aguardar_carregamento(self, driver) -> float | None:
+        """Espera os anuncios aparecerem (card de preco ou JSON-LD com anuncios). Devolve os segundos esperados, ou None no timeout."""
+        inicio = time.time()
         try:
-            WebDriverWait(driver, 20).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, self._SELETORES["preco"]))
+            WebDriverWait(driver, ESPERA_CARREGAMENTO).until(
+                lambda d: d.find_elements(By.CSS_SELECTOR, self._SELETORES["preco"]) or extrair_anuncios(self.blocos_json_ld(d))
             )
+            return round(time.time() - inicio, 1)
         except Exception:
-            pass
+            return None
 
     def _rolar_pagina(self, driver) -> None:
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight / 2);")
@@ -271,12 +276,14 @@ class ScraperPortal:
         time.sleep(random.uniform(DELAY_MIN, DELAY_MAX))
         if not self._extractor.pagina_tem_resultados(self._driver) and self._detectar_captcha():
             self._aguardar_liberacao_captcha()
-        self._extractor._aguardar_carregamento(self._driver)
+        espera = self._extractor._aguardar_carregamento(self._driver)
         blocos = self._extractor.blocos_json_ld(self._driver)
         arquivo = os.path.join(AMOSTRAS_DIR, f"{self.fonte}_{segmento['tipo']}_p1.json")
         with open(arquivo, "w", encoding="utf-8") as f:
             json.dump(blocos, f, ensure_ascii=False)
-        return {"url": self._driver.current_url, "arquivo": arquivo, **self._extractor.contagens(self._driver),
+        return {"url": self._driver.current_url, "arquivo": arquivo, "segundos_ate_carregar": espera,
+                "timeout_de_carregamento": espera is None, "captcha_visivel": self._detectar_captcha(),
+                **self._extractor.contagens(self._driver),
                 "cards_com_condominio_ou_iptu": sum(1 for v in self._extractor.valores_dos_cards(self._driver).values()
                                                     if v["condominio"] is not None or v["iptu"] is not None)}
 
@@ -286,10 +293,24 @@ class ScraperPortal:
             try:
                 return funcao()
             except (WebDriverException, HTTPError, ConnectionError) as erro:
-                self._log(f"navegador caiu ({type(erro).__name__}); reiniciando ({numero}/{tentativas})")
+                self._log(f"navegador caiu ({type(erro).__name__}: {str(erro).splitlines()[0][:100] if str(erro) else ''}); "
+                          f"{self._diagnostico_navegador()}; reiniciando ({numero}/{tentativas})")
                 if numero == tentativas:
                     raise
                 self._reiniciar_driver()
+
+    def _diagnostico_navegador(self) -> str:
+        """Separa 'a janela foi fechada / o Chrome morreu' de 'o Chrome esta vivo mas nao responde'."""
+        pid = getattr(self._driver, "browser_pid", None)
+        if not pid:
+            return "pid do Chrome desconhecido"
+        try:
+            os.kill(pid, 0)
+            return f"o processo do Chrome (pid {pid}) ainda existe: travou ou esta lento, nao foi fechado"
+        except ProcessLookupError:
+            return f"o processo do Chrome (pid {pid}) NAO existe mais: a janela foi fechada ou o Chrome morreu"
+        except PermissionError:
+            return f"o processo do Chrome (pid {pid}) existe"
 
     def _reiniciar_driver(self) -> None:
         try:

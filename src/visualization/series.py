@@ -71,7 +71,33 @@ def _erro_por_horizonte() -> Bloco:
                  opcoes=tuple(COLUNAS), fonte="reports/results/lstm/lstm_{nacional,SJC}_metricas.csv")
 
 
+def _lstm_macro() -> Bloco:
+    """Selecao x confirmacao: o LSTM com macro piora quando e avaliado fora do periodo em que foi escolhido."""
+    fig = go.Figure()
+    achou = False
+    for chave in COLUNAS:
+        sc = dados.csv(os.path.join(dados.LSTM_MACRO, f"lstm_macro_{chave}_selecao.csv"))
+        if sc is None:
+            continue
+        achou = True
+        sc.columns = ["modelo", "origens_conf", "origens_sel", "rmse_conf", "rmse_sel", "mape_conf", "mape_sel"]
+        sc = sc.sort_values("rmse_sel", ascending=False)
+        for nome, col, cor in (("Seleção (60% iniciais)", "rmse_sel", tema.PALETA[0]), ("Confirmação (40% finais)", "rmse_conf", tema.PALETA[1])):
+            fig.add_trace(tema.grupo(go.Bar(
+                y=sc["modelo"], x=sc[col], orientation="h", name=nome, marker_color=cor,
+                hovertemplate="%{y}<br>RMSE relativo ao ARIMA: %{x:.2f}<extra>" + nome + "</extra>"), chave))
+    if not achou:
+        return ausente("LSTM com macroeconômicos", "lstm_macro_*_selecao.csv", "python main.py lstm-macro")
+    fig.add_vline(x=1, line_dash="dash", line_color="gray")
+    fig.update_xaxes(title="RMSE relativo ao ARIMA (média dos horizontes; abaixo de 1 = melhor que o ARIMA)")
+    fig.update_layout(barmode="group")
+    return Bloco("LSTM com indicadores macroeconômicos: seleção x confirmação",
+                 "As barras azuis são o período em que a variante foi escolhida; as laranjas, o período em que foi confirmada. Resultado negativo: as redes com macro (e as escolhidas na seleção) "
+                 "pioram na confirmação, e a rede pequena sem macro é a mais estável. Nenhuma variante supera o ARIMA de forma consistente no índice nacional.",
+                 tema.base(fig, 640), opcoes=tuple(COLUNAS), largura="cheia", fonte="reports/results/lstm_macro/lstm_macro_{nacional,SJC}_selecao.csv")
+
+
 def secao() -> Secao:
     return Secao("series", "Séries temporais",
                  "Índice FipeZAP (preço de venda residencial) e modelos de previsão: ARIMA, LSTM e gradient boosting global em painel de 50 cidades.",
-                 [_historico(), _erro_por_horizonte()])
+                 [_historico(), _erro_por_horizonte(), _lstm_macro()])
