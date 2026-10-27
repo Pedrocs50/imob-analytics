@@ -1,0 +1,21 @@
+modelo,contra,h (meses),estatistica DM,p (bilateral)
+LSTM painel + macro,"ARIMA(0,2,3)",1,2.013564501575124,0.050340763913356255
+LSTM painel + macro,"ARIMA(0,2,3)",3,1.1798111197995902,0.24487581984799417
+LSTM painel + macro,"ARIMA(0,2,3)",6,0.15851769340016786,0.8748883271134045
+LSTM painel + macro,"ARIMA(0,2,3)",12,-0.1692728350274342,0.8666475715466748
+LSTM painel + macro,LSTM painel (sem macro),1,2.3059566735757255,0.02599900572906117
+LSTM painel + macro,LSTM painel (sem macro),3,1.287098506462789,0.20527912882335742
+LSTM painel + macro,LSTM painel (sem macro),6,0.9974365756537955,0.3248620551547501
+LSTM painel + macro,LSTM painel (sem macro),12,1.941491881186067,0.06104765785165841
+LSTM painel + macro,Regressao linear (alvo + macro),1,1.4273159333794028,0.16071090898849805
+LSTM painel + macro,Regressao linear (alvo + macro),3,0.9517670280511621,0.34679258807200963
+LSTM painel + macro,Regressao linear (alvo + macro),6,0.7114320930158677,0.48116123148202133
+LSTM painel + macro,Regressao linear (alvo + macro),12,1.4391210104315064,0.15982691452868314
+Regressao linear (alvo + macro),"ARIMA(0,2,3)",1,1.550571766597057,0.12833398299355414
+Regressao linear (alvo + macro),"ARIMA(0,2,3)",3,0.5066077619634646,0.6151437980017258
+Regressao linear (alvo + macro),"ARIMA(0,2,3)",6,-0.8385861379157302,0.4069458748261163
+Regressao linear (alvo + macro),"ARIMA(0,2,3)",12,-1.3449234341883904,0.18810517244958694
+Regressao linear (alvo + macro),Regressao linear (so o alvo),1,0.3154014124360702,0.7539825642456957
+Regressao linear (alvo + macro),Regressao linear (so o alvo),3,0.7696794073917667,0.44590206062844834
+Regressao linear (alvo + macro),Regressao linear (so o alvo),6,0.5796377802079853,0.5655798677355518
+Regressao linear (alvo + macro),Regressao linear (so o alvo),12,-0.583461949696221,0.5636724490944721

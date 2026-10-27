@@ -42,9 +42,9 @@ torch.set_num_threads(4)
 
 # ----------------------------------------------------------------------------- dados
 class Rede(nn.Module):
-    def __init__(self, oculto: int = 32):
+    def __init__(self, oculto: int = 32, n_entradas: int = 1):
         super().__init__()
-        self.lstm = nn.LSTM(1, oculto, batch_first=True)
+        self.lstm = nn.LSTM(n_entradas, oculto, batch_first=True)
         self.drop = nn.Dropout(0.1)
         self.saida = nn.Linear(oculto, H)
 
@@ -84,11 +84,13 @@ def treinar_lstm(X, Y, W, D, semente: int) -> Rede:
     np.random.seed(semente)
     ordem = np.argsort(D)
     X, Y, W = X[ordem], Y[ordem], W[ordem]
+    if X.ndim == 2:  # serie univariada: (amostras, janela) -> (amostras, janela, 1)
+        X = X[..., None]
     n_val = max(int(len(X) * 0.15), 3)
     tr, va = slice(0, len(X) - n_val), slice(len(X) - n_val, len(X))  # validacao = amostras mais recentes
-    xt, yt, wt = torch.tensor(X[tr]).unsqueeze(-1), torch.tensor(Y[tr]), torch.tensor(W[tr])
-    xv, yv, wv = torch.tensor(X[va]).unsqueeze(-1), torch.tensor(Y[va]), torch.tensor(W[va])
-    rede = Rede()
+    xt, yt, wt = torch.tensor(X[tr]), torch.tensor(Y[tr]), torch.tensor(W[tr])
+    xv, yv, wv = torch.tensor(X[va]), torch.tensor(Y[va]), torch.tensor(W[va])
+    rede = Rede(n_entradas=X.shape[-1])
     otim = torch.optim.Adam(rede.parameters(), lr=2e-3, weight_decay=1e-4)
     melhor, estado, paciencia = np.inf, None, 0
     for _ in range(120):

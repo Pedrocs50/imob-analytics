@@ -48,6 +48,10 @@ class DataCleaner:
         Isso cobre imóveis que aparecem em múltiplos segmentos de preço.
         """
         antes = len(df)
+        if 'external_id' in df:
+            # com id do anuncio, a chave e o id; so os registros sem id caem na regra aproximada
+            com_id = df['external_id'].notna()
+            df = pd.concat([df[com_id].drop_duplicates(subset=['external_id']), df[~com_id]])
         df = df.drop_duplicates(subset=['endereco', 'preco_venda', 'area_m2'])
         removidos = antes - len(df)
         print(f"[CLEANER] Duplicatas removidas: {removidos}")

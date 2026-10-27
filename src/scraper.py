@@ -9,6 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from src.database import Database
+from src.jsonld import extrair_anuncios
 from src.repository import DataRepository
 
 
@@ -16,9 +17,10 @@ from src.repository import DataRepository
 # CONFIGURACOES CENTRALIZADAS
 # =============================================================================
 
-CHROME_BIN_PATH = os.path.join(os.getcwd(), "scripts", "chrome-win64", "chrome.exe")
-CHROMEDRIVER_PATH = os.path.join(os.getcwd(), "scripts", "chromedriver.exe")
-CHROME_VERSION = 145  # atualize se instalar uma versao nova do Chrome
+# Sem variavel de ambiente, usa o Chrome instalado no sistema e detecta a versao sozinho.
+CHROME_BIN_PATH = os.environ.get("CHROME_BIN")  # ex.: /usr/bin/google-chrome
+CHROMEDRIVER_PATH = os.environ.get("CHROMEDRIVER")
+CHROME_VERSION = int(os.environ["CHROME_VERSION"]) if os.environ.get("CHROME_VERSION") else None
 DELAY_MIN = 8  # segundos minimos entre paginas
 DELAY_MAX = 15  # segundos maximos entre paginas
 MAX_PAGINAS = 400  # limite seguro por segmento antes de bloqueio do Zap
@@ -65,8 +67,24 @@ class ExtractorZap:
 
     _CARDS_CSS = 'div[class*="content-stretch"][class*="min-w-0"]'
 
+    _JSON_LD_JS = "return [...document.querySelectorAll('script[type=\"application/ld+json\"]')].map(s => s.textContent);"
+
+    def _extrair_json_ld(self, driver, segmento: dict, pagina: int) -> list[dict]:
+        """Anuncios dos dados estruturados da pagina (id, URL, endereco, comodidades), sem rolar nem ler cards."""
+        try:
+            anuncios = extrair_anuncios(driver.execute_script(self._JSON_LD_JS))
+        except Exception:
+            return []
+        for a in anuncios:
+            a.update({"segmento": segmento["tipo"], "preco_min_filtro": segmento["preco_min"], "pagina": pagina})
+        return anuncios
+
     def extrair_pagina(self, driver, segmento: dict, pagina: int) -> list[dict]:
         self._aguardar_carregamento(driver)
+        anuncios = self._extrair_json_ld(driver, segmento, pagina)
+        if anuncios:
+            return anuncios
+        # sem JSON-LD (pagina mudou): volta aos cards
         self._rolar_pagina(driver)
 
         cards = driver.find_elements(By.CSS_SELECTOR, self._CARDS_CSS)
@@ -184,7 +202,8 @@ class ScraperZap:
 
     def _iniciar_driver(self) -> None:
         options = uc.ChromeOptions()
-        options.binary_location = CHROME_BIN_PATH
+        if CHROME_BIN_PATH:
+            options.binary_location = CHROME_BIN_PATH
         options.add_argument("--start-maximized")
         self._driver = uc.Chrome(
             options=options,

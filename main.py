@@ -286,6 +286,12 @@ def cmd_lstm():
     print("[LSTM] relatorio em reports/results/lstm.md")
 
 
+def cmd_lstm_macro():
+    from src.timeseries.lstm_macro import executar
+
+    executar(rapido="--teste" in sys.argv)
+
+
 def cmd_modelos_avancados():
     from src.pricing.modelos_avancados import executar
 
@@ -371,6 +377,7 @@ COMANDOS = {
     "mapa-setores": cmd_mapa_setores,
     "ajuste-gb": cmd_ajuste_gb,
     "lstm": cmd_lstm,
+    "lstm-macro": cmd_lstm_macro,
     "modelos-avancados": cmd_modelos_avancados,
     "projecao": cmd_projecao,
     "prever": cmd_prever,

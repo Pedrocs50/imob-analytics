@@ -37,6 +37,9 @@ class Database:
                     quartos          TEXT,
                     banheiros        TEXT,
                     vagas            TEXT,
+                    external_id      TEXT,
+                    url              TEXT,
+                    comodidades      TEXT,
                     coletado_em      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
 
@@ -114,4 +117,15 @@ class Database:
                 CREATE INDEX IF NOT EXISTS idx_indicadores_fonte_serie
                     ON indicadores_macro(fonte, codigo_serie);
             """)
+            self._migrar_raw(conn)
         print(f"[DB] Banco pronto em: {self.db_path}")
+
+    @staticmethod
+    def _migrar_raw(conn: sqlite3.Connection) -> None:
+        """Bancos criados antes do JSON-LD nao tem as colunas de id/URL/comodidades."""
+        existentes = {linha[1] for linha in conn.execute("PRAGMA table_info(imoveis_raw)")}
+        for coluna in ("external_id", "url", "comodidades"):
+            if coluna not in existentes:
+                conn.execute(f"ALTER TABLE imoveis_raw ADD COLUMN {coluna} TEXT")
+        # o mesmo anuncio aparece em varias faixas de preco: o id impede a repeticao
+        conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS ux_raw_external_id ON imoveis_raw(external_id) WHERE external_id IS NOT NULL")
