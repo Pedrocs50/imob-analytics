@@ -28,9 +28,11 @@ DELAY_MAX = 15  # segundos maximos entre paginas
 MAX_PAGINAS = 400  # limite seguro por segmento antes de bloqueio do portal
 
 # para evitar o capcha infinito, ja que estava tentando esperar uma liberação que não existe
-CAPTCHA_MAX_WAIT = 90  # segundos
+CAPTCHA_MAX_WAIT = int(os.environ.get("CAPTCHA_MAX_WAIT", 300))  # segundos para voce resolver na janela aberta
 CAPTCHA_POLL = 3  # segundos
 
+# perfil do navegador por portal: cookies da sessao (inclusive depois de resolver um CAPTCHA a mao) persistem entre execucoes
+PERFIL_DIR = os.environ.get("PERFIL_NAVEGADOR_DIR", os.path.join("data", "chrome_profile"))
 AMOSTRAS_DIR = os.path.join("data", "raw", "amostras_scraper")
 CARD_PRECO_CSS = '[data-cy="rp-cardProperty-price-txt"]'
 
@@ -272,6 +274,7 @@ class ScraperPortal:
             options=options,
             driver_executable_path=CHROMEDRIVER_PATH,
             version_main=CHROME_VERSION,
+            user_data_dir=os.path.abspath(os.path.join(PERFIL_DIR, self.fonte)),
         )
 
     def _ler_robots(self) -> None:
