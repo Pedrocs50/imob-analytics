@@ -295,3 +295,8 @@ class TestePaginaNaoEncontrada(unittest.TestCase):
         self.assertEqual(caminhos_candidatos(PORTAIS["zap"], "terrenos"), ["lotes-terrenos", "terrenos"])
         self.assertIn("/venda/terrenos/sp+jacarei/", montar_url(PORTAIS["zap"], seg, 1, "terrenos"))
         self.assertIn("/venda/lotes-terrenos/sp+jacarei/", montar_url(PORTAIS["zap"], seg, 1))
+
+
+class TesteFocoDaColeta(unittest.TestCase):
+    def test_por_padrao_so_casas_e_apartamentos(self):
+        self.assertEqual({s["tipo"] for s in SEGMENTOS}, {"casas", "apartamentos"})

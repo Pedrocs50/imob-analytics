@@ -4,7 +4,7 @@ Data: 2026-10-26. Implementacao: `src/scraper.py`, `src/jsonld.py`; testes em `t
 
 ## Como funciona
 
-- **Um worker por portal**, em paralelo (ZAP e VivaReal), com as **mesmas regras do coletor original**: fatias de preco por tipo (casas, apartamentos, terrenos, imoveis) para contornar o limite de
+- **Um worker por portal**, em paralelo (ZAP e VivaReal), com as **mesmas regras do coletor original**: fatias de preco por tipo (foco em casas e apartamentos; terrenos e "imoveis" so com `TIPOS=casas,apartamentos,terrenos`) para contornar o limite de
   paginas, retomada por pagina, espera de CAPTCHA (a pessoa resolve na janela) e atrasos de 8 a 15 s.
 - **Leitura do JSON-LD** (schema.org) que a propria pagina traz: id, URL, tipo, rua, quartos, banheiros, area, comodidades, preco e data de publicacao (`datePosted`); bairro e vagas sao extraidos do titulo/`keywords`.
   Condominio e IPTU vem dos cards, ligados ao anuncio pelo id do link. Sem JSON-LD, volta para os cards.

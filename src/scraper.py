@@ -57,7 +57,7 @@ AMOSTRAS_DIR = os.path.join("data", "raw", "amostras_scraper")
 CARD_PRECO_CSS = '[data-cy="rp-cardProperty-price-txt"]'
 
 # fatias do catalogo para driblar o limite de paginas que stava dando menos de 50 por pagina
-SEGMENTOS = [
+SEGMENTOS_DISPONIVEIS = [
     {"tipo": "casas", "preco_min": 0, "preco_max": 300_000},
     {"tipo": "casas", "preco_min": 300_000, "preco_max": 600_000},
     {"tipo": "casas", "preco_min": 600_000, "preco_max": 1_000_000},
@@ -72,6 +72,11 @@ SEGMENTOS = [
     {"tipo": "imoveis", "preco_min": 0, "preco_max": 500_000},
     {"tipo": "imoveis", "preco_min": 500_000, "preco_max": 99_999_999},
 ]
+
+# Foco da pesquisa: casas e apartamentos (os que os modelos usam). Terrenos e "imoveis" (mistura de tipos, repete casas e
+# apartamentos) ficam disponiveis, mas so entram se pedidos: TIPOS=casas,apartamentos,terrenos python main.py scrape
+TIPOS = [t.strip() for t in os.environ.get("TIPOS", "casas,apartamentos").split(",") if t.strip()]
+SEGMENTOS = [s for s in SEGMENTOS_DISPONIVEIS if s["tipo"] in TIPOS]
 
 # Um worker por portal: sites diferentes em paralelo, cada um com seu proprio ritmo.
 # `caminho`: parte da URL por tipo; `parametros`: nomes dos filtros. O ZAP e o que ja funcionava;
