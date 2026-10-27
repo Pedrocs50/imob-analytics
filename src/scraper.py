@@ -183,9 +183,10 @@ def robots_do_texto(base: str, texto: str) -> urllib.robotparser.RobotFileParser
 
 
 class ScraperPortal:
-    def __init__(self, worker_id: int, fonte: str, segmentos: list[dict], fila_progresso, db_path: str):
+    def __init__(self, worker_id: int, fonte: str, segmentos: list[dict], fila_progresso, db_path: str, trava_driver=None):
         self.worker_id = worker_id
         self.fonte = fonte
+        self._trava_driver = trava_driver
         self.portal = PORTAIS[fonte]
         self.segmentos = segmentos
         self.fila_progresso = fila_progresso
@@ -223,7 +224,7 @@ class ScraperPortal:
                     continue
                 self._driver.get(url)
                 time.sleep(random.uniform(DELAY_MIN, DELAY_MAX))
-                if self._detectar_captcha():
+                if not self._extractor.pagina_tem_resultados(self._driver) and self._detectar_captcha():
                     self._aguardar_liberacao_captcha()
                 self._extractor._aguardar_carregamento(self._driver)
                 blocos = self._extractor.blocos_json_ld(self._driver)
@@ -278,12 +279,17 @@ class ScraperPortal:
         if CHROME_BIN_PATH:
             options.binary_location = CHROME_BIN_PATH
         options.add_argument("--start-maximized")
-        self._driver = uc.Chrome(
+        criar = lambda: uc.Chrome(  # noqa: E731
             options=options,
             driver_executable_path=CHROMEDRIVER_PATH,
             version_main=CHROME_VERSION,
             user_data_dir=os.path.abspath(os.path.join(PERFIL_DIR, self.fonte)),
         )
+        if self._trava_driver is None:
+            self._driver = criar()
+        else:
+            with self._trava_driver:  # um navegador por vez: o chromedriver e baixado/renomeado na criacao
+                self._driver = criar()
 
     def _ler_robots(self) -> None:
         """Le o robots.txt pelo proprio navegador. Se nao for possivel ler, segue e avisa."""
@@ -318,14 +324,15 @@ class ScraperPortal:
                 '[id*="captcha"]',
                 '[class*="captcha"]',
             ]
-            return any(self._driver.find_elements(By.CSS_SELECTOR, s) for s in seletores)
+            # o DOM de paginas normais tem elementos de captcha escondidos (selo do reCAPTCHA): so conta o que aparece na tela
+            return any(e.is_displayed() for s in seletores for e in self._driver.find_elements(By.CSS_SELECTOR, s))
         except Exception:
             return False
 
     def _aguardar_liberacao_captcha(self) -> None:
         self._log(f"CAPTCHA detectado. Aguardando liberacao por ate {CAPTCHA_MAX_WAIT}s...")
         inicio = time.time()
-        while self._detectar_captcha():
+        while self._detectar_captcha() and not self._extractor.pagina_tem_resultados(self._driver):
             if (time.time() - inicio) >= CAPTCHA_MAX_WAIT:
                 self._log("Timeout de CAPTCHA. Continuando fluxo.")
                 return
@@ -461,11 +468,12 @@ class ScraperOrchestrator:
     def executar(self) -> None:
         Database(self._db_path).setup()
         fila = multiprocessing.Queue()
+        trava_driver = multiprocessing.Lock()
 
         processos = [
             multiprocessing.Process(
                 target=_run_worker,
-                args=(i, fonte, SEGMENTOS, fila, self._db_path, self._amostra, self._http),
+                args=(i, fonte, SEGMENTOS, fila, self._db_path, self._amostra, self._http, trava_driver),
                 daemon=True,
             )
             for i, fonte in enumerate(PORTAIS, start=1)
@@ -519,6 +527,8 @@ class ScraperOrchestrator:
         print("=" * 65)
 
 
-def _run_worker(worker_id: int, fonte: str, segmentos: list, fila, db_path: str, amostra: bool = False, http: bool = False) -> None:
-    scraper = (ScraperHttp if http else ScraperPortal)(worker_id, fonte, segmentos, fila, db_path)
+def _run_worker(worker_id: int, fonte: str, segmentos: list, fila, db_path: str, amostra: bool = False, http: bool = False,
+                trava_driver=None) -> None:
+    scraper = ScraperHttp(worker_id, fonte, segmentos, fila, db_path) if http else \
+        ScraperPortal(worker_id, fonte, segmentos, fila, db_path, trava_driver)
     scraper.executar_amostra() if amostra else scraper.executar()

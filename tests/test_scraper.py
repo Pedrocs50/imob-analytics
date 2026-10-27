@@ -132,3 +132,37 @@ class TesteModoHttp(unittest.TestCase):
             s._scrape_segmento(SEGMENTOS[0])
         self.assertEqual(s._repo.total_raw(), 1)
         self.assertTrue(s._repo.pagina_ja_coletada("zap:casas", 0, 1))
+
+
+class TesteCaptcha(unittest.TestCase):
+    def _scraper(self, elementos, resultados):
+        import queue, tempfile, os
+        from unittest import mock
+        from src.scraper import ScraperPortal
+        from src.database import Database
+        db = os.path.join(tempfile.mkdtemp(), "t.db")
+        Database(db).setup()
+        s = ScraperPortal(1, "vivareal", SEGMENTOS[:1], queue.Queue(), db)
+        drv = mock.Mock(current_url="https://x/casas", title="Casas")
+        drv.find_elements.return_value = elementos
+        s._driver = drv
+        s._extractor.pagina_tem_resultados = lambda d: resultados
+        return s
+
+    def test_elemento_de_captcha_escondido_nao_e_captcha(self):
+        from unittest import mock
+        escondido = mock.Mock(is_displayed=lambda: False)
+        self.assertFalse(self._scraper([escondido], True)._detectar_captcha())
+
+    def test_elemento_de_captcha_visivel_e_captcha(self):
+        from unittest import mock
+        visivel = mock.Mock(is_displayed=lambda: True)
+        self.assertTrue(self._scraper([visivel], False)._detectar_captcha())
+
+    def test_nao_espera_quando_a_pagina_ja_tem_resultados(self):
+        from unittest import mock
+        visivel = mock.Mock(is_displayed=lambda: True)
+        s = self._scraper([visivel], True)
+        with mock.patch("src.scraper.time.sleep") as dorme:
+            s._aguardar_liberacao_captcha()
+        dorme.assert_not_called()
