@@ -33,10 +33,11 @@ Dois trabalhos: **(A) coleta e mineração de dados** e **(B) LSTM x ARIMA**. N�
 5. Nacional: ARIMA(0,2,3) vence (MAPE 1,18% aos 12 meses vs 1,7% a 2,3% das redes).
 6. SJC: redes erram menos aos 6 e 12 meses (MAPE 2,1% a 3,3% vs 5,5%), mas **sem significância** (p de 0,06 a 0,16); ARIMA melhor em 1 mês.
 7. Conclusão honesta: nenhum modelo é uniformemente melhor; ARIMA é difícil de bater em série longa e suave.
-8. Trabalho futuro: LSTM com preditores macro (já estão no banco), série de Jacareí.
+8. Macro no LSTM: testado (`python main.py lstm-macro`, 12 variantes de rede x 4 conjuntos de macro, 5 sementes, 2 alvos). **O macro não melhorou**: a variante escolhida pelo período de seleção (crédito + juros + confiança + IBC-Br) piorou na confirmação (RMSE 1,34x o do ARIMA em SJC, contra 0,83x na seleção). Sem macro, a rede pequena ficou estável (0,84x na seleção, 0,97x na confirmação).
+9. Trabalho futuro: série própria de Jacareí (recoletas periódicas), mais dados para o LSTM.
 
 **Perguntas prováveis:**
-- *"Cadê o macro no LSTM?"* Os indicadores estão integrados e foram analisados (correlação cruzada, Granger), mas o LSTM atual usa só o crescimento passado; entrada macro é o próximo passo. Não diga que o modelo usa macro.
+- *"Cadê o macro no LSTM?"* Foi testado: BCB, IBGE e IPEA (8 indicadores, e 2 subconjuntos definidos antes) entraram como entradas da rede, em painel de 50 cidades, com as mesmas sementes e a mesma validação. Nenhuma variante com macro superou a sem macro de forma estável; a que ganhou na seleção perdeu na confirmação. Resultado negativo, relatado em `reports/results/lstm_macro.md`. Possíveis motivos: poucas observações mensais (SJC tem 104 meses) e macro lento demais para prever o índice em 12 meses.
 - *"Por que não usou as características dos imóveis no LSTM?"* O preço por características é outro problema (transversal, tratado no trabalho A); o VivaReal é um retrato único, sem série temporal.
 - *"Por que MAPE e RMSE?"* São as métricas calculadas nos resultados; R2 e MAE não foram reportados para o LSTM.
 - *"Poucos dados?"* Sim: SJC tem 104 meses e 44 origens de teste; por isso a falta de significância é um achado, não um defeito escondido.

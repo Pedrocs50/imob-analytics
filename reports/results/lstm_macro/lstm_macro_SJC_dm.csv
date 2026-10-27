@@ -1,21 +1,49 @@
 modelo,contra,h (meses),estatistica DM,p (bilateral)
-LSTM painel + macro,"ARIMA(0,2,3)",1,2.013564501575124,0.050340763913356255
-LSTM painel + macro,"ARIMA(0,2,3)",3,1.1798111197995902,0.24487581984799417
-LSTM painel + macro,"ARIMA(0,2,3)",6,0.15851769340016786,0.8748883271134045
-LSTM painel + macro,"ARIMA(0,2,3)",12,-0.1692728350274342,0.8666475715466748
-LSTM painel + macro,LSTM painel (sem macro),1,2.3059566735757255,0.02599900572906117
-LSTM painel + macro,LSTM painel (sem macro),3,1.287098506462789,0.20527912882335742
-LSTM painel + macro,LSTM painel (sem macro),6,0.9974365756537955,0.3248620551547501
-LSTM painel + macro,LSTM painel (sem macro),12,1.941491881186067,0.06104765785165841
-LSTM painel + macro,Regressao linear (alvo + macro),1,1.4273159333794028,0.16071090898849805
-LSTM painel + macro,Regressao linear (alvo + macro),3,0.9517670280511621,0.34679258807200963
-LSTM painel + macro,Regressao linear (alvo + macro),6,0.7114320930158677,0.48116123148202133
-LSTM painel + macro,Regressao linear (alvo + macro),12,1.4391210104315064,0.15982691452868314
+LSTM painel (sem macro; base),"ARIMA(0,2,3)",1,0.32470709298785994,0.7469772374973206
+LSTM painel (sem macro; base),"ARIMA(0,2,3)",3,-0.5811312788283151,0.5643332036070163
+LSTM painel (sem macro; base),"ARIMA(0,2,3)",6,-1.8742276667478384,0.068602586065357
+LSTM painel (sem macro; base),"ARIMA(0,2,3)",12,-1.5492870072549,0.13114728500392497
+LSTM painel (macro completo; base),"ARIMA(0,2,3)",1,2.013564501575124,0.050340763913356255
+LSTM painel (macro completo; base),"ARIMA(0,2,3)",3,1.1798111197995902,0.24487581984799417
+LSTM painel (macro completo; base),"ARIMA(0,2,3)",6,0.15851769340016786,0.8748883271134045
+LSTM painel (macro completo; base),"ARIMA(0,2,3)",12,-0.1692728350274342,0.8666475715466748
+LSTM painel (credito + juros + confianca + IBC-Br; base),"ARIMA(0,2,3)",1,1.237795081712326,0.22250824722948226
+LSTM painel (credito + juros + confianca + IBC-Br; base),"ARIMA(0,2,3)",3,0.00832509628095198,0.9933979879495264
+LSTM painel (credito + juros + confianca + IBC-Br; base),"ARIMA(0,2,3)",6,-1.5830884177994593,0.1216897181810505
+LSTM painel (credito + juros + confianca + IBC-Br; base),"ARIMA(0,2,3)",12,-1.4502265616734835,0.15672712128021796
 Regressao linear (alvo + macro),"ARIMA(0,2,3)",1,1.550571766597057,0.12833398299355414
 Regressao linear (alvo + macro),"ARIMA(0,2,3)",3,0.5066077619634646,0.6151437980017258
 Regressao linear (alvo + macro),"ARIMA(0,2,3)",6,-0.8385861379157302,0.4069458748261163
 Regressao linear (alvo + macro),"ARIMA(0,2,3)",12,-1.3449234341883904,0.18810517244958694
+Regressao linear (alvo + juros e confianca),"ARIMA(0,2,3)",1,1.5012680520408075,0.1405943633130314
+Regressao linear (alvo + juros e confianca),"ARIMA(0,2,3)",3,0.16807454514498377,0.8673509961811822
+Regressao linear (alvo + juros e confianca),"ARIMA(0,2,3)",6,-1.2890260517607395,0.20518102298011545
+Regressao linear (alvo + juros e confianca),"ARIMA(0,2,3)",12,-1.042343309016736,0.3050637434518232
+Regressao linear (alvo + credito + juros + confianca + IBC-Br),"ARIMA(0,2,3)",1,1.6195685649809033,0.11263707000593523
+Regressao linear (alvo + credito + juros + confianca + IBC-Br),"ARIMA(0,2,3)",3,0.40308339993205683,0.6889811936809087
+Regressao linear (alvo + credito + juros + confianca + IBC-Br),"ARIMA(0,2,3)",6,-1.1979627279102536,0.23835033352083176
+Regressao linear (alvo + credito + juros + confianca + IBC-Br),"ARIMA(0,2,3)",12,-1.1945056139230807,0.2410592851586176
+LSTM painel (macro completo; base),LSTM painel (sem macro; base),1,2.3059566735757255,0.02599900572906117
+LSTM painel (macro completo; base),LSTM painel (sem macro; base),3,1.287098506462789,0.20527912882335742
+LSTM painel (macro completo; base),LSTM painel (sem macro; base),6,0.9974365756537955,0.3248620551547501
+LSTM painel (macro completo; base),LSTM painel (sem macro; base),12,1.941491881186067,0.06104765785165841
+LSTM painel (credito + juros + confianca + IBC-Br; base),LSTM painel (sem macro; base),1,1.482898730578815,0.14539408385982783
+LSTM painel (credito + juros + confianca + IBC-Br; base),LSTM painel (sem macro; base),3,0.35250735775092384,0.7262635116926794
+LSTM painel (credito + juros + confianca + IBC-Br; base),LSTM painel (sem macro; base),6,-0.4771846431960203,0.6359637550220659
+LSTM painel (credito + juros + confianca + IBC-Br; base),LSTM painel (sem macro; base),12,-0.3214902360976823,0.7499294889081871
+LSTM painel (credito + juros + confianca + IBC-Br; base),Regressao linear (so o alvo),1,-0.8340750977815077,0.4088483935308797
+LSTM painel (credito + juros + confianca + IBC-Br; base),Regressao linear (so o alvo),3,-0.03195900847914465,0.974659816435325
+LSTM painel (credito + juros + confianca + IBC-Br; base),Regressao linear (so o alvo),6,-0.31963294927045927,0.7509973146043767
+LSTM painel (credito + juros + confianca + IBC-Br; base),Regressao linear (so o alvo),12,-0.7732616569924333,0.4450423708180057
 Regressao linear (alvo + macro),Regressao linear (so o alvo),1,0.3154014124360702,0.7539825642456957
 Regressao linear (alvo + macro),Regressao linear (so o alvo),3,0.7696794073917667,0.44590206062844834
 Regressao linear (alvo + macro),Regressao linear (so o alvo),6,0.5796377802079853,0.5655798677355518
 Regressao linear (alvo + macro),Regressao linear (so o alvo),12,-0.583461949696221,0.5636724490944721
+Regressao linear (alvo + juros e confianca),Regressao linear (so o alvo),1,-0.0615535946107951,0.9512035534098658
+Regressao linear (alvo + juros e confianca),Regressao linear (so o alvo),3,0.1633172686016853,0.8710710138728215
+Regressao linear (alvo + juros e confianca),Regressao linear (so o alvo),6,0.09439202345654078,0.9252937308605034
+Regressao linear (alvo + juros e confianca),Regressao linear (so o alvo),12,-0.6442789374282225,0.5239863041827181
+Regressao linear (alvo + credito + juros + confianca + IBC-Br),Regressao linear (so o alvo),1,0.9848283626389371,0.33021758881401575
+Regressao linear (alvo + credito + juros + confianca + IBC-Br),Regressao linear (so o alvo),3,0.5331275416509041,0.5968235207465686
+Regressao linear (alvo + credito + juros + confianca + IBC-Br),Regressao linear (so o alvo),6,0.19635020128866418,0.8453824004129735
+Regressao linear (alvo + credito + juros + confianca + IBC-Br),Regressao linear (so o alvo),12,-0.6239040999685556,0.537113175497318
