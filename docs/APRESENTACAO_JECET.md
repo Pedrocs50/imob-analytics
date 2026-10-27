@@ -39,5 +39,5 @@ Dois trabalhos: **(A) coleta e mineração de dados** e **(B) LSTM x ARIMA**. N�
 **Perguntas prováveis:**
 - *"Cadê o macro no LSTM?"* Foi testado: BCB, IBGE e IPEA (8 indicadores, e 2 subconjuntos definidos antes) entraram como entradas da rede, em painel de 50 cidades, com as mesmas sementes e a mesma validação. Nenhuma variante com macro superou a sem macro de forma estável; a que ganhou na seleção perdeu na confirmação. Resultado negativo, relatado em `reports/results/lstm_macro.md`. Possíveis motivos: poucas observações mensais (SJC tem 104 meses) e macro lento demais para prever o índice em 12 meses.
 - *"Por que não usou as características dos imóveis no LSTM?"* O preço por características é outro problema (transversal, tratado no trabalho A); o VivaReal é um retrato único, sem série temporal.
-- *"Por que MAPE e RMSE?"* São as métricas calculadas nos resultados; R2 e MAE não foram reportados para o LSTM.
+- *"E o MAE e o R²?"* MAE, RMSE e MAPE estão em `reports/results/lstm_macro.md` (para o ARIMA, as regressões e as redes). O R² não é usado porque o alvo é o nível do índice, em que quase tudo dá R² próximo de 1; o erro por horizonte é mais informativo.
 - *"Poucos dados?"* Sim: SJC tem 104 meses e 44 origens de teste; por isso a falta de significância é um achado, não um defeito escondido.
