@@ -20,16 +20,17 @@ class DataRepository:
         if not dados:
             return
         # coletor por cards nao traz fonte/id/url/rua/comodidades: ficam nulos
-        linhas = [{"fonte": None, "external_id": None, "url": None, "rua": None, "comodidades": None, **d} for d in dados]
+        extras = dict.fromkeys(("fonte", "external_id", "url", "rua", "bairro", "data_publicacao", "condominio", "iptu", "comodidades"))
+        linhas = [{**extras, **d} for d in dados]
         with self._db.get_connection() as conn:
             conn.executemany(
                 """
                 INSERT OR IGNORE INTO imoveis_raw
                     (segmento, preco_min_filtro, pagina, endereco, preco, area, quartos, banheiros, vagas,
-                     fonte, external_id, url, rua, comodidades)
+                     fonte, external_id, url, rua, bairro, data_publicacao, condominio, iptu, comodidades)
                 VALUES
                     (:segmento, :preco_min_filtro, :pagina, :endereco, :preco, :area, :quartos, :banheiros, :vagas,
-                     :fonte, :external_id, :url, :rua, :comodidades)
+                     :fonte, :external_id, :url, :rua, :bairro, :data_publicacao, :condominio, :iptu, :comodidades)
                 """,
                 linhas,
             )

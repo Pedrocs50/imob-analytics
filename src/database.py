@@ -41,6 +41,10 @@ class Database:
                     external_id      TEXT,
                     url              TEXT,
                     rua              TEXT,
+                    bairro           TEXT,
+                    data_publicacao  TEXT,
+                    condominio       REAL,
+                    iptu             REAL,
                     comodidades      TEXT,
                     coletado_em      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
@@ -126,9 +130,11 @@ class Database:
     def _migrar_raw(conn: sqlite3.Connection) -> None:
         """Bancos criados antes do JSON-LD nao tem as colunas de id/URL/comodidades."""
         existentes = {linha[1] for linha in conn.execute("PRAGMA table_info(imoveis_raw)")}
-        for coluna in ("fonte", "external_id", "url", "rua", "comodidades"):
+        novas = {"fonte": "TEXT", "external_id": "TEXT", "url": "TEXT", "rua": "TEXT", "bairro": "TEXT",
+                 "data_publicacao": "TEXT", "condominio": "REAL", "iptu": "REAL", "comodidades": "TEXT"}
+        for coluna, tipo in novas.items():
             if coluna not in existentes:
-                conn.execute(f"ALTER TABLE imoveis_raw ADD COLUMN {coluna} TEXT")
+                conn.execute(f"ALTER TABLE imoveis_raw ADD COLUMN {coluna} {tipo}")
         # o mesmo anuncio aparece em varias faixas de preco: (fonte, id) impede a repeticao
         conn.execute("DROP INDEX IF EXISTS ux_raw_external_id")
         conn.execute("CREATE UNIQUE INDEX IF NOT EXISTS ux_raw_fonte_id ON imoveis_raw(fonte, external_id) WHERE external_id IS NOT NULL")

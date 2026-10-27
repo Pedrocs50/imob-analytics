@@ -1,4 +1,5 @@
 import json
+import re
 import requests
 import time
 import os
@@ -7,12 +8,14 @@ import multiprocessing
 import urllib.robotparser
 
 import undetected_chromedriver as uc
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.common.by import By
+from urllib3.exceptions import HTTPError
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from src.database import Database
-from src.jsonld import blocos_do_html, extrair_anuncios
+from src.jsonld import blocos_do_html, extrair_anuncios, valores_do_card
 from src.repository import DataRepository
 
 
@@ -101,8 +104,34 @@ class ExtractorPortal:
     _CARDS_CSS = 'div[class*="content-stretch"][class*="min-w-0"]'
     _JSON_LD_JS = "return [...document.querySelectorAll('script[type=\"application/ld+json\"]')].map(s => s.textContent);"
 
+    # texto de cada card ligado ao id do anuncio: sobe a partir do preco ate o menor elemento com o link do anuncio
+    _CARDS_TEXTO_JS = """return [...document.querySelectorAll('[data-cy="rp-cardProperty-price-txt"]')].map(p => {
+        let n = p;
+        for (let i = 0; i < 8 && n; i++) {
+            const a = n.querySelector && n.querySelector('a[href*="-id-"]');
+            if (a) return n.querySelectorAll('[data-cy="rp-cardProperty-price-txt"]').length === 1 ? {href: a.href, texto: n.innerText} : null;
+            n = n.parentElement;
+        }
+        return null;
+    }).filter(Boolean);"""
+
     def __init__(self, fonte: str):
         self._fonte = fonte
+
+    def valores_dos_cards(self, driver) -> dict[str, dict]:
+        """{id do anuncio: {condominio, iptu}}: esses dois so aparecem nos cards, nao no JSON-LD."""
+        try:
+            cards = driver.execute_script(self._CARDS_TEXTO_JS) or []
+        except Exception:
+            return {}
+        saida = {}
+        for c in cards:
+            if not isinstance(c, dict):
+                continue
+            achado = re.search(r"id-(\d+)", c.get("href", ""))
+            if achado:
+                saida[achado.group(1)] = valores_do_card(c.get("texto", ""))
+        return saida
 
     def blocos_json_ld(self, driver) -> list[str]:
         try:
@@ -113,6 +142,10 @@ class ExtractorPortal:
     def extrair_pagina(self, driver, segmento: dict, pagina: int) -> list[dict]:
         self._aguardar_carregamento(driver)
         anuncios = extrair_anuncios(self.blocos_json_ld(driver))
+        if anuncios:
+            cards = self.valores_dos_cards(driver)
+            for a in anuncios:
+                a.update(cards.get(a["external_id"], {}))
         if not anuncios:
             self._rolar_pagina(driver)
             anuncios = [d for d in (self._extrair_card(c) for c in driver.find_elements(By.CSS_SELECTOR, self._CARDS_CSS)) if d]
@@ -222,23 +255,61 @@ class ScraperPortal:
                 if not self._permitido(url):
                     resumo[segmento["tipo"]] = {"url": url, "erro": "bloqueado pelo robots.txt"}
                     continue
-                self._driver.get(url)
-                time.sleep(random.uniform(DELAY_MIN, DELAY_MAX))
-                if not self._extractor.pagina_tem_resultados(self._driver) and self._detectar_captcha():
-                    self._aguardar_liberacao_captcha()
-                self._extractor._aguardar_carregamento(self._driver)
-                blocos = self._extractor.blocos_json_ld(self._driver)
-                arquivo = os.path.join(AMOSTRAS_DIR, f"{self.fonte}_{segmento['tipo']}_p1.json")
-                with open(arquivo, "w", encoding="utf-8") as f:
-                    json.dump(blocos, f, ensure_ascii=False)
-                resumo[segmento["tipo"]] = {"url": self._driver.current_url, "arquivo": arquivo,
-                                            **self._extractor.contagens(self._driver)}
+                try:
+                    resumo[segmento["tipo"]] = self._tentar(lambda: self._amostrar(segmento, url))
+                except Exception as erro:
+                    resumo[segmento["tipo"]] = {"url": url, "erro": f"{type(erro).__name__}: {erro}"[:300]}
                 self._log(f"amostra {segmento['tipo']}: {resumo[segmento['tipo']]}")
         finally:
             if self._driver is not None:
                 self._driver.quit()
         with open(os.path.join(AMOSTRAS_DIR, f"{self.fonte}_resumo.json"), "w", encoding="utf-8") as f:
             json.dump(resumo, f, ensure_ascii=False, indent=2)
+
+    def _amostrar(self, segmento: dict, url: str) -> dict:
+        self._driver.get(url)
+        time.sleep(random.uniform(DELAY_MIN, DELAY_MAX))
+        if not self._extractor.pagina_tem_resultados(self._driver) and self._detectar_captcha():
+            self._aguardar_liberacao_captcha()
+        self._extractor._aguardar_carregamento(self._driver)
+        blocos = self._extractor.blocos_json_ld(self._driver)
+        arquivo = os.path.join(AMOSTRAS_DIR, f"{self.fonte}_{segmento['tipo']}_p1.json")
+        with open(arquivo, "w", encoding="utf-8") as f:
+            json.dump(blocos, f, ensure_ascii=False)
+        return {"url": self._driver.current_url, "arquivo": arquivo, **self._extractor.contagens(self._driver),
+                "cards_com_condominio_ou_iptu": sum(1 for v in self._extractor.valores_dos_cards(self._driver).values()
+                                                    if v["condominio"] is not None or v["iptu"] is not None)}
+
+    def _tentar(self, funcao, tentativas: int = 3):
+        """Executa uma etapa com o navegador; se ele cair (fechado, travado), reinicia e repete."""
+        for numero in range(1, tentativas + 1):
+            try:
+                return funcao()
+            except (WebDriverException, HTTPError, ConnectionError) as erro:
+                self._log(f"navegador caiu ({type(erro).__name__}); reiniciando ({numero}/{tentativas})")
+                if numero == tentativas:
+                    raise
+                self._reiniciar_driver()
+
+    def _reiniciar_driver(self) -> None:
+        try:
+            self._driver.quit()
+        except Exception:
+            pass
+        time.sleep(5)
+        self._iniciar_driver()
+
+    def _coletar_pagina(self, segmento: dict, pagina: int, url: str):
+        """Uma pagina da listagem. Devolve os anuncios, ou None quando o segmento acabou."""
+        self._driver.get(url)
+        time.sleep(random.uniform(DELAY_MIN, DELAY_MAX))
+        # Recheca cards para evitar falso "fim de segmento"
+        if not self._extractor.pagina_tem_resultados(self._driver):
+            if self._detectar_captcha():
+                self._aguardar_liberacao_captcha()
+            if not self._extractor.pagina_tem_resultados(self._driver):
+                return None
+        return self._extractor.extrair_pagina(self._driver, segmento, pagina)
 
     def _scrape_segmento(self, segmento: dict) -> None:
         nome = f"{self.fonte}:{segmento['tipo']} R${segmento['preco_min']:,}-{segmento['preco_max']:,}"
@@ -253,21 +324,10 @@ class ScraperPortal:
             if not self._permitido(url):
                 self._log(f"robots.txt nao permite {url}; segmento ignorado.")
                 return
-            self._driver.get(url)
-
-            delay = random.uniform(DELAY_MIN, DELAY_MAX)
-            time.sleep(delay)
-
-            # Recheca cards para evitar falso "fim de segmento"
-            if not self._extractor.pagina_tem_resultados(self._driver):
-                if self._detectar_captcha():
-                    self._aguardar_liberacao_captcha()
-
-                if not self._extractor.pagina_tem_resultados(self._driver):
-                    self._log(f"Fim do segmento na pagina {pagina}.")
-                    break
-
-            dados = self._extractor.extrair_pagina(self._driver, segmento, pagina)
+            dados = self._tentar(lambda: self._coletar_pagina(segmento, pagina, url))
+            if dados is None:
+                self._log(f"Fim do segmento na pagina {pagina}.")
+                break
             self._repo.salvar_raw(dados)
             self._repo.marcar_pagina_coletada(chave, segmento["preco_min"], pagina)
 

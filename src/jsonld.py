@@ -9,6 +9,9 @@ from html.parser import HTMLParser
 
 _ID_NA_URL = re.compile(r"id-(\d+)")
 _VAGAS = re.compile(r"(\d+)\s+vagas?", re.IGNORECASE)
+_BAIRRO = re.compile(r".*\bem\s+([^,]+),\s*Jacare[íi]", re.IGNORECASE)  # "... 2 vagas em  Parque Imperial, Jacareí"
+_CONDOMINIO = re.compile(r"Cond\.?\s*(R\$\s*([\d.]+)|isento|n[ãa]o informado)", re.IGNORECASE)
+_IPTU = re.compile(r"IPTU\s*(R\$\s*([\d.]+)|isento|n[ãa]o informado)", re.IGNORECASE)
 
 
 def _percorrer(no):
@@ -43,6 +46,19 @@ def _id_externo(no: dict, url: str) -> str | None:
     return achado.group(1) if achado else None
 
 
+def _valor_do_card(achado) -> float | None:
+    if not achado:
+        return None
+    if achado.group(2):
+        return float(achado.group(2).replace(".", ""))
+    return 0.0 if achado.group(1).lower() == "isento" else None
+
+
+def valores_do_card(texto: str) -> dict:
+    """Condominio e IPTU do texto do card ("Cond. R$ 1 • IPTU R$ 500"). Isento = 0; "nao informado" = ausente."""
+    return {"condominio": _valor_do_card(_CONDOMINIO.search(texto)), "iptu": _valor_do_card(_IPTU.search(texto))}
+
+
 def _anuncio(no: dict) -> dict | None:
     url = str(no.get("url") or "")
     oferta = _primeiro(no.get("offers"))
@@ -60,6 +76,7 @@ def _anuncio(no: dict) -> dict | None:
     comodidades = [str(c.get("value") or c.get("name")) for c in no.get("amenityFeature") or [] if isinstance(c, dict)]
     rua, cidade = endereco.get("streetAddress"), endereco.get("addressLocality")
     titulo = str(no.get("name") or "")
+    bairro = _BAIRRO.match(titulo)
 
     def texto(valor, formato):
         return formato.format(int(round(valor))) if valor is not None else "N/A"
@@ -68,6 +85,7 @@ def _anuncio(no: dict) -> dict | None:
         "external_id": _id_externo(no, url),
         "url": url,
         "rua": rua or None,
+        "bairro": bairro.group(1).strip() if bairro else None,
         # campos de texto no mesmo formato do coletor antigo: o DataCleaner continua funcionando
         "endereco": ", ".join(p for p in (titulo, rua, cidade) if p) or "N/A",
         "preco": "R$ " + f"{int(round(preco)):,}".replace(",", "."),
@@ -82,17 +100,22 @@ def _anuncio(no: dict) -> dict | None:
 def extrair_anuncios(blocos: list[str]) -> list[dict]:
     """Anuncios encontrados nos blocos `application/ld+json` de uma pagina (sem repeticao por id)."""
     vistos: dict[str, dict] = {}
+    datas: dict[str, str] = {}  # data de publicacao vem em outro bloco (RealEstateListing), ligada pelo id da URL
     for texto in blocos:
         try:
             dados = json.loads(texto)
         except (TypeError, ValueError):
             continue
         for no in _percorrer(dados):
+            if no.get("datePosted") and no.get("url"):
+                datas[_id_externo({}, str(no["url"])) or str(no["url"])] = str(no["datePosted"])
             if "offers" not in no:
                 continue
             anuncio = _anuncio(no)
             if anuncio:
                 vistos.setdefault(anuncio["external_id"] or anuncio["url"], anuncio)
+    for chave, anuncio in vistos.items():
+        anuncio["data_publicacao"] = datas.get(chave)
     return list(vistos.values())
 
 

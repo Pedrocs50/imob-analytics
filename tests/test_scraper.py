@@ -41,7 +41,7 @@ class FakeDriver:
         self.blocos = blocos
 
     def execute_script(self, js):
-        return self.blocos
+        return self.blocos if "ld+json" in js else []  # a outra chamada (cards) nao devolve JSON-LD
 
     def find_elements(self, *a):
         return []
@@ -166,3 +166,46 @@ class TesteCaptcha(unittest.TestCase):
         with mock.patch("src.scraper.time.sleep") as dorme:
             s._aguardar_liberacao_captcha()
         dorme.assert_not_called()
+
+
+class TesteDadosReaisVivaReal(unittest.TestCase):
+    """Fixture: 3 anuncios reais de uma listagem do VivaReal (sem fotos nem nome de anunciante)."""
+    BLOCOS = json.load(open("tests/fixtures/vivareal_casas_real.json", encoding="utf-8"))
+
+    def test_le_os_tres_anuncios_com_data_e_bairro(self):
+        an = extrair_anuncios(self.BLOCOS)
+        self.assertEqual(len(an), 3)
+        self.assertEqual({a["external_id"] for a in an}, {"2919149554", "2917795805", "2918949038"})
+        primeiro = next(a for a in an if a["external_id"] == "2919149554")
+        self.assertEqual((primeiro["preco"], primeiro["area"], primeiro["vagas"]), ("R$ 289.620", "100 m²", "2"))
+        self.assertEqual(primeiro["bairro"], "Parque Imperial")
+        self.assertEqual(primeiro["data_publicacao"], "2018-03-27T23:24:33Z")
+
+    def test_valores_do_card(self):
+        from src.jsonld import valores_do_card
+        self.assertEqual(valores_do_card("R$ 289.620\nCond. R$ 1 • IPTU R$ 500"), {"condominio": 1.0, "iptu": 500.0})
+        self.assertEqual(valores_do_card("Cond. isento • IPTU não informado"), {"condominio": 0.0, "iptu": None})
+        self.assertEqual(valores_do_card("Cond. não informado • IPTU R$ 1.200"), {"condominio": None, "iptu": 1200.0})
+        self.assertEqual(valores_do_card("sem nada"), {"condominio": None, "iptu": None})
+
+
+class TesteReinicio(unittest.TestCase):
+    def test_reinicia_o_navegador_quando_cai(self):
+        import queue, tempfile, os
+        from unittest import mock
+        from selenium.common.exceptions import WebDriverException
+        from src.scraper import ScraperPortal
+        from src.database import Database
+        db = os.path.join(tempfile.mkdtemp(), "t.db")
+        Database(db).setup()
+        s = ScraperPortal(1, "zap", SEGMENTOS[:1], queue.Queue(), db)
+        s._reiniciar_driver = mock.Mock()
+        chamadas = iter([WebDriverException("caiu"), "ok"])
+
+        def etapa():
+            r = next(chamadas)
+            if isinstance(r, Exception):
+                raise r
+            return r
+        self.assertEqual(s._tentar(etapa), "ok")
+        s._reiniciar_driver.assert_called_once()
