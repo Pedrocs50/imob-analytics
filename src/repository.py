@@ -20,17 +20,20 @@ class DataRepository:
         if not dados:
             return
         # coletor por cards nao traz fonte/id/url/rua/comodidades: ficam nulos
-        extras = dict.fromkeys(("fonte", "external_id", "url", "rua", "bairro", "data_publicacao", "condominio", "iptu", "comodidades"))
+        extras = dict.fromkeys(("fonte", "external_id", "url", "rua", "bairro", "data_publicacao", "condominio", "iptu", "comodidades",
+                                "tipo_imovel", "n_comodos", "aceita_pets", "disponibilidade", "fotos", "destaque", "json_ld"))
         linhas = [{**extras, **d} for d in dados]
         with self._db.get_connection() as conn:
             conn.executemany(
                 """
                 INSERT OR IGNORE INTO imoveis_raw
                     (segmento, preco_min_filtro, pagina, endereco, preco, area, quartos, banheiros, vagas,
-                     fonte, external_id, url, rua, bairro, data_publicacao, condominio, iptu, comodidades)
+                     fonte, external_id, url, rua, bairro, data_publicacao, condominio, iptu, comodidades,
+                     tipo_imovel, n_comodos, aceita_pets, disponibilidade, fotos, destaque, json_ld)
                 VALUES
                     (:segmento, :preco_min_filtro, :pagina, :endereco, :preco, :area, :quartos, :banheiros, :vagas,
-                     :fonte, :external_id, :url, :rua, :bairro, :data_publicacao, :condominio, :iptu, :comodidades)
+                     :fonte, :external_id, :url, :rua, :bairro, :data_publicacao, :condominio, :iptu, :comodidades,
+                     :tipo_imovel, :n_comodos, :aceita_pets, :disponibilidade, :fotos, :destaque, :json_ld)
                 """,
                 linhas,
             )

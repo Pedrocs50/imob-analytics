@@ -183,10 +183,34 @@ class TesteDadosReaisVivaReal(unittest.TestCase):
 
     def test_valores_do_card(self):
         from src.jsonld import valores_do_card
-        self.assertEqual(valores_do_card("R$ 289.620\nCond. R$ 1 • IPTU R$ 500"), {"condominio": 1.0, "iptu": 500.0})
-        self.assertEqual(valores_do_card("Cond. isento • IPTU não informado"), {"condominio": 0.0, "iptu": None})
-        self.assertEqual(valores_do_card("Cond. não informado • IPTU R$ 1.200"), {"condominio": None, "iptu": 1200.0})
-        self.assertEqual(valores_do_card("sem nada"), {"condominio": None, "iptu": None})
+        v = lambda t: {k: x for k, x in valores_do_card(t).items() if k in ("condominio", "iptu")}  # noqa: E731
+        self.assertEqual(v("R$ 289.620\nCond. R$ 1 • IPTU R$ 500"), {"condominio": 1.0, "iptu": 500.0})
+        self.assertEqual(v("Cond. isento • IPTU não informado"), {"condominio": 0.0, "iptu": None})
+        self.assertEqual(v("Cond. não informado • IPTU R$ 1.200"), {"condominio": None, "iptu": 1200.0})
+        self.assertEqual(v("sem nada"), {"condominio": None, "iptu": None})
+
+    def test_fotos_e_destaque_do_card(self):
+        from src.jsonld import valores_do_card
+        r = valores_do_card("+28 fotos Super Destaque Apartamento para comprar Cond. R$ 484 • IPTU R$ 691")
+        self.assertEqual((r["fotos"], r["destaque"]), (28, "super destaque"))
+        r = valores_do_card("+15 fotos Destaque Apartamento com piscina")
+        self.assertEqual((r["fotos"], r["destaque"]), (15, "destaque"))
+        r = valores_do_card("Casa para comprar")
+        self.assertEqual((r["fotos"], r["destaque"]), (None, None))
+
+    def test_campos_extras_do_json_ld_e_json_bruto_sem_anunciante(self):
+        no = {"@type": "House", "url": "https://x/imovel-id-77/", "name": "Casa em Centro, Jacareí",
+              "additionalType": "https://schema.org/House", "numberOfRooms": 3, "petsAllowed": True,
+              "image": ["https://img/1.jpg"], "seller": {"name": "Imobiliaria X", "telephone": "123"},
+              "offers": {"price": 300000, "availability": "https://schema.org/InStock",
+                         "additionalProperty": {"@type": "PropertyValue", "name": "Condominium Fee", "value": 285}}}
+        from src.jsonld import extrair_anuncios
+        [a] = extrair_anuncios([json.dumps(no)])
+        self.assertEqual((a["tipo_imovel"], a["n_comodos"], a["aceita_pets"], a["disponibilidade"], a["condominio"]),
+                         ("House", 3.0, 1, "InStock", 285.0))
+        self.assertNotIn("Imobiliaria X", a["json_ld"])
+        self.assertNotIn("img/1.jpg", a["json_ld"])
+        self.assertIn("Condominium Fee", a["json_ld"])
 
 
 class TesteReinicio(unittest.TestCase):
@@ -300,3 +324,29 @@ class TestePaginaNaoEncontrada(unittest.TestCase):
 class TesteFocoDaColeta(unittest.TestCase):
     def test_por_padrao_so_casas_e_apartamentos(self):
         self.assertEqual({s["tipo"] for s in SEGMENTOS}, {"casas", "apartamentos"})
+
+
+class TesteBloqueioCloudflare(unittest.TestCase):
+    TEXTO = "Attention Required! | Cloudflare | Sorry, you have been blocked | You are unable to access zapimoveis.com.br"
+
+    def test_reconhece_a_pagina_de_bloqueio_e_nao_a_listagem(self):
+        from src.scraper import pagina_de_bloqueio
+        self.assertTrue(pagina_de_bloqueio(self.TEXTO))
+        self.assertFalse(pagina_de_bloqueio("Casas para venda - Jacareí, SP | ZAP Imóveis | R$ 289.620"))
+
+    def test_worker_para_ao_ser_bloqueado_sem_tentar_de_novo(self):
+        import os, queue, tempfile
+        from unittest import mock
+        from src.scraper import ScraperPortal, SEGMENTOS
+        from src.database import Database
+        db = os.path.join(tempfile.mkdtemp(), "t.db")
+        Database(db).setup()
+        s = ScraperPortal(1, "zap", SEGMENTOS[:1], queue.Queue(), db)
+        driver = mock.Mock(current_url="https://www.zapimoveis.com.br/venda/casas/", title="Attention Required! | Cloudflare")
+        driver.execute_script.return_value = self.TEXTO
+        s._iniciar_driver = lambda: setattr(s, "_driver", driver)
+        s._ler_robots = lambda: None
+        with mock.patch("src.scraper.time.sleep"):
+            s.executar()  # nao pode lancar nem insistir
+        self.assertEqual(driver.get.call_count, 1)
+        driver.quit.assert_called_once()

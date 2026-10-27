@@ -112,6 +112,19 @@ def pagina_de_erro(texto: str) -> bool:
     return bool(_PAGINA_NAO_ENCONTRADA.search(texto))
 
 
+class Bloqueado(Exception):
+    """O portal recusou a requisicao (403/429/desafio). O coletor para: nao tenta contornar."""
+
+
+_BLOQUEIO_CLOUDFLARE = re.compile(r"you have been blocked|you are unable to access|attention required!?\s*\|\s*cloudflare|"
+                                  r"error 1020|access denied", re.IGNORECASE)
+
+
+def pagina_de_bloqueio(texto: str) -> bool:
+    """Pagina "Sorry, you have been blocked" do Cloudflare: o acesso foi negado (diferente do CAPTCHA, que pede uma verificacao)."""
+    return bool(_BLOQUEIO_CLOUDFLARE.search(texto))
+
+
 class ExtractorPortal:
     """Le os anuncios de uma pagina de listagem. Prefere o JSON-LD embutido (id, URL, endereco, comodidades);
     se a pagina nao trouxer, volta para os cards (so o que aparece na tela)."""
@@ -175,8 +188,8 @@ class ExtractorPortal:
         anuncios = extrair_anuncios(self.blocos_json_ld(driver))
         if anuncios:
             cards = self.valores_dos_cards(driver)
-            for a in anuncios:
-                a.update(cards.get(a["external_id"], {}))
+            for a in anuncios:  # valor do card so complementa: "nao informado" (None) nao apaga o que o JSON-LD trouxe
+                a.update({k: v for k, v in cards.get(a["external_id"], {}).items() if v is not None})
         if not anuncios:
             self._rolar_pagina(driver)
             anuncios = [d for d in (self._extrair_card(c) for c in driver.find_elements(By.CSS_SELECTOR, self._CARDS_CSS)) if d]
@@ -192,6 +205,9 @@ class ExtractorPortal:
             return str(driver.execute_script(self._TEXTO_PAGINA_JS) or "")
         except Exception:
             return ""
+
+    def pagina_bloqueada(self, driver) -> bool:
+        return pagina_de_bloqueio(self.texto_da_pagina(driver))
 
     def pagina_nao_encontrada(self, driver) -> bool:
         """Pagina de erro do portal ("nao conseguimos encontrar a pagina solicitada"). Ela mostra anuncios
@@ -320,6 +336,10 @@ class ScraperPortal:
         self._robots = None
         self._caminhos: dict[str, str] = {}  # tipo -> caminho que funcionou
 
+    def _checar_bloqueio(self) -> None:
+        if self._extractor.pagina_bloqueada(self._driver):
+            raise Bloqueado(f"o portal negou o acesso (Cloudflare 'you have been blocked') em {self._driver.current_url}")
+
     def _url(self, segmento: dict, pagina: int) -> str:
         return montar_url(self.portal, segmento, pagina, self._caminhos.get(segmento["tipo"]))
 
@@ -335,6 +355,7 @@ class ScraperPortal:
                 continue
             self._driver.get(url)
             time.sleep(random.uniform(DELAY_MIN, DELAY_MAX))
+            self._checar_bloqueio()
             if not self._extractor.pagina_tem_resultados(self._driver) and self._detectar_captcha():
                 self._aguardar_liberacao_captcha()
             self._extractor._aguardar_carregamento(self._driver)
@@ -352,6 +373,9 @@ class ScraperPortal:
             self._ler_robots()
             for segmento in self.segmentos:
                 self._scrape_segmento(segmento)
+        except Bloqueado as erro:
+            self._log(f"BLOQUEADO: {erro}. Coleta deste portal PARADA; o que ja foi gravado esta salvo e a coleta retoma de onde parou. "
+                      "Nada foi contornado: espere o bloqueio expirar (horas) e rode de novo, com menos pressa.")
         except KeyboardInterrupt:
             self._log("Interrompido.")
         finally:
@@ -380,6 +404,10 @@ class ScraperPortal:
                         continue
                     url = self._url(segmento, 1)
                     resumo[segmento["tipo"]] = self._tentar(lambda: self._amostrar(segmento, url))
+                except Bloqueado as erro:
+                    resumo[segmento["tipo"]] = {"url": url, "erro": f"BLOQUEADO: {erro}"}
+                    self._log(f"amostra {segmento['tipo']}: {resumo[segmento['tipo']]}; amostra interrompida, nada contornado.")
+                    break
                 except Exception as erro:
                     resumo[segmento["tipo"]] = {"url": url, "erro": f"{type(erro).__name__}: {erro}"[:300]}
                 self._log(f"amostra {segmento['tipo']}: {resumo[segmento['tipo']]}")
@@ -392,6 +420,7 @@ class ScraperPortal:
     def _amostrar(self, segmento: dict, url: str) -> dict:
         self._driver.get(url)
         time.sleep(random.uniform(DELAY_MIN, DELAY_MAX))
+        self._checar_bloqueio()
         if not self._extractor.pagina_tem_resultados(self._driver) and self._detectar_captcha():
             self._aguardar_liberacao_captcha()
         espera = self._extractor._aguardar_carregamento(self._driver)
@@ -455,6 +484,7 @@ class ScraperPortal:
         """Uma pagina da listagem. Devolve os anuncios, ou None quando o segmento acabou."""
         self._driver.get(url)
         time.sleep(random.uniform(DELAY_MIN, DELAY_MAX))
+        self._checar_bloqueio()
         # Recheca cards para evitar falso "fim de segmento"
         if not self._extractor.pagina_tem_resultados(self._driver):
             if self._detectar_captcha():
@@ -582,10 +612,6 @@ class ScraperPortal:
                 "total_db": total,
             }
         )
-
-
-class Bloqueado(Exception):
-    """O portal recusou a requisicao (403/429/desafio). O coletor para: nao tenta contornar."""
 
 
 def resposta_bloqueada(status: int, html: str) -> bool:

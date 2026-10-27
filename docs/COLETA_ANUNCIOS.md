@@ -7,6 +7,7 @@ Data: 2026-10-26. Implementacao: `src/scraper.py`, `src/jsonld.py`; testes em `t
 - **Um worker por portal**, em paralelo (ZAP e VivaReal), com as **mesmas regras do coletor original**: fatias de preco por tipo (foco em casas e apartamentos; terrenos e "imoveis" so com `TIPOS=casas,apartamentos,terrenos`) para contornar o limite de
   paginas, retomada por pagina, espera de CAPTCHA (a pessoa resolve na janela) e atrasos de 8 a 15 s.
 - **Leitura do JSON-LD** (schema.org) que a propria pagina traz: id, URL, tipo, rua, quartos, banheiros, area, comodidades, preco e data de publicacao (`datePosted`); bairro e vagas sao extraidos do titulo/`keywords`.
+- **Campos guardados por anuncio** (`imoveis_raw`): fonte, id, URL, rua, bairro, preco, area, quartos, banheiros, vagas, comodidades, data de publicacao, condominio (taxa do JSON-LD, completada pelo card), IPTU (card), tipo do imovel (`additionalType`: House, Apartment...), numero de comodos, aceita pets, disponibilidade, numero de fotos e destaque ("destaque"/"super destaque", do card) e o **JSON-LD bruto do anuncio** (`json_ld`), para minerar campos que ainda nao foram usados sem recoletar. Ficam de fora, de proposito: imagens, nome do anunciante e telefones (dado de terceiros).
   Condominio e IPTU vem dos cards, ligados ao anuncio pelo id do link. Sem JSON-LD, volta para os cards.
 - **Nao guarda** nome, telefone nem identificacao do anunciante.
 - **`robots.txt`** lido pelo navegador; caminhos proibidos sao pulados.
@@ -37,3 +38,7 @@ python main.py clean                                                           #
 
 - Uma coleta e uma **fotografia**: para uma serie de precos de Jacarei no LSTM e preciso repetir a coleta periodicamente, guardando data e id.
 - Termos de uso dos portais nao foram revisados; o uso em volume deve respeitar as regras de cada site.
+
+## Bloqueio do Cloudflare ("Sorry, you have been blocked")
+
+Diferente do CAPTCHA (que pede uma verificacao que voce resolve na janela), esta pagina **nega o acesso**. Em 2026-10-26 apareceu nos dois portais depois de varias rodadas seguidas de `--amostra` e de testes automatizados. O coletor reconhece a pagina, **para o portal na hora**, avisa no log e preserva o que ja foi gravado (a coleta retoma de onde parou). O projeto **nao tenta contornar** (sem proxy, sem trocar de IP, sem esconder o navegador): o bloqueio expira com o tempo; rodar de novo com menos pressa (`DELAY_MIN`/`DELAY_MAX` maiores) e evitar rodadas repetidas ajuda. Se persistir, usar a base compartilhada pelo orientador (marco/2026) ou dados abertos (ITBI).

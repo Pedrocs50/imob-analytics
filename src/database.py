@@ -46,6 +46,13 @@ class Database:
                     condominio       REAL,
                     iptu             REAL,
                     comodidades      TEXT,
+                    tipo_imovel      TEXT,
+                    n_comodos        REAL,
+                    aceita_pets      INTEGER,
+                    disponibilidade  TEXT,
+                    fotos            INTEGER,
+                    destaque         TEXT,
+                    json_ld          TEXT,
                     coletado_em      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
 
@@ -131,7 +138,9 @@ class Database:
         """Bancos criados antes do JSON-LD nao tem as colunas de id/URL/comodidades."""
         existentes = {linha[1] for linha in conn.execute("PRAGMA table_info(imoveis_raw)")}
         novas = {"fonte": "TEXT", "external_id": "TEXT", "url": "TEXT", "rua": "TEXT", "bairro": "TEXT",
-                 "data_publicacao": "TEXT", "condominio": "REAL", "iptu": "REAL", "comodidades": "TEXT"}
+                 "data_publicacao": "TEXT", "condominio": "REAL", "iptu": "REAL", "comodidades": "TEXT",
+                 "tipo_imovel": "TEXT", "n_comodos": "REAL", "aceita_pets": "INTEGER", "disponibilidade": "TEXT",
+                 "fotos": "INTEGER", "destaque": "TEXT", "json_ld": "TEXT"}
         for coluna, tipo in novas.items():
             if coluna not in existentes:
                 conn.execute(f"ALTER TABLE imoveis_raw ADD COLUMN {coluna} {tipo}")
