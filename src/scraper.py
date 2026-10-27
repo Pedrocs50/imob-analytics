@@ -128,15 +128,14 @@ class ExtractorPortal:
     _CARDS_CSS = 'div[class*="content-stretch"][class*="min-w-0"]'
     _JSON_LD_JS = "return [...document.querySelectorAll('script[type=\"application/ld+json\"]')].map(s => s.textContent);"
 
-    # texto de cada card ligado ao id do anuncio: sobe a partir do preco ate o menor elemento com o link do anuncio
-    _CARDS_TEXTO_JS = """return [...document.querySelectorAll('[data-cy="rp-cardProperty-price-txt"]')].map(p => {
-        let n = p;
-        for (let i = 0; i < 8 && n; i++) {
-            const a = n.querySelector && n.querySelector('a[href*="-id-"]');
-            if (a) return n.querySelectorAll('[data-cy="rp-cardProperty-price-txt"]').length === 1 ? {href: a.href, texto: n.innerText} : null;
-            n = n.parentElement;
-        }
-        return null;
+    # texto de cada card ligado ao id do anuncio. Sobe a partir do preco ate o MAIOR bloco que ainda tem um unico preco
+    # (= o card inteiro, qualquer que seja a profundidade); le textContent, que nao fica vazio em card fora da tela.
+    _CARDS_TEXTO_JS = """const sel = '[data-cy="rp-cardProperty-price-txt"]';
+    return [...document.querySelectorAll(sel)].map(p => {
+        let card = p;
+        while (card.parentElement && card.parentElement.querySelectorAll(sel).length === 1) card = card.parentElement;
+        const a = card.querySelector('a[href*="-id-"]');
+        return a ? {href: a.href, texto: card.textContent || ''} : null;
     }).filter(Boolean);"""
 
     def __init__(self, fonte: str):
@@ -402,7 +401,8 @@ class ScraperPortal:
             json.dump(blocos, f, ensure_ascii=False)
         return {"url": self._driver.current_url, "pagina_nao_encontrada": self._extractor.pagina_nao_encontrada(self._driver),
                 "titulo": self._driver.title, "arquivo": arquivo,
-                "exemplos_de_cards": self._extractor.exemplos_de_cards(self._driver), "segundos_ate_carregar": espera,
+                "exemplos_de_cards": self._extractor.exemplos_de_cards(self._driver),
+                "cards_lidos_com_link": len(self._extractor.valores_dos_cards(self._driver)), "segundos_ate_carregar": espera,
                 "timeout_de_carregamento": espera is None, "captcha_visivel": self._detectar_captcha(),
                 **self._extractor.contagens(self._driver),
                 "cards_com_condominio_ou_iptu": sum(1 for v in self._extractor.valores_dos_cards(self._driver).values()
