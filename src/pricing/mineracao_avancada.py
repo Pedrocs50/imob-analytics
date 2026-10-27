@@ -199,6 +199,8 @@ def fora_da_curva(df: pd.DataFrame, itens: pd.DataFrame, segmento: str) -> tuple
         previsto[teste] = modelo.fit(X.iloc[treino], y.iloc[treino]).predict(X.iloc[teste])
     esperado = np.exp(previsto)
     desvio = 100 * (df["preco_m2"] / esperado - 1)
+    pd.DataFrame({"tolerancia (%)": range(5, 65, 5), "% dos anuncios dentro": [float((desvio.abs() <= t).mean() * 100) for t in range(5, 65, 5)]}
+                 ).to_csv(os.path.join(RESULTS_DIR, f"{segmento}_fora_da_curva_tolerancia.csv"), index=False)
     resumo = {"R2 do log(R$/m2) fora da amostra": float(1 - ((y - previsto) ** 2).sum() / ((y - y.mean()) ** 2).sum()),
               "erro percentual mediano": float(desvio.abs().median()), "% dos anuncios a ate 20% do esperado": float((desvio.abs() <= 20).mean() * 100),
               "% mais de 30% ACIMA do esperado": float((desvio > 30).mean() * 100), "% mais de 30% ABAIXO do esperado": float((desvio < -30).mean() * 100)}

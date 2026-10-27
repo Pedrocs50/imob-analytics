@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JECET 2026 · Previsão de preços de imóveis com redes neurais LSTM</title>
+<link rel="stylesheet" href="assets/deck.css">
+</head>
+<body>
+<div class="stage">
+  <div class="faixa"></div>
+  <div class="topo"><img src="img/jecet2026.png" alt="JECET 2026 · IFSP Campus Jacareí"><div class="secao"></div></div>
+
+  <!-- 1. CAPA -->
+  <section class="slide capa-slide on" data-titulo="Capa" data-min="0.5">
+    <div class="cap-wrap">
+      <img class="cap-logo" src="img/jecet2026.png" alt="JECET 2026">
+      <h1>Previsão de preços de imóveis utilizando redes neurais LSTM a partir de dados imobiliários e indicadores macroeconômicos</h1>
+      <div class="autor"><b>Pedro de Moraes Machado</b> · <b>Tardelli Ronan Coelho Stekel</b> (orientadora)<small>Instituto Federal de São Paulo · Campus Jacareí</small></div>
+    </div>
+    <div class="selo">Apresentação B · Jacareí, SP</div>
+    <div class="barra"></div>
+    <aside class="notas"><p><b>(30 s)</b> Este é o segundo trabalho do mesmo projeto: prever preços de imóveis com redes neurais LSTM e indicadores macroeconômicos, em parceria com a professora Tardelli.</p>
+    <p>Dica: <b>F</b> = tela cheia, <b>→</b> avança, <b>G</b> = lista de slides, <b>P</b> = notas e cronômetro.</p></aside>
+  </section>
+
+  <!-- 2. PERGUNTA -->
+  <section class="slide" data-secao="<b>B</b> · LSTM e macroeconomia" data-titulo="A pergunta" data-min="1">
+    <h2 class="titulo"><small>A pergunta</small>Uma rede neural prevê o preço melhor que um modelo tradicional?</h2>
+    <div class="cols c2" style="margin-top:30px">
+      <div class="cartao frag" data-frag="1"><h3>Hipótese 1</h3><p>A <b>LSTM</b>, que aprende padrões ao longo do tempo, <b>erra menos</b> que modelos tradicionais (ARIMA e regressão linear).</p></div>
+      <div class="cartao frag" data-frag="2"><h3>Hipótese 2</h3><p>Incluir <b>indicadores macroeconômicos</b> (juros, inflação, crédito, câmbio) <b>melhora</b> a previsão da LSTM.</p></div>
+    </div>
+    <div class="callout frag" data-frag="3" style="margin-top:44px"><b>Como medimos:</b> erro médio (<b>MAE</b>), raiz do erro quadrático (<b>RMSE</b>) e erro percentual (<b>MAPE</b>), comparando com os modelos tradicionais.</div>
+    <aside class="notas"><p><b>(1 min)</b> Duas hipóteses. A primeira: a LSTM, que aprende dependências no tempo, erra menos que modelos tradicionais como ARIMA e regressão linear. A segunda: se eu der a ela indicadores macroeconômicos (juros, inflação, crédito, câmbio), ela melhora. Para testar, comparo os erros MAE, RMSE e MAPE.</p></aside>
+  </section>
+
+  <!-- 3. DADOS -->
+  <section class="slide" data-secao="<b>B</b> · LSTM e macroeconomia" data-titulo="Os dados" data-min="1">
+    <h2 class="titulo" style="margin-bottom:18px"><small>Os dados</small>Séries públicas de várias fontes, num único banco</h2>
+    <div class="cols c4">
+      <div class="kpi"><div class="v">49</div><div class="r">séries (FipeZAP, BCB, IBGE, IPEA)</div></div>
+      <div class="kpi"><div class="v">50</div><div class="r">cidades no painel de treino</div></div>
+      <div class="kpi"><div class="v">104</div><div class="r">meses de São José dos Campos</div></div>
+      <div class="kpi"><div class="v">0</div><div class="r">falhas no teste de vazamento de dados</div></div>
+    </div>
+    <div class="cols c2" style="margin-top:34px">
+      <div class="callout frag" data-frag="1"><b>Por que SJC?</b> Jacareí não está no FipeZAP. São José dos Campos é a cidade coberta <b>mais próxima</b> e entra como representante.</div>
+      <div class="callout frag" data-frag="2"><b>Sem trapaça no tempo:</b> em cada mês, o modelo só usa o que <b>já estava publicado</b> naquela data ("as-of").</div>
+    </div>
+    <p class="mut frag" data-frag="3" style="margin-top:26px">Indicadores: Selic, IPCA, INCC, câmbio (PTAX), IBC-Br, crédito imobiliário, confiança do consumidor e Selic real.</p>
+    <aside class="notas"><p><b>(1 min)</b> Reuni 49 séries do FipeZAP, Banco Central, IBGE e IPEA num banco só. Jacareí não aparece no FipeZAP, então uso São José dos Campos, a cidade mais próxima coberta, como representante.</p>
+    <p>Um cuidado importante: em cada mês o modelo só enxerga o que já tinha sido publicado naquela data. Isso evita "vazamento" do futuro, e o teste que fiz para isso deu zero falhas.</p></aside>
+  </section>
+
+  <!-- 4. MÉTODO -->
+  <section class="slide" data-secao="<b>B</b> · LSTM e macroeconomia" data-titulo="O método" data-min="1.5">
+    <h2 class="titulo"><small>O método</small>Como a LSTM foi testada</h2>
+    <div class="cols" style="grid-template-columns:1fr 70px 1fr 70px 1fr;align-items:center;margin-top:24px;text-align:center">
+      <div class="cartao frag" data-frag="1"><h3>Entrada</h3><p>últimos <b>12 meses</b> do índice (e, em alguns casos, do macro)</p></div>
+      <div style="font-size:70px;color:var(--verm);font-weight:800" class="frag" data-frag="2">→</div>
+      <div class="cartao frag" data-frag="2"><h3>LSTM</h3><p>treinada em um <b>painel de 50 cidades</b></p></div>
+      <div style="font-size:70px;color:var(--verm);font-weight:800" class="frag" data-frag="3">→</div>
+      <div class="cartao frag" data-frag="3"><h3>Saída</h3><p>variação de <b>1 a 12 meses</b> à frente</p></div>
+    </div>
+    <div class="cols c2" style="margin-top:34px">
+      <div class="cartao frag" data-frag="4"><h3>Contra quem?</h3><ul><li><b>ARIMA</b></li><li><b>Tendência</b> de 12 meses</li><li><b>Regressão linear</b>, com e sem macro</li></ul></div>
+      <div class="cartao frag" data-frag="5"><h3>Sem se enganar</h3><ul><li><b>12 redes</b> × 5 sementes</li><li>Escolhe a variante nos <b>60% iniciais</b> e confirma nos <b>40% finais</b></li><li>Teste de <b>Diebold-Mariano</b></li></ul></div>
+    </div>
+    <aside class="notas"><p><b>(1,5 min)</b> A rede recebe os últimos 12 meses e prevê de 1 a 12 meses à frente. Foi treinada num painel de 50 cidades. Os comparadores são ARIMA, tendência e regressão linear.</p>
+    <p>Para não me enganar, testei 12 redes (4 conjuntos de macro e 3 tamanhos), com 5 sementes cada. Escolho a melhor nos 60% iniciais do período e <b>confirmo nos 40% finais</b>. Se eu escolhesse olhando o próprio teste, o resultado seria otimista demais.</p></aside>
+  </section>
+
+  <!-- 5. RESULTADO 1: MAPE POR HORIZONTE -->
+  <section class="slide" data-secao="<b>B</b> · LSTM e macroeconomia" data-titulo="Resultado: erro por horizonte" data-min="2" data-tab="SJC">
+    <h2 class="titulo" style="margin-bottom:10px"><small>Resultado 1</small>Erro de previsão (MAPE) por horizonte</h2>
+    <div class="seg"><button data-v="SJC">São José dos Campos</button><button data-v="nacional">Índice nacional</button><span class="dica">clique na legenda para esconder modelos</span></div>
+    <div data-grafico="mape" class="nao-avanca"><div class="legenda-ch"></div><svg style="width:100%;height:480px"></svg></div>
+    <div class="cols c2" style="margin-top:6px">
+      <div class="callout" data-tab="SJC" style="font-size:30px;grid-column:1/-1"><b>SJC:</b> aos 12 meses a LSTM sem macro erra <b>3,3%</b> contra <b>5,4%</b> do ARIMA, mas a diferença <b>não é significativa</b> (p = 0,13).</div>
+      <div class="callout verm" data-tab="nacional" style="font-size:30px;grid-column:1/-1"><b>Nacional:</b> o <b>ARIMA vence</b> (1,2% contra 1,7% aos 12 meses). A diferença é significativa de 1 a 6 meses (p &lt; 0,05); aos 12 meses, p = 0,051.</div>
+    </div>
+    <aside class="notas"><p><b>(2 min)</b> Este gráfico é interativo. No índice de São José dos Campos, a LSTM sem macro erra menos aos 6 e 12 meses (3,3% contra 5,4% do ARIMA aos 12 meses), mas com poucas observações o teste estatístico diz que a diferença <b>não é significativa</b> (p de 0,13).</p>
+    <p>No índice nacional, que é longo e suave, o ARIMA é melhor, e a diferença é significativa de 1 a 6 meses (aos 12 meses, p de 0,051). Resumindo: nenhum modelo vence em tudo. Dá para esconder modelos clicando na legenda e alternar entre os dois índices com Tab.</p></aside>
+  </section>
+
+  <!-- 6. RESULTADO 2: MACRO -->
+  <section class="slide" data-secao="<b>B</b> · LSTM e macroeconomia" data-titulo="Resultado: o macro ajudou?" data-min="2" data-tab="SJC">
+    <h2 class="titulo" style="margin-bottom:10px"><small>Resultado 2</small>O macro ajudou? A campeã não se confirmou</h2>
+    <div class="seg"><button data-v="SJC">São José dos Campos</button><button data-v="nacional">Índice nacional</button></div>
+    <div data-grafico="selecao" class="nao-avanca"></div>
+    <div class="callout verm frag" data-frag="1" style="margin-top:10px;font-size:30px"><span data-tab="SJC">A variante com macro que <b>ganhou na escolha (0,83)</b> piorou na confirmação (<b>1,34</b>). A melhor sem macro ficou em 0,97.</span><span data-tab="nacional">No índice nacional <b>nenhuma</b> rede com macro bateu o ARIMA: a pior chegou a <b>2,75×</b> o erro dele.</span></div>
+    <aside class="notas"><p><b>(2 min)</b> Resultado central, e negativo. A barra amarela é o desempenho no período de escolha; a verde, na confirmação. A linha vermelha é o ARIMA: quanto menor, melhor. Em São José dos Campos, a variante com macro que parecia a melhor (0,83) piorou para 1,34 na confirmação. Se eu tivesse escolhido pelo teste, teria me enganado.</p>
+    <p>Sem macro, a rede pequena foi a mais estável. Conclusão: nestes dados, o macro não ajudou. Resultado negativo também é resultado.</p></aside>
+  </section>
+
+  <!-- 7. O QUE APRENDEMOS -->
+  <section class="slide" data-secao="<b>B</b> · LSTM e macroeconomia" data-titulo="O que aprendemos" data-min="1">
+    <h2 class="titulo"><small>Leitura</small>O que esse resultado nos ensina</h2>
+    <div class="cols c3" style="margin-top:20px">
+      <div class="cartao frag" data-frag="1"><h3>1 · Macro não ajudou</h3><p>Com <b>dados mensais</b> é pouca informação: 104 meses são pouco para a rede aprender com 8 indicadores.</p></div>
+      <div class="cartao frag" data-frag="2"><h3>2 · ARIMA é duro</h3><p>Em séries longas e suaves, como o índice nacional, o <b>ARIMA continua difícil de bater</b>.</p></div>
+      <div class="cartao frag" data-frag="3"><h3>3 · Cuidado ao escolher</h3><p>Escolher o modelo olhando o próprio teste <b>engana</b>. Separar escolha e confirmação evitou um erro.</p></div>
+    </div>
+    <div class="callout amar frag" data-frag="4" style="margin-top:40px"><b>O que ainda dá para testar:</b> macro com mais defasagens, frequência trimestral, e uma <b>série própria de Jacareí</b> (com recoletas periódicas).</div>
+    <aside class="notas"><p><b>(1 min)</b> Três aprendizados. Um: com 104 meses, uma rede com oito indicadores tem mais parâmetros do que o sinal sustenta. Dois: o ARIMA é duro de bater em séries longas e suaves. Três: separar escolha e confirmação me impediu de publicar um resultado enganoso.</p></aside>
+  </section>
+
+  <!-- 8. DO ÍNDICE AO PREÇO -->
+  <section class="slide" data-secao="<b>B</b> · LSTM e macroeconomia" data-titulo="Do índice ao preço de Jacareí" data-min="1.5" data-tab="modelo">
+    <h2 class="titulo" style="margin-bottom:10px"><small>Juntando as pontas</small>Das características do imóvel ao preço em Jacareí</h2>
+    <div class="seg"><button data-v="modelo">Modelo de preço</button><button data-v="peso">O que pesa</button><button data-v="cenario">Cenários</button></div>
+    <div class="fig" style="height:480px"><img data-tab="modelo" class="zoom show" src="img/modelos_avancados_real_previsto.png" alt=""><img data-tab="peso" class="zoom" src="img/importancia_variaveis.png" alt=""><img data-tab="cenario" class="zoom" src="img/projecao_cenarios.png" alt=""></div>
+    <div class="cols c2" style="margin-top:18px;align-items:stretch">
+      <div><div class="callout" data-tab="modelo" style="font-size:30px"><b>R² 0,80</b> (casas) e <b>0,73</b> (apartamentos) em teste no tempo; erro médio de <b>15%</b> e <b>11%</b>.</div>
+        <div class="callout" data-tab="peso" style="font-size:30px">O que mais pesa: <b>área</b>, <b>bairro</b> e a <b>localização fina</b> (apartamentos).</div>
+        <div class="callout" data-tab="cenario" style="font-size:30px">Aplicando a tendência do índice aos preços de Jacareí: de <b>+6%</b> a <b>+10%</b> em 12 meses, conforme o cenário.</div></div>
+      <div class="callout amar" style="font-size:28px">As características dos imóveis entram pelo <b>modelo de preço</b>; o índice dá a <b>tendência no tempo</b>. O VivaReal é uma fotografia, sem histórico para alimentar a LSTM.</div>
+    </div>
+    <aside class="notas"><p><b>(1,5 min)</b> Para ligar as duas partes: as características dos imóveis entram num modelo de preço, que acerta bem (R² 0,80 nas casas), e o índice dá a tendência no tempo. O gráfico de cenários aplica a tendência do índice aos preços de Jacareí: entre 6% e 10% em 12 meses, conforme o cenário.</p>
+    <p>Limite: os anúncios do VivaReal são uma fotografia de um mês, sem histórico, então não alimentam a LSTM diretamente. Isso é trabalho futuro com recoletas periódicas. Troque a aba com Tab.</p></aside>
+  </section>
+
+  <!-- 9. PAINEL -->
+  <section class="slide" data-secao="<b>B</b> · LSTM e macroeconomia" data-titulo="Painel interativo" data-min="0.5">
+    <h2 class="titulo" style="margin-bottom:14px"><small>Demonstração</small>Veja as séries no painel interativo</h2>
+    <div class="iframe-wrap nao-avanca"><iframe class="moldura-iframe" src="../painel.html" title="Painel interativo"></iframe></div>
+    <div class="legenda">Abra a aba <b>Séries temporais</b>. Precisa de internet. Clique fora do painel para voltar às setas.</div>
+    <aside class="notas"><p><b>(30 s)</b> No painel, a aba Séries temporais mostra as séries usadas, as previsões e a comparação entre os modelos. Se a internet falhar, é só pular este slide.</p></aside>
+  </section>
+
+  <!-- 10. PRÓXIMOS PASSOS / OBRIGADO -->
+  <section class="slide" data-secao="<b>B</b> · LSTM e macroeconomia" data-titulo="Conclusão e próximos passos" data-min="1">
+    <h2 class="titulo"><small>Conclusão</small>O que levamos desta pesquisa</h2>
+    <div class="cols c2" style="margin-top:20px">
+      <div class="cartao frag" data-frag="1"><h3>O que descobrimos</h3><ul>
+        <li>A LSTM <b>nem sempre</b> vence o ARIMA</li>
+        <li>O <b>macro não melhorou</b> a previsão nestes dados</li>
+        <li>Testar do jeito certo evitou um falso ganho</li></ul></div>
+      <div class="cartao frag" data-frag="2"><h3>Próximos passos</h3><ul>
+        <li><b>Série própria de Jacareí</b> (recoletas)</li>
+        <li>Mais dados e macro com defasagem</li>
+        <li>Combinar tendência e modelo de preço</li></ul></div>
+    </div>
+    <div class="callout frag" data-frag="3" style="margin-top:34px">Código, dados e resultados abertos: <b>github.com/Pedrocs50/imob-analytics</b></div>
+    <aside class="notas"><p><b>(1 min)</b> Para fechar: a LSTM nem sempre vence o ARIMA, o macro não melhorou a previsão com estes dados, e testar do jeito certo me poupou de afirmar um ganho que não existe. O caminho é montar uma série própria de Jacareí com recoletas periódicas.</p>
+    <p>Agradecer, citar a orientadora e abrir para perguntas.</p></aside>
+  </section>
+
+  <!-- 11. OBRIGADO -->
+  <section class="slide capa-slide" data-titulo="Obrigado" data-min="0.5">
+    <div class="cap-wrap">
+      <img class="cap-logo" src="img/jecet2026.png" alt="JECET 2026" style="width:760px">
+      <h1>Obrigado!</h1>
+      <div class="autor"><b>Pedro de Moraes Machado</b> · orientadora <b>Tardelli Ronan Coelho Stekel</b><small>Instituto Federal de São Paulo · Campus Jacareí</small>
+        <small style="margin-top:22px">github.com/Pedrocs50/imob-analytics</small></div>
+    </div>
+    <div class="selo">Perguntas?</div>
+    <div class="barra"></div>
+  </section>
+
+  <div class="rodape"><span>JECET 2026 · Pedro de Moraes Machado</span><div class="prog"><i></i></div><span class="cont"></span></div>
+
+  <div class="overlay visao"><h2>Slides (clique para ir)</h2><ol></ol>
+    <div class="tec">Teclas: → ou clique avança · ← volta · F tela cheia · G esta lista · P notas e cronômetro · Tab alterna as abas · clique numa figura para ampliar</div></div>
+  <div class="lightbox"><img alt=""></div>
+  <div class="nota-rapida"></div>
+</div>
+<script src="assets/dados.js"></script>
+<script src="assets/graficos.js"></script>
+<script src="assets/deck.js"></script>
+</body>
+</html>

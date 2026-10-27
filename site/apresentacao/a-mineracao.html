@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JECET 2026 · Coleta e mineração de dados de anúncios imobiliários</title>
+<link rel="stylesheet" href="assets/deck.css">
+</head>
+<body>
+<div class="stage">
+  <div class="faixa"></div>
+  <div class="topo"><img src="img/jecet2026.png" alt="JECET 2026 · IFSP Campus Jacareí"><div class="secao"></div></div>
+
+  <!-- 1. CAPA -->
+  <section class="slide capa-slide on" data-titulo="Capa" data-min="0.5">
+    <div class="cap-wrap">
+      <img class="cap-logo" src="img/jecet2026.png" alt="JECET 2026">
+      <h1>Coleta e mineração de dados de anúncios imobiliários por meio de web scraping</h1>
+      <div class="autor"><b>Pedro de Moraes Machado</b><small>Instituto Federal de São Paulo · Campus Jacareí</small></div>
+    </div>
+    <div class="selo">Apresentação A · Jacareí, SP</div>
+    <div class="barra"></div>
+    <aside class="notas"><p><b>(30 s)</b> Boa tarde. Eu sou o Pedro, aluno do IFSP Jacareí. Vou mostrar como transformei anúncios de imóveis da internet em uma base de dados e o que dá para descobrir minerando esses dados.</p>
+    <p>Dica: tecla <b>F</b> = tela cheia, <b>→</b> avança, <b>G</b> = lista de slides, <b>P</b> = notas e cronômetro.</p></aside>
+  </section>
+
+  <!-- 2. PROBLEMA E PERGUNTA -->
+  <section class="slide" data-secao="<b>A</b> · Mineração de dados" data-titulo="O problema e a pergunta" data-min="1">
+    <h2 class="titulo"><small>O problema</small>Milhares de anúncios, e ninguém consegue ler todos</h2>
+    <div class="cols c-55-45" style="margin-top:20px">
+      <div>
+        <ul>
+          <li data-frag="1" class="frag">Os preços e as características dos imóveis estão nos <b>portais de anúncios</b></li>
+          <li data-frag="2" class="frag">São <b>muitos anúncios</b>, que mudam toda semana</li>
+          <li data-frag="3" class="frag">Coletar e comparar <b>à mão não escala</b></li>
+        </ul>
+        <p class="mut frag" data-frag="4" style="margin-top:34px">Solução: <b>coletar automaticamente</b> e <b>minerar</b> os dados.</p>
+      </div>
+      <div class="pergunta frag" data-frag="4">Que características fazem um imóvel custar <em>mais que os vizinhos</em> do mesmo bairro?</div>
+    </div>
+    <aside class="notas"><p><b>(1 min)</b> Os portais têm milhares de anúncios de Jacareí e eles mudam toda hora. Olhar um por um é inviável. A ideia da pesquisa é automatizar a coleta e depois usar mineração de dados para responder uma pergunta bem prática: o que faz um imóvel custar mais do que os vizinhos do mesmo bairro?</p></aside>
+  </section>
+
+  <!-- 3. PIPELINE -->
+  <section class="slide" data-secao="<b>A</b> · Mineração de dados" data-titulo="Do anúncio ao dado" data-min="1.5">
+    <h2 class="titulo"><small>O caminho</small>Do anúncio ao conhecimento, em 4 etapas</h2>
+    <div class="cols c4" style="margin-top:30px">
+      <div class="cartao frag" data-frag="1"><h3>1 · Coleta</h3><p>Robô em <b>Selenium</b> lê as páginas do ZAP e do VivaReal</p><p class="mut">Lê o <b>JSON-LD</b> que a própria página traz: 30 de 30 anúncios por página</p></div>
+      <div class="cartao frag" data-frag="2"><h3>2 · Limpeza</h3><p><b>1.984</b> duplicatas removidas</p><p class="mut">Condomínio e IPTU absurdos viram "ausente"</p></div>
+      <div class="cartao frag" data-frag="3"><h3>3 · Mineração</h3><p>Correlação, perfis, <b>regras de associação</b>, árvore de decisão e imóveis fora da curva</p></div>
+      <div class="cartao frag" data-frag="4"><h3>4 · Validação</h3><p>Intervalos de confiança, <b>dados que o método nunca viu</b> e teste no tempo</p></div>
+    </div>
+    <div class="callout amar frag" data-frag="5" style="margin-top:40px"><b>Honestidade:</b> a análise usa a base de <b>23.128 anúncios (março/2026)</b> compartilhada pelo orientador. O meu robô funciona (amostra real validada, 42 testes), mas os portais <b>bloquearam</b> o acesso depois de várias rodadas de teste, e eu decidi <b>não contornar</b> o bloqueio.</div>
+    <aside class="notas"><p><b>(1,5 min)</b> O trabalho tem quatro etapas. Na coleta, um robô em Selenium abre as páginas e lê os dados estruturados que o próprio site oferece, o JSON-LD, o que é mais robusto que raspar a tela. Depois vem a limpeza, a mineração e a validação.</p>
+    <p><b>Falar com franqueza:</b> a análise usa a base de março de 2026 do orientador. Meu robô funciona e foi validado numa amostra real, mas os portais bloquearam o acesso depois de várias rodadas de teste. Eu escolhi não burlar o bloqueio: respeito o site e a política dele.</p></aside>
+  </section>
+
+  <!-- 4. OS DADOS -->
+  <section class="slide" data-secao="<b>A</b> · Mineração de dados" data-titulo="Os dados em números" data-min="1">
+    <h2 class="titulo" style="margin-bottom:18px"><small>Os dados</small>Uma fotografia do mercado de Jacareí</h2>
+    <div class="cols c4">
+      <div class="kpi"><div class="v">23.128</div><div class="r">anúncios coletados<br>(março/2026)</div></div>
+      <div class="kpi"><div class="v">10.254</div><div class="r">casas depois da limpeza</div></div>
+      <div class="kpi"><div class="v">3.992</div><div class="r">apartamentos depois da limpeza</div></div>
+      <div class="kpi"><div class="v">121</div><div class="r">bairros com casas anunciadas</div></div>
+    </div>
+    <div class="fig" style="height:420px;margin-top:22px"><img class="zoom" src="img/geo_mapa_preco_m2.png" alt="Mapa de R$/m² por região de Jacareí"></div>
+    <div class="legenda">Preço mediano do m² por região (apartamentos à esquerda, casas à direita): o mapa já mostra que <b>onde</b> o imóvel está pesa muito.</div>
+    <aside class="notas"><p><b>(1 min)</b> Depois da limpeza ficaram 10.254 casas e 3.992 apartamentos, em 121 bairros. O mapa mostra o preço mediano do metro quadrado por região: tem áreas claramente mais caras. Por isso, nas análises seguintes, eu sempre comparo cada imóvel com o próprio bairro. (Clique na figura para ampliar.)</p></aside>
+  </section>
+
+  <!-- 5. MÉTODO -->
+  <section class="slide" data-secao="<b>A</b> · Mineração de dados" data-titulo="Como comparar: o preço do bairro" data-min="1">
+    <h2 class="titulo"><small>O método</small>Comparar cada imóvel com o próprio bairro</h2>
+    <div class="cols" style="grid-template-columns:1fr 90px 1fr 90px 1fr;align-items:center;margin-top:30px;text-align:center">
+      <div class="cartao frag" data-frag="1"><h3>R$/m² do anúncio</h3><p class="mut">quanto o anunciante pede por metro quadrado</p></div>
+      <div style="font-size:90px;color:var(--verm);font-weight:800" class="frag" data-frag="2">÷</div>
+      <div class="cartao frag" data-frag="2"><h3>Mediana do bairro</h3><p class="mut">o preço "típico" do m² ali</p></div>
+      <div style="font-size:90px;color:var(--verm);font-weight:800" class="frag" data-frag="3">=</div>
+      <div class="cartao frag" data-frag="3" style="background:#fffbea;border-color:var(--amar)"><h3>Preço relativo</h3><p class="mut">1,20 = 20% acima dos vizinhos</p></div>
+    </div>
+    <div class="callout frag" data-frag="4" style="margin-top:44px">Chamamos de <b>"preço alto para o bairro"</b> o <b>terço mais caro</b>: casas com R$/m² ao menos <b>14%</b> acima do bairro; apartamentos, <b>8%</b>.</div>
+    <p class="mut frag" data-frag="5" style="margin-top:30px">Assim, "tem piscina" não se confunde com "mora em bairro caro".</p>
+    <aside class="notas"><p><b>(1 min)</b> A ideia-chave: dividir o preço do metro quadrado do anúncio pela mediana do bairro. Se o resultado é 1,2, o imóvel está 20% acima dos vizinhos. Definimos "preço alto para o bairro" como o terço mais caro nessa comparação. Isso evita confundir "tem piscina" com "mora num bairro caro".</p></aside>
+  </section>
+
+  <!-- 6. CORRELAÇÕES -->
+  <section class="slide" data-secao="<b>A</b> · Mineração de dados" data-titulo="O que anda junto com o preço" data-min="1.5" data-tab="casa">
+    <h2 class="titulo" style="margin-bottom:12px"><small>Resultado 1</small>O que mais anda junto com o preço do m²</h2>
+    <div class="seg"><button data-v="casa">Casas</button><button data-v="apto">Apartamentos</button><span class="dica">tecla Tab alterna</span></div>
+    <div class="cols c-55-45">
+      <div><div class="barras" data-grafico="spearman"></div>
+        <div class="legenda">Correlação de Spearman com o R$/m². A barra preta é o <b>intervalo de confiança de 95%</b> (bootstrap).</div></div>
+      <div>
+        <div class="callout" data-tab="casa"><b>Casas:</b> a taxa de <b>condomínio</b> é o que mais anda junto com o preço (0,50), depois <b>comodidades</b> (0,34) e <b>suítes</b> (0,29).</div>
+        <div class="callout" data-tab="apto"><b>Apartamentos:</b> <b>suítes</b> (0,33), <b>banheiros</b> e <b>vagas</b> (0,26): o que indica padrão do imóvel.</div>
+        <div class="callout amar" style="margin-top:26px;font-size:30px"><b>Confiável?</b> Os intervalos são estreitos e os valores se repetem nas duas metades dos dados. Mas é <b>associação</b>, não causa.</div>
+      </div>
+    </div>
+    <aside class="notas"><p><b>(1,5 min)</b> Calculei a correlação de cada característica com o preço do metro quadrado. Nas casas, o condomínio lidera, o que faz sentido: casa em condomínio fechado tem outro padrão. Nos apartamentos, suítes, banheiros e vagas.</p>
+    <p>A barra preta é o intervalo de confiança: é estreita, então o resultado é estável. Importante: isso é associação, não causa. Use a tecla Tab (ou os botões) para alternar entre casas e apartamentos.</p></aside>
+  </section>
+
+  <!-- 7. PERFIS -->
+  <section class="slide" data-secao="<b>A</b> · Mineração de dados" data-titulo="Perfis de imóveis" data-min="1" data-tab="casa">
+    <h2 class="titulo" style="margin-bottom:12px"><small>Resultado 2</small>Perfis típicos de imóveis (K-means)</h2>
+    <div class="seg"><button data-v="casa">Casas</button><button data-v="apto">Apartamentos</button></div>
+    <div class="cols" style="grid-template-columns:1.75fr 1fr">
+      <div class="fig media"><img data-tab="casa" class="zoom show" src="img/mineracao_grupos_casa.png" alt=""><img data-tab="apto" class="zoom" src="img/mineracao_grupos_apartamento.png" alt=""></div>
+      <div>
+        <div class="callout" data-tab="casa">Casas de <b>~250 m² e 4 vagas</b>: R$/m² mediano <b>~5.330</b>. As de <b>~90 m²</b>: <b>~4.250</b>.</div>
+        <div class="callout" data-tab="apto">Apartamentos de <b>2 quartos com suíte (64 m²)</b>: R$/m² mediano <b>~7.100</b>, bem acima dos de 52 m² sem suíte (<b>~5.500</b>).</div>
+        <div class="callout amar" style="margin-top:26px;font-size:30px" data-tab="casa"><b>Sinceridade:</b> nas casas os perfis se sobrepõem (silhueta baixa). São <b>perfis típicos</b>, não segmentos separados.</div>
+        <div class="callout amar" style="margin-top:26px;font-size:30px" data-tab="apto">Nos apartamentos os grupos são <b>bem separados</b> (silhueta 0,59) e <b>estáveis</b> (ARI 1,00).</div>
+      </div>
+    </div>
+    <aside class="notas"><p><b>(1 min)</b> Agrupei os imóveis por área, quartos, suítes e vagas com K-means. À esquerda, a escolha do número de grupos (silhueta) e, à direita, o preço do metro quadrado em cada grupo. Nas casas, grupos maiores têm preço do m² mais alto, mas há muita sobreposição, então chamo de perfis típicos. Nos apartamentos os grupos são bem separados e estáveis.</p></aside>
+  </section>
+
+  <!-- 8. REGRAS -->
+  <section class="slide" data-secao="<b>A</b> · Mineração de dados" data-titulo="Regras de associação" data-min="1.5" data-tab="casa">
+    <h2 class="titulo" style="margin-bottom:12px"><small>Resultado 3</small>Regras: o que costuma vir junto de "preço alto"</h2>
+    <div class="seg"><button data-v="casa">Casas</button><button data-v="apto">Apartamentos</button></div>
+    <div data-grafico="regras"></div>
+    <div class="cols c2" style="margin-top:22px;align-items:center">
+      <div class="callout" style="font-size:32px"><b>Lift</b> = quantas vezes a chance de "preço alto" é maior que a média (que é de 33%).</div>
+      <div class="callout amar frag" data-frag="1" style="font-size:32px"><span data-tab="casa">Casas com <b>piscina + segurança + armários planejados</b>: <b>56%</b> de chance de estar no terço mais caro do bairro.</span><span data-tab="apto">Apartamentos com <b>área gourmet + varanda + 3+ quartos</b>: <b>56%</b> de chance de preço alto para o bairro.</span></div>
+    </div>
+    <aside class="notas"><p><b>(1,5 min)</b> Esta é a técnica clássica de mineração: regras de associação. Cada linha é uma combinação de características e a chance de o imóvel estar no terço mais caro do bairro. A média é 33%. Casas com piscina, segurança e armários planejados chegam a 56%. O lift 1,7 quer dizer 70% mais chance que a média.</p>
+    <p>Atenção: são marcadores do <b>padrão do condomínio</b>, não causa. Alternar Casas/Apartamentos com Tab.</p></aside>
+  </section>
+
+  <!-- 9. VALIDAÇÃO DAS REGRAS -->
+  <section class="slide" data-secao="<b>A</b> · Mineração de dados" data-titulo="Teste honesto das regras" data-min="1" data-tab="casa">
+    <h2 class="titulo" style="margin-bottom:12px"><small>Validação</small>E se foi só sorte? Teste em dados que a regra nunca viu</h2>
+    <div class="seg"><button data-v="casa">Casas</button><button data-v="apto">Apartamentos</button></div>
+    <div data-grafico="validacao"></div>
+    <div class="callout frag" data-frag="1" style="margin-top:22px;font-size:34px"><span data-tab="casa">Escolhidas numa metade, medidas na outra: o lift médio cai só de <b>1,67</b> para <b>1,50</b>.</span><span data-tab="apto">Escolhidas numa metade, medidas na outra: o lift médio cai só de <b>1,73</b> para <b>1,52</b>.</span> Continua bem acima de 1: <b>não é acaso de seleção</b>.</div>
+    <aside class="notas"><p><b>(1 min)</b> Como testei se as regras não são sorte? Escolhi as 10 melhores numa metade dos anúncios e medi na outra metade, que a regra nunca viu. O lift cai um pouco, de 1,67 para 1,50, mas continua bem acima de 1. Isso mostra que a regra se mantém.</p></aside>
+  </section>
+
+  <!-- 10. ÁRVORE -->
+  <section class="slide" data-secao="<b>A</b> · Mineração de dados" data-titulo="Árvore de decisão" data-min="1">
+    <h2 class="titulo" style="margin-bottom:14px"><small>Resultado 4</small>Árvore de decisão: regras que dá para ler</h2>
+    <div class="fig" style="height:520px"><img class="zoom" src="img/mineracao_arvore_casa.png" alt="Árvore de decisão das casas"></div>
+    <div class="cols" style="grid-template-columns:.8fr .55fr 1.5fr;margin-top:18px;align-items:stretch">
+      <div class="kpi c"><div class="v">71,6%</div><div class="r">de acerto no teste (chutar a classe mais comum: 66,7%)</div></div>
+      <div class="kpi c"><div class="v">0,73</div><div class="r">AUC no teste</div></div>
+      <div class="callout amar" style="font-size:28px;display:flex;align-items:center"><div>Sinal <b>real e modesto</b>. Nos apartamentos a árvore <b>não superou o acaso</b>: por isso lá usamos as regras.</div></div>
+    </div>
+    <aside class="notas"><p><b>(1 min)</b> A árvore de decisão aprende regras do tipo "se a área é até 110 m² e tem até dois quartos, então tende a ser caro para o bairro". Acerta 71,6% no teste, contra 66,7% de quem sempre chuta a classe mais comum: sinal real, mas modesto. Basicamente diz que casas pequenas têm preço do m² alto.</p>
+    <p>Nos apartamentos ela não passou do acaso, e eu prefiro dizer isso do que esconder. (Clique na figura para ampliar.)</p></aside>
+  </section>
+
+  <!-- 11. FORA DA CURVA -->
+  <section class="slide" data-secao="<b>A</b> · Mineração de dados" data-titulo="Imóveis fora da curva" data-min="1.5" data-tab="casa">
+    <h2 class="titulo" style="margin-bottom:14px"><small>Resultado 5</small>Imóveis fora da curva</h2>
+    <div class="cols" style="grid-template-columns:.95fr 1.05fr">
+      <div class="nao-avanca" data-tolerancia>
+        <p style="margin:0 0 6px">Anúncios a <b>até ±<span class="t-tol verm" style="font-size:50px">20</span>%</b> do preço esperado:</p>
+        <input type="range" min="5" max="60" step="5" value="20">
+        <div class="cols c2" style="margin-top:22px">
+          <div class="kpi"><div class="v t-casa">73%</div><div class="r">das casas</div></div>
+          <div class="kpi"><div class="v t-apto">86%</div><div class="r">dos apartamentos</div></div>
+        </div>
+        <div class="callout amar" style="margin-top:22px;font-size:28px">O modelo vê só características, bairro e coordenadas, e prevê <b>sem ter visto o anúncio</b>. Os extremos são <b>candidatos a revisar</b> (erro de cadastro, sobrepreço ou oportunidade), não prova de que está caro ou barato.</div>
+      </div>
+      <div>
+        <div class="seg"><button data-v="casa">Casas</button><button data-v="apto">Apartamentos</button></div>
+        <div class="fig" style="height:640px"><img data-tab="casa" class="zoom show" src="img/mineracao_fora_da_curva_casa.png" alt=""><img data-tab="apto" class="zoom" src="img/mineracao_fora_da_curva_apartamento.png" alt=""></div>
+      </div>
+    </div>
+    <aside class="notas"><p><b>(1,5 min)</b> Esta é a parte mais prática. Treinei um modelo que prevê o preço esperado de cada imóvel sem ver o anúncio dele, com validação cruzada. Dá para ver quão perto cada anúncio fica do esperado: arraste o controle. A 20% de tolerância, 73% das casas e 86% dos apartamentos estão dentro.</p>
+    <p>Os pontos fora das linhas vermelhas são candidatos a revisar: pode ser erro de cadastro, sobrepreço ou oportunidade. O modelo não vê estado de conservação nem acabamento, então não é prova.</p></aside>
+  </section>
+
+  <!-- 12. O QUE PESA NO PREÇO -->
+  <section class="slide" data-secao="<b>A</b> · Mineração de dados" data-titulo="O que pesa no preço previsto" data-min="1">
+    <h2 class="titulo" style="margin-bottom:14px"><small>Resultado 6</small>Prever o preço: o que mais pesa</h2>
+    <div class="fig" style="height:520px"><img class="zoom" src="img/importancia_variaveis.png" alt="Importância das variáveis"></div>
+    <div class="cols c4" style="margin-top:22px">
+      <div class="kpi"><div class="v">0,80</div><div class="r">R² nas casas<br>(teste no tempo)</div></div>
+      <div class="kpi"><div class="v">0,73</div><div class="r">R² nos apartamentos</div></div>
+      <div class="kpi"><div class="v">15%</div><div class="r">erro médio (MAPE) nas casas</div></div>
+      <div class="kpi"><div class="v">11%</div><div class="r">erro médio (MAPE) nos apartamentos</div></div>
+    </div>
+    <aside class="notas"><p><b>(1 min)</b> Para completar, um modelo de preço com gradient boosting, testado em anúncios mais recentes que os do treino. Acerta bem: R² 0,80 nas casas e 0,73 nos apartamentos. O que mais pesa: a <b>área</b>, o <b>bairro</b> e, nos apartamentos, a <b>localização fina</b>. Isso confirma o que a mineração mostrou.</p></aside>
+  </section>
+
+  <!-- 13. PAINEL -->
+  <section class="slide" data-secao="<b>A</b> · Mineração de dados" data-titulo="Painel interativo" data-min="0.5">
+    <h2 class="titulo" style="margin-bottom:14px"><small>Demonstração</small>Painel interativo do projeto</h2>
+    <div class="iframe-wrap nao-avanca"><iframe class="moldura-iframe" src="../painel.html" title="Painel interativo"></iframe></div>
+    <div class="legenda">Painel do GitHub Pages: abas Mercado, Modelos, Sensibilidade, Séries temporais e Projeção. Precisa de internet. Clique fora do painel para voltar às setas.</div>
+    <aside class="notas"><p><b>(30 s)</b> Tudo isso também está num painel interativo público. Dá para trocar entre casa e apartamento e explorar os gráficos. Se a internet falhar, é só pular este slide.</p></aside>
+  </section>
+
+  <!-- 14. LIMITAÇÕES -->
+  <section class="slide" data-secao="<b>A</b> · Mineração de dados" data-titulo="Limitações e próximos passos" data-min="1">
+    <h2 class="titulo"><small>Para fechar</small>O que ainda falta</h2>
+    <div class="cols c2" style="margin-top:20px">
+      <div class="cartao alerta frag" data-frag="1"><h3>Limitações</h3><ul>
+        <li>Retrato de <b>um único mês</b></li>
+        <li>São <b>preços pedidos</b>, não de venda</li>
+        <li>Associação <b>não é causa</b></li>
+        <li>Coleta em volume parada por <b>bloqueio</b> do portal</li></ul></div>
+      <div class="cartao frag" data-frag="2"><h3>Próximos passos</h3><ul>
+        <li><b>Recoletas espaçadas</b> para ver valorização no tempo</li>
+        <li>Dados abertos de <b>ITBI</b> (preço de venda)</li>
+        <li>Fotos e texto para medir <b>estado do imóvel</b></li>
+        <li>Parceria com os portais (API)</li></ul></div>
+    </div>
+    <aside class="notas"><p><b>(1 min)</b> Para fechar com honestidade: é uma fotografia de um mês, com preços pedidos, e a associação não é causa. A coleta em volume está parada pelo bloqueio, e a saída correta é espaçar recoletas, usar dados abertos como ITBI ou conversar com os portais. Próximos passos: ver a valorização no tempo.</p></aside>
+  </section>
+
+  <!-- 15. OBRIGADO -->
+  <section class="slide capa-slide" data-titulo="Obrigado" data-min="0.5">
+    <div class="cap-wrap">
+      <img class="cap-logo" src="img/jecet2026.png" alt="JECET 2026" style="width:760px">
+      <h1>Obrigado!</h1>
+      <div class="autor"><b>Pedro de Moraes Machado</b><small>Instituto Federal de São Paulo · Campus Jacareí</small>
+        <small style="margin-top:22px">Código e dados abertos: <b>github.com/Pedrocs50/imob-analytics</b></small></div>
+    </div>
+    <div class="selo">Perguntas?</div>
+    <div class="barra"></div>
+    <aside class="notas"><p>Agradecer e abrir para perguntas. Se perguntarem do tempo no ar dos anúncios, o próximo slide (extra) tem a resposta.</p></aside>
+  </section>
+
+  <!-- 16. EXTRA -->
+  <section class="slide" data-secao="<b>A</b> · Extra" data-titulo="Extra: tempo do anúncio no ar" data-min="0">
+    <h2 class="titulo"><small>Extra (se perguntarem)</small>Anúncio caro demora mais a sair?</h2>
+    <div class="cols c2" style="margin-top:10px">
+      <div><table class="tabela"><tr><th>Tempo no ar</th><th style="text-align:right">Casas: vs bairro</th><th style="text-align:right">Aptos: vs bairro</th></tr>
+        <tr><td>até 30 dias</td><td class="n">+1,2%</td><td class="n">0,0%</td></tr>
+        <tr><td>91–180 dias</td><td class="n">+0,7%</td><td class="n">−0,1%</td></tr>
+        <tr><td>1 a 2 anos</td><td class="n">−1,5%</td><td class="n">−1,6%</td></tr>
+        <tr class="dest"><td>mais de 2 anos</td><td class="n">−5,8%</td><td class="n">−5,2%</td></tr></table></div>
+      <div><div class="callout amar">Correlação fraca: <b>−0,06</b> (casas) e <b>−0,03</b> (apartamentos).</div>
+        <div class="callout" style="margin-top:20px">Anúncios com mais de 2 anos estão ~<b>6% abaixo</b> do bairro. Provavelmente <b>desatualizados</b>, não "caros demais".</div></div>
+    </div>
+  </section>
+
+  <div class="rodape"><span>JECET 2026 · Pedro de Moraes Machado</span><div class="prog"><i></i></div><span class="cont"></span></div>
+
+  <div class="overlay visao"><h2>Slides (clique para ir)</h2><ol></ol>
+    <div class="tec">Teclas: → ou clique avança · ← volta · F tela cheia · G esta lista · P notas e cronômetro · Tab alterna Casas/Apartamentos · clique numa figura para ampliar</div></div>
+  <div class="lightbox"><img alt=""></div>
+  <div class="nota-rapida"></div>
+</div>
+<script src="assets/dados.js"></script>
+<script src="assets/graficos.js"></script>
+<script src="assets/deck.js"></script>
+</body>
+</html>
